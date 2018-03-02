@@ -67,6 +67,12 @@ foreign key (provider_id) references providers(id)
 );
 
 
+insert into user_types values (null, "Administrador");
+insert into user_types values (null, "Personal");
+
+insert into users values (null, "Oscar", "Méndez", "admin@gmail.com", "123", 1)
+
+
 
 
 
