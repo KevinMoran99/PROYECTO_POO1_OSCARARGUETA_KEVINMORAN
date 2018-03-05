@@ -108,19 +108,15 @@ public class Login extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         try {
-            String email = /*txtEmail.getText().trim();*/ "admin@gmail.com";
-            String pass = /*txtPass.getText().trim();*/ "123";
+            String email = txtEmail.getText().trim(); /*"admin@gmail.com"*/;
+            String pass = txtPass.getText().trim(); /*"123"*/;
             
             if(!(email.equals("") || pass.equals(""))) {
                 User user = new UserController().login(email, pass);
                 if (user != null) {
                     if (user.isState()) {
                         JFrame form;
-                        if (user.getUser_type().getId() == 1) 
-                            form = new AdminFrame(user);
-                        else
-                            form = new MainFrame(user);
-
+                        form = new MainFrame(user);
                         form.setVisible(true);
                         this.dispose();
                     }

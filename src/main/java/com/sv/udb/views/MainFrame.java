@@ -6,7 +6,16 @@
 package com.sv.udb.views;
 
 import com.sv.udb.models.User;
+import com.sv.udb.utilities.Animations;
+import com.sv.udb.utilities.Utils;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 /**
  *
@@ -14,15 +23,62 @@ import javax.swing.JOptionPane;
  */
 public class MainFrame extends javax.swing.JFrame {
 
-    User user;
+    User user; //Usuario logeado
+    JButton[] adminBtns, userBtns; //Botones del menu de admin, y de personal, respectivamente
     
     /**
-     * Creates new form Main
+     * Creates new form AdminFrame
+     * @param user
      */
     public MainFrame(User user) {
         this.user = user;
         initComponents();
+        
+        lblUser.setText(Utils.wrapText(user.toString(), 12));
+        
+        cmbUserSearch.setVisible(false);
+        cmbTypeSearch.setVisible(false);
+        cmbSchoolSearch.setVisible(false);
+        cmbAuthSearch.setVisible(false);
+        cmbProvSearch.setVisible(false);
+        
+        //Estilizando componentes
+        Animations.initStyle(this.getContentPane());
+        
+        //Botones del menu
+        adminBtns = new JButton[5];
+        adminBtns[0] = btnMenuUser;
+        adminBtns[1] = btnMenuType;
+        adminBtns[2] = btnMenuSchool;
+        adminBtns[3] = btnMenuAuth;
+        adminBtns[4] = btnMenuProv;
+        
+        userBtns = new JButton[4];
+        userBtns[0] = btnMenuNew;
+        userBtns[1] = btnMenuCalls;
+        userBtns[2] = btnMenuReports;
+        userBtns[3] = btnMenuProfile;
+        
+        //Invisibilizando botones según usuario logeado
+        for (JButton btn : user.getUser_type().getId() == 1 ? userBtns : adminBtns) {
+            btn.setVisible(false);
+        }
+        
+        
+        //Todos los label de error
+        JLabel[] errorList = {
+            errUserName, errUserLastname, errUserEmail, errUserPass, errUserType, errUserState,
+            errTypeName, errTypeState, errTypeAction,
+            errSchoolName, errSchoolAddress, errSchoolState,
+            errAuthName, errAuthState,
+            errProvName, errProvState
+        };
+        
+        //Ocultando los label de error
+        for(JLabel err : errorList)
+            Animations.hide(err, 255, 0, 0);
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -33,51 +89,1516 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        pnlMenu = new javax.swing.JPanel();
         btnLogout = new javax.swing.JButton();
+        btnMenuUser = new javax.swing.JButton();
+        btnMenuSchool = new javax.swing.JButton();
+        btnMenuAuth = new javax.swing.JButton();
+        btnMenuProv = new javax.swing.JButton();
+        btnMenuType = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel27 = new javax.swing.JLabel();
+        lblUser = new org.jdesktop.swingx.JXLabel();
+        btnMenuNew = new javax.swing.JButton();
+        btnMenuCalls = new javax.swing.JButton();
+        btnMenuReports = new javax.swing.JButton();
+        btnMenuProfile = new javax.swing.JButton();
+        pnlMain = new javax.swing.JPanel();
+        pnlUser = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel2 = new javax.swing.JLabel();
+        cmbUserSearchType = new javax.swing.JComboBox<>();
+        txtUserSearch = new javax.swing.JTextField();
+        cmbUserSearch = new javax.swing.JComboBox<>();
+        btnUserSearchReset = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblUser = new javax.swing.JTable();
+        jLabel3 = new javax.swing.JLabel();
+        txtUserName = new javax.swing.JTextField();
+        txtUserLastame = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        errUserName = new javax.swing.JLabel();
+        errUserLastname = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        txtUserEmail = new javax.swing.JTextField();
+        errUserEmail = new javax.swing.JLabel();
+        errUserPass = new javax.swing.JLabel();
+        txtUserPass = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        errUserType = new javax.swing.JLabel();
+        errUserState = new javax.swing.JLabel();
+        cmbUserType = new javax.swing.JComboBox<>();
+        cmbUserState = new javax.swing.JComboBox<>();
+        btnUserClear = new javax.swing.JButton();
+        btnUserAction = new javax.swing.JButton();
+        pnlType = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
+        jLabel10 = new javax.swing.JLabel();
+        cmbTypeSearchType = new javax.swing.JComboBox<>();
+        txtTypeSearch = new javax.swing.JTextField();
+        cmbTypeSearch = new javax.swing.JComboBox<>();
+        btnTypeSearchReset = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblType = new javax.swing.JTable();
+        jLabel11 = new javax.swing.JLabel();
+        txtTypeName = new javax.swing.JTextField();
+        errTypeName = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        errTypeAction = new javax.swing.JLabel();
+        errTypeState = new javax.swing.JLabel();
+        cmbTypeAction = new javax.swing.JComboBox<>();
+        cmbTypeState = new javax.swing.JComboBox<>();
+        btnTypeClear = new javax.swing.JButton();
+        btnTypeAction = new javax.swing.JButton();
+        pnlSchool = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JSeparator();
+        jLabel13 = new javax.swing.JLabel();
+        cmbSchoolSearchType = new javax.swing.JComboBox<>();
+        txtSchoolSearch = new javax.swing.JTextField();
+        cmbSchoolSearch = new javax.swing.JComboBox<>();
+        btnSchoolSearchReset = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblSchool = new javax.swing.JTable();
+        jLabel14 = new javax.swing.JLabel();
+        txtSchoolName = new javax.swing.JTextField();
+        errSchoolName = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        errSchoolAddress = new javax.swing.JLabel();
+        errSchoolState = new javax.swing.JLabel();
+        cmbSchoolState = new javax.swing.JComboBox<>();
+        btnSchoolClear = new javax.swing.JButton();
+        btnSchoolAction = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        txtSchoolAddress = new javax.swing.JTextArea();
+        pnlAuth = new javax.swing.JPanel();
+        jLabel19 = new javax.swing.JLabel();
+        jSeparator4 = new javax.swing.JSeparator();
+        jLabel20 = new javax.swing.JLabel();
+        cmbAuthSearchType = new javax.swing.JComboBox<>();
+        txtAuthSearch = new javax.swing.JTextField();
+        cmbAuthSearch = new javax.swing.JComboBox<>();
+        btnAuthSearchReset = new javax.swing.JButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        tblAuth = new javax.swing.JTable();
+        jLabel21 = new javax.swing.JLabel();
+        txtAuthName = new javax.swing.JTextField();
+        errAuthName = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        errAuthState = new javax.swing.JLabel();
+        cmbAuthState = new javax.swing.JComboBox<>();
+        btnAuthClear = new javax.swing.JButton();
+        btnAuthAction = new javax.swing.JButton();
+        pnlProv = new javax.swing.JPanel();
+        jLabel22 = new javax.swing.JLabel();
+        jSeparator5 = new javax.swing.JSeparator();
+        jLabel24 = new javax.swing.JLabel();
+        cmbProvSearchType = new javax.swing.JComboBox<>();
+        txtProvSearch = new javax.swing.JTextField();
+        cmbProvSearch = new javax.swing.JComboBox<>();
+        btnProvSearchReset = new javax.swing.JButton();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        tblProv = new javax.swing.JTable();
+        jLabel25 = new javax.swing.JLabel();
+        txtProvName = new javax.swing.JTextField();
+        errProvName = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        errProvState = new javax.swing.JLabel();
+        cmbProvState = new javax.swing.JComboBox<>();
+        btnProvClear = new javax.swing.JButton();
+        btnProvAction = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
+        setResizable(false);
 
-        jLabel1.setText("MainFrame");
+        pnlMenu.setBackground(new java.awt.Color(135, 202, 182));
+        pnlMenu.setMaximumSize(new java.awt.Dimension(234, 32767));
 
+        btnLogout.setBackground(new java.awt.Color(94, 151, 103));
+        btnLogout.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnLogout.setForeground(new java.awt.Color(255, 255, 255));
+        btnLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/power-signal.png"))); // NOI18N
         btnLogout.setText("Logout");
+        btnLogout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnLogout.setDoubleBuffered(true);
+        btnLogout.setIconTextGap(10);
+        btnLogout.setMargin(null);
         btnLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLogoutActionPerformed(evt);
             }
         });
 
+        btnMenuUser.setBackground(new java.awt.Color(0, 74, 101));
+        btnMenuUser.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnMenuUser.setForeground(new java.awt.Color(255, 255, 255));
+        btnMenuUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/user-silhouette.png"))); // NOI18N
+        btnMenuUser.setText("Usuarios");
+        btnMenuUser.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnMenuUser.setIconTextGap(10);
+        btnMenuUser.setMargin(null);
+        btnMenuUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuUserActionPerformed(evt);
+            }
+        });
+
+        btnMenuSchool.setBackground(new java.awt.Color(94, 151, 103));
+        btnMenuSchool.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnMenuSchool.setForeground(new java.awt.Color(255, 255, 255));
+        btnMenuSchool.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/college-graduation.png"))); // NOI18N
+        btnMenuSchool.setText("Escuelas");
+        btnMenuSchool.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnMenuSchool.setIconTextGap(10);
+        btnMenuSchool.setMargin(null);
+        btnMenuSchool.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuSchoolActionPerformed(evt);
+            }
+        });
+
+        btnMenuAuth.setBackground(new java.awt.Color(94, 151, 103));
+        btnMenuAuth.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnMenuAuth.setForeground(new java.awt.Color(255, 255, 255));
+        btnMenuAuth.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/police-shield-with-a-star-symbol.png"))); // NOI18N
+        btnMenuAuth.setText("Autoridades");
+        btnMenuAuth.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnMenuAuth.setIconTextGap(10);
+        btnMenuAuth.setMargin(null);
+        btnMenuAuth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuAuthActionPerformed(evt);
+            }
+        });
+
+        btnMenuProv.setBackground(new java.awt.Color(94, 151, 103));
+        btnMenuProv.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnMenuProv.setForeground(new java.awt.Color(255, 255, 255));
+        btnMenuProv.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/wifi.png"))); // NOI18N
+        btnMenuProv.setText("Proveedores");
+        btnMenuProv.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnMenuProv.setIconTextGap(10);
+        btnMenuProv.setMargin(null);
+        btnMenuProv.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuProvActionPerformed(evt);
+            }
+        });
+
+        btnMenuType.setBackground(new java.awt.Color(94, 151, 103));
+        btnMenuType.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnMenuType.setForeground(new java.awt.Color(255, 255, 255));
+        btnMenuType.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/telephone.png"))); // NOI18N
+        btnMenuType.setText("Tipos de denuncias");
+        btnMenuType.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnMenuType.setIconTextGap(10);
+        btnMenuType.setMargin(null);
+        btnMenuType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuTypeActionPerformed(evt);
+            }
+        });
+
+        jPanel1.setBackground(new java.awt.Color(0, 119, 198));
+
+        jLabel27.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel27.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel27.setText("Usuario conectado:");
+
+        lblUser.setForeground(new java.awt.Color(255, 255, 255));
+        lblUser.setText("Ninguno");
+        lblUser.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        lblUser.setLineWrap(true);
+        lblUser.setMaximumSize(new java.awt.Dimension(230, 0));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel27)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel27)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE))
+        );
+
+        btnMenuNew.setBackground(new java.awt.Color(94, 151, 103));
+        btnMenuNew.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnMenuNew.setForeground(new java.awt.Color(255, 255, 255));
+        btnMenuNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/wifi.png"))); // NOI18N
+        btnMenuNew.setText("Proveedores");
+        btnMenuNew.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnMenuNew.setIconTextGap(10);
+        btnMenuNew.setMargin(null);
+        btnMenuNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuNewActionPerformed(evt);
+            }
+        });
+
+        btnMenuCalls.setBackground(new java.awt.Color(94, 151, 103));
+        btnMenuCalls.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnMenuCalls.setForeground(new java.awt.Color(255, 255, 255));
+        btnMenuCalls.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/wifi.png"))); // NOI18N
+        btnMenuCalls.setText("Proveedores");
+        btnMenuCalls.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnMenuCalls.setIconTextGap(10);
+        btnMenuCalls.setMargin(null);
+        btnMenuCalls.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuCallsActionPerformed(evt);
+            }
+        });
+
+        btnMenuReports.setBackground(new java.awt.Color(94, 151, 103));
+        btnMenuReports.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnMenuReports.setForeground(new java.awt.Color(255, 255, 255));
+        btnMenuReports.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/wifi.png"))); // NOI18N
+        btnMenuReports.setText("Proveedores");
+        btnMenuReports.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnMenuReports.setIconTextGap(10);
+        btnMenuReports.setMargin(null);
+        btnMenuReports.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuReportsActionPerformed(evt);
+            }
+        });
+
+        btnMenuProfile.setBackground(new java.awt.Color(94, 151, 103));
+        btnMenuProfile.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnMenuProfile.setForeground(new java.awt.Color(255, 255, 255));
+        btnMenuProfile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/wifi.png"))); // NOI18N
+        btnMenuProfile.setText("Proveedores");
+        btnMenuProfile.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnMenuProfile.setIconTextGap(10);
+        btnMenuProfile.setMargin(null);
+        btnMenuProfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuProfileActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlMenuLayout = new javax.swing.GroupLayout(pnlMenu);
+        pnlMenu.setLayout(pnlMenuLayout);
+        pnlMenuLayout.setHorizontalGroup(
+            pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(btnLogout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnMenuUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnMenuSchool, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnMenuAuth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnMenuProv, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnMenuType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnMenuNew, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnMenuCalls, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnMenuReports, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnMenuProfile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        pnlMenuLayout.setVerticalGroup(
+            pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlMenuLayout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(btnMenuUser, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(btnMenuType, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(btnMenuSchool, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(btnMenuAuth, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(btnMenuProv, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(btnMenuNew, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(btnMenuCalls, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(btnMenuReports, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(btnMenuProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        pnlMain.setLayout(new java.awt.CardLayout());
+
+        pnlUser.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel1.setText("Usuarios");
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel2.setText("Buscar por:");
+
+        cmbUserSearchType.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbUserSearchType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nombre", "Apellido", "Email", "Tipo de usuario", "Estado" }));
+        cmbUserSearchType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbUserSearchTypeActionPerformed(evt);
+            }
+        });
+
+        txtUserSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtUserSearch.setForeground(new java.awt.Color(6, 43, 51));
+
+        cmbUserSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbUserSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        btnUserSearchReset.setBackground(new java.awt.Color(121, 121, 101));
+        btnUserSearchReset.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnUserSearchReset.setForeground(new java.awt.Color(255, 255, 255));
+        btnUserSearchReset.setText("Revertir");
+        btnUserSearchReset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        tblUser.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Usuario", "Email", "Tipo", "Estado"
+            }
+        ));
+        jScrollPane1.setViewportView(tblUser);
+        if (tblUser.getColumnModel().getColumnCount() > 0) {
+            tblUser.getColumnModel().getColumn(1).setResizable(false);
+            tblUser.getColumnModel().getColumn(1).setHeaderValue("Dirección");
+        }
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel3.setText("Nombre:");
+
+        txtUserName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtUserName.setForeground(new java.awt.Color(6, 43, 51));
+
+        txtUserLastame.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtUserLastame.setForeground(new java.awt.Color(6, 43, 51));
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel4.setText("Apellido:");
+
+        errUserName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        errUserName.setForeground(new java.awt.Color(255, 0, 0));
+        errUserName.setText("Error:");
+        errUserName.setName(""); // NOI18N
+
+        errUserLastname.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        errUserLastname.setForeground(new java.awt.Color(255, 0, 0));
+        errUserLastname.setText("Error:");
+        errUserLastname.setName(""); // NOI18N
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel5.setText("Email:");
+
+        txtUserEmail.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtUserEmail.setForeground(new java.awt.Color(6, 43, 51));
+
+        errUserEmail.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        errUserEmail.setForeground(new java.awt.Color(255, 0, 0));
+        errUserEmail.setText("Error:");
+        errUserEmail.setName(""); // NOI18N
+
+        errUserPass.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        errUserPass.setForeground(new java.awt.Color(255, 0, 0));
+        errUserPass.setText("Error:");
+        errUserPass.setName(""); // NOI18N
+
+        txtUserPass.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtUserPass.setForeground(new java.awt.Color(6, 43, 51));
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel6.setText("Contraseña:");
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel7.setText("Tipo de usuario:");
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel8.setText("Estado:");
+
+        errUserType.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        errUserType.setForeground(new java.awt.Color(255, 0, 0));
+        errUserType.setText("Error:");
+        errUserType.setName(""); // NOI18N
+
+        errUserState.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        errUserState.setForeground(new java.awt.Color(255, 0, 0));
+        errUserState.setText("Error:");
+        errUserState.setName(""); // NOI18N
+
+        cmbUserType.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbUserType.setForeground(new java.awt.Color(6, 43, 51));
+        cmbUserType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        cmbUserState.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbUserState.setForeground(new java.awt.Color(6, 43, 51));
+        cmbUserState.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
+
+        btnUserClear.setBackground(new java.awt.Color(121, 121, 101));
+        btnUserClear.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnUserClear.setForeground(new java.awt.Color(255, 255, 255));
+        btnUserClear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/clear-button.png"))); // NOI18N
+        btnUserClear.setText("Limpiar");
+        btnUserClear.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnUserClear.setIconTextGap(6);
+        btnUserClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUserClearActionPerformed(evt);
+            }
+        });
+
+        btnUserAction.setBackground(new java.awt.Color(0, 50, 180));
+        btnUserAction.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnUserAction.setForeground(new java.awt.Color(255, 255, 255));
+        btnUserAction.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/save-icon.png"))); // NOI18N
+        btnUserAction.setText("Añadir");
+        btnUserAction.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnUserAction.setIconTextGap(6);
+
+        javax.swing.GroupLayout pnlUserLayout = new javax.swing.GroupLayout(pnlUser);
+        pnlUser.setLayout(pnlUserLayout);
+        pnlUserLayout.setHorizontalGroup(
+            pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator1)
+            .addGroup(pnlUserLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(pnlUserLayout.createSequentialGroup()
+                        .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addGroup(pnlUserLayout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)
+                                .addComponent(cmbUserSearchType, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtUserSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                            .addComponent(cmbUserSearch, 0, 140, Short.MAX_VALUE))
+                        .addGap(35, 35, 35)
+                        .addComponent(btnUserSearchReset))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlUserLayout.createSequentialGroup()
+                        .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(errUserName))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                        .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(errUserLastname)
+                            .addComponent(jLabel4)
+                            .addComponent(txtUserLastame, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pnlUserLayout.createSequentialGroup()
+                        .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7)
+                            .addComponent(errUserType))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel8)
+                        .addGap(189, 189, 189))
+                    .addGroup(pnlUserLayout.createSequentialGroup()
+                        .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(cmbUserType, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtUserEmail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                            .addComponent(errUserEmail, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlUserLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(errUserPass)
+                                    .addComponent(jLabel6)
+                                    .addComponent(txtUserPass, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(pnlUserLayout.createSequentialGroup()
+                                .addGap(67, 67, 67)
+                                .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(pnlUserLayout.createSequentialGroup()
+                                        .addComponent(errUserState)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(cmbUserState, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                    .addGroup(pnlUserLayout.createSequentialGroup()
+                        .addComponent(btnUserClear)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnUserAction, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        pnlUserLayout.setVerticalGroup(
+            pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlUserLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(cmbUserSearchType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbUserSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtUserSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUserSearchReset))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlUserLayout.createSequentialGroup()
+                        .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlUserLayout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(txtUserLastame, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(errUserName)
+                    .addComponent(errUserLastname))
+                .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlUserLayout.createSequentialGroup()
+                        .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtUserEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlUserLayout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(txtUserPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(errUserEmail)
+                    .addComponent(errUserPass))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbUserType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbUserState, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
+                .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(errUserType)
+                    .addComponent(errUserState))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnUserClear)
+                    .addComponent(btnUserAction))
+                .addContainerGap())
+        );
+
+        errUserName.getAccessibleContext().setAccessibleName("errUserName");
+
+        pnlMain.add(pnlUser, "crdUser");
+
+        pnlType.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel9.setText("Tipos de denuncias");
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel10.setText("Buscar por:");
+
+        cmbTypeSearchType.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbTypeSearchType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nombre", "Acción tomada", "Estado" }));
+        cmbTypeSearchType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbTypeSearchTypeActionPerformed(evt);
+            }
+        });
+
+        txtTypeSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtTypeSearch.setForeground(new java.awt.Color(6, 43, 51));
+
+        cmbTypeSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbTypeSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        btnTypeSearchReset.setBackground(new java.awt.Color(121, 121, 101));
+        btnTypeSearchReset.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnTypeSearchReset.setForeground(new java.awt.Color(255, 255, 255));
+        btnTypeSearchReset.setText("Revertir");
+        btnTypeSearchReset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        tblType.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nombre", "Acción tomada", "Estado"
+            }
+        ));
+        jScrollPane2.setViewportView(tblType);
+        if (tblType.getColumnModel().getColumnCount() > 0) {
+            tblType.getColumnModel().getColumn(1).setResizable(false);
+            tblType.getColumnModel().getColumn(1).setHeaderValue("Dirección");
+        }
+
+        jLabel11.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel11.setText("Nombre:");
+
+        txtTypeName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtTypeName.setForeground(new java.awt.Color(6, 43, 51));
+
+        errTypeName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        errTypeName.setForeground(new java.awt.Color(255, 0, 0));
+        errTypeName.setText("Error:");
+        errTypeName.setName(""); // NOI18N
+
+        jLabel15.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel15.setText("Acción tomada:");
+
+        jLabel16.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel16.setText("Estado:");
+
+        errTypeAction.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        errTypeAction.setForeground(new java.awt.Color(255, 0, 0));
+        errTypeAction.setText("Error:");
+        errTypeAction.setName(""); // NOI18N
+
+        errTypeState.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        errTypeState.setForeground(new java.awt.Color(255, 0, 0));
+        errTypeState.setText("Error:");
+        errTypeState.setName(""); // NOI18N
+
+        cmbTypeAction.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbTypeAction.setForeground(new java.awt.Color(6, 43, 51));
+        cmbTypeAction.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Remitir con autoridad competente", "Tomar contacto con ISP y colegio" }));
+
+        cmbTypeState.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbTypeState.setForeground(new java.awt.Color(6, 43, 51));
+        cmbTypeState.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
+
+        btnTypeClear.setBackground(new java.awt.Color(121, 121, 101));
+        btnTypeClear.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnTypeClear.setForeground(new java.awt.Color(255, 255, 255));
+        btnTypeClear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/clear-button.png"))); // NOI18N
+        btnTypeClear.setText("Limpiar");
+        btnTypeClear.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnTypeClear.setIconTextGap(6);
+        btnTypeClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTypeClearActionPerformed(evt);
+            }
+        });
+
+        btnTypeAction.setBackground(new java.awt.Color(0, 50, 180));
+        btnTypeAction.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnTypeAction.setForeground(new java.awt.Color(255, 255, 255));
+        btnTypeAction.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/save-icon.png"))); // NOI18N
+        btnTypeAction.setText("Añadir");
+        btnTypeAction.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnTypeAction.setIconTextGap(6);
+
+        javax.swing.GroupLayout pnlTypeLayout = new javax.swing.GroupLayout(pnlType);
+        pnlType.setLayout(pnlTypeLayout);
+        pnlTypeLayout.setHorizontalGroup(
+            pnlTypeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator2)
+            .addGroup(pnlTypeLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlTypeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlTypeLayout.createSequentialGroup()
+                        .addGroup(pnlTypeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel15)
+                            .addComponent(errTypeAction))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(pnlTypeLayout.createSequentialGroup()
+                        .addGroup(pnlTypeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlTypeLayout.createSequentialGroup()
+                                .addGroup(pnlTypeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtTypeName, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(errTypeName)
+                                    .addComponent(jLabel11))
+                                .addGap(52, 52, 52)
+                                .addGroup(pnlTypeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(pnlTypeLayout.createSequentialGroup()
+                                        .addComponent(jLabel16)
+                                        .addGap(189, 189, 189))
+                                    .addComponent(cmbTypeState, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(pnlTypeLayout.createSequentialGroup()
+                                        .addComponent(errTypeState)
+                                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addComponent(jScrollPane2)
+                            .addGroup(pnlTypeLayout.createSequentialGroup()
+                                .addGroup(pnlTypeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel9)
+                                    .addGroup(pnlTypeLayout.createSequentialGroup()
+                                        .addComponent(jLabel10)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(cmbTypeSearchType, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(pnlTypeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtTypeSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                                    .addComponent(cmbTypeSearch, 0, 140, Short.MAX_VALUE))
+                                .addGap(35, 35, 35)
+                                .addComponent(btnTypeSearchReset))
+                            .addGroup(pnlTypeLayout.createSequentialGroup()
+                                .addComponent(btnTypeClear)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnTypeAction, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlTypeLayout.createSequentialGroup()
+                                .addComponent(cmbTypeAction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
+        );
+        pnlTypeLayout.setVerticalGroup(
+            pnlTypeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTypeLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlTypeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(cmbTypeSearchType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbTypeSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTypeSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTypeSearchReset))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(41, 41, 41)
+                .addGroup(pnlTypeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlTypeLayout.createSequentialGroup()
+                        .addComponent(jLabel16)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbTypeState, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9)
+                        .addComponent(errTypeState))
+                    .addGroup(pnlTypeLayout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtTypeName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(errTypeName)))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel15)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmbTypeAction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(9, 9, 9)
+                .addComponent(errTypeAction)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
+                .addGroup(pnlTypeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnTypeClear)
+                    .addComponent(btnTypeAction))
+                .addContainerGap())
+        );
+
+        pnlMain.add(pnlType, "crdType");
+
+        pnlSchool.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel12.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel12.setText("Escuelas");
+
+        jLabel13.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel13.setText("Buscar por:");
+
+        cmbSchoolSearchType.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbSchoolSearchType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nombre", "Dirección", "Estado" }));
+        cmbSchoolSearchType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbSchoolSearchTypeActionPerformed(evt);
+            }
+        });
+
+        txtSchoolSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtSchoolSearch.setForeground(new java.awt.Color(6, 43, 51));
+
+        cmbSchoolSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbSchoolSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        btnSchoolSearchReset.setBackground(new java.awt.Color(121, 121, 101));
+        btnSchoolSearchReset.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnSchoolSearchReset.setForeground(new java.awt.Color(255, 255, 255));
+        btnSchoolSearchReset.setText("Revertir");
+        btnSchoolSearchReset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        tblSchool.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nombre", "Dirección", "Estado"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(tblSchool);
+        if (tblSchool.getColumnModel().getColumnCount() > 0) {
+            tblSchool.getColumnModel().getColumn(1).setResizable(false);
+            tblSchool.getColumnModel().getColumn(1).setHeaderValue("Dirección");
+        }
+
+        jLabel14.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel14.setText("Nombre:");
+
+        txtSchoolName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtSchoolName.setForeground(new java.awt.Color(6, 43, 51));
+
+        errSchoolName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        errSchoolName.setForeground(new java.awt.Color(255, 0, 0));
+        errSchoolName.setText("Error:");
+        errSchoolName.setName(""); // NOI18N
+
+        jLabel17.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel17.setText("Dirección");
+
+        jLabel18.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel18.setText("Estado:");
+
+        errSchoolAddress.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        errSchoolAddress.setForeground(new java.awt.Color(255, 0, 0));
+        errSchoolAddress.setText("Error:");
+        errSchoolAddress.setName(""); // NOI18N
+
+        errSchoolState.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        errSchoolState.setForeground(new java.awt.Color(255, 0, 0));
+        errSchoolState.setText("Error:");
+        errSchoolState.setName(""); // NOI18N
+
+        cmbSchoolState.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbSchoolState.setForeground(new java.awt.Color(6, 43, 51));
+        cmbSchoolState.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
+
+        btnSchoolClear.setBackground(new java.awt.Color(121, 121, 101));
+        btnSchoolClear.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnSchoolClear.setForeground(new java.awt.Color(255, 255, 255));
+        btnSchoolClear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/clear-button.png"))); // NOI18N
+        btnSchoolClear.setText("Limpiar");
+        btnSchoolClear.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSchoolClear.setIconTextGap(6);
+        btnSchoolClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSchoolClearActionPerformed(evt);
+            }
+        });
+
+        btnSchoolAction.setBackground(new java.awt.Color(0, 50, 180));
+        btnSchoolAction.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnSchoolAction.setForeground(new java.awt.Color(255, 255, 255));
+        btnSchoolAction.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/save-icon.png"))); // NOI18N
+        btnSchoolAction.setText("Añadir");
+        btnSchoolAction.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSchoolAction.setIconTextGap(6);
+
+        txtSchoolAddress.setColumns(20);
+        txtSchoolAddress.setLineWrap(true);
+        txtSchoolAddress.setRows(2);
+        jScrollPane4.setViewportView(txtSchoolAddress);
+
+        javax.swing.GroupLayout pnlSchoolLayout = new javax.swing.GroupLayout(pnlSchool);
+        pnlSchool.setLayout(pnlSchoolLayout);
+        pnlSchoolLayout.setHorizontalGroup(
+            pnlSchoolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator3)
+            .addGroup(pnlSchoolLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlSchoolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlSchoolLayout.createSequentialGroup()
+                        .addComponent(jLabel17)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(pnlSchoolLayout.createSequentialGroup()
+                        .addGroup(pnlSchoolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane4)
+                            .addGroup(pnlSchoolLayout.createSequentialGroup()
+                                .addGroup(pnlSchoolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtSchoolName, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(errSchoolName)
+                                    .addComponent(jLabel14))
+                                .addGap(52, 52, 52)
+                                .addGroup(pnlSchoolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(pnlSchoolLayout.createSequentialGroup()
+                                        .addComponent(jLabel18)
+                                        .addGap(189, 189, 189))
+                                    .addComponent(cmbSchoolState, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(pnlSchoolLayout.createSequentialGroup()
+                                        .addComponent(errSchoolState)
+                                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addComponent(jScrollPane3)
+                            .addGroup(pnlSchoolLayout.createSequentialGroup()
+                                .addGroup(pnlSchoolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel12)
+                                    .addGroup(pnlSchoolLayout.createSequentialGroup()
+                                        .addComponent(jLabel13)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(cmbSchoolSearchType, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(pnlSchoolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtSchoolSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                                    .addComponent(cmbSchoolSearch, 0, 140, Short.MAX_VALUE))
+                                .addGap(35, 35, 35)
+                                .addComponent(btnSchoolSearchReset))
+                            .addGroup(pnlSchoolLayout.createSequentialGroup()
+                                .addComponent(btnSchoolClear)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnSchoolAction, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap())
+                    .addGroup(pnlSchoolLayout.createSequentialGroup()
+                        .addComponent(errSchoolAddress)
+                        .addGap(0, 0, Short.MAX_VALUE))))
+        );
+        pnlSchoolLayout.setVerticalGroup(
+            pnlSchoolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlSchoolLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlSchoolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(cmbSchoolSearchType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbSchoolSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSchoolSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSchoolSearchReset))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(41, 41, 41)
+                .addGroup(pnlSchoolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlSchoolLayout.createSequentialGroup()
+                        .addComponent(jLabel18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbSchoolState, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9)
+                        .addComponent(errSchoolState))
+                    .addGroup(pnlSchoolLayout.createSequentialGroup()
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtSchoolName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(errSchoolName)))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel17)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(errSchoolAddress)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                .addGroup(pnlSchoolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSchoolClear)
+                    .addComponent(btnSchoolAction))
+                .addContainerGap())
+        );
+
+        pnlMain.add(pnlSchool, "crdSchool");
+
+        pnlAuth.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel19.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel19.setText("Autoridades");
+
+        jLabel20.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel20.setText("Buscar por:");
+
+        cmbAuthSearchType.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbAuthSearchType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nombre", "Estado" }));
+        cmbAuthSearchType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbAuthSearchTypeActionPerformed(evt);
+            }
+        });
+
+        txtAuthSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtAuthSearch.setForeground(new java.awt.Color(6, 43, 51));
+
+        cmbAuthSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbAuthSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        btnAuthSearchReset.setBackground(new java.awt.Color(121, 121, 101));
+        btnAuthSearchReset.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnAuthSearchReset.setForeground(new java.awt.Color(255, 255, 255));
+        btnAuthSearchReset.setText("Revertir");
+        btnAuthSearchReset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        tblAuth.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nombre", "Estado"
+            }
+        ));
+        jScrollPane5.setViewportView(tblAuth);
+
+        jLabel21.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel21.setText("Nombre:");
+
+        txtAuthName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtAuthName.setForeground(new java.awt.Color(6, 43, 51));
+
+        errAuthName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        errAuthName.setForeground(new java.awt.Color(255, 0, 0));
+        errAuthName.setText("Error:");
+        errAuthName.setName(""); // NOI18N
+
+        jLabel23.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel23.setText("Estado:");
+
+        errAuthState.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        errAuthState.setForeground(new java.awt.Color(255, 0, 0));
+        errAuthState.setText("Error:");
+        errAuthState.setName(""); // NOI18N
+
+        cmbAuthState.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbAuthState.setForeground(new java.awt.Color(6, 43, 51));
+        cmbAuthState.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
+
+        btnAuthClear.setBackground(new java.awt.Color(121, 121, 101));
+        btnAuthClear.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnAuthClear.setForeground(new java.awt.Color(255, 255, 255));
+        btnAuthClear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/clear-button.png"))); // NOI18N
+        btnAuthClear.setText("Limpiar");
+        btnAuthClear.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAuthClear.setIconTextGap(6);
+        btnAuthClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAuthClearActionPerformed(evt);
+            }
+        });
+
+        btnAuthAction.setBackground(new java.awt.Color(0, 50, 180));
+        btnAuthAction.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnAuthAction.setForeground(new java.awt.Color(255, 255, 255));
+        btnAuthAction.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/save-icon.png"))); // NOI18N
+        btnAuthAction.setText("Añadir");
+        btnAuthAction.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAuthAction.setIconTextGap(6);
+
+        javax.swing.GroupLayout pnlAuthLayout = new javax.swing.GroupLayout(pnlAuth);
+        pnlAuth.setLayout(pnlAuthLayout);
+        pnlAuthLayout.setHorizontalGroup(
+            pnlAuthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator4)
+            .addGroup(pnlAuthLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlAuthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlAuthLayout.createSequentialGroup()
+                        .addGroup(pnlAuthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtAuthName, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(errAuthName)
+                            .addComponent(jLabel21))
+                        .addGap(52, 52, 52)
+                        .addGroup(pnlAuthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlAuthLayout.createSequentialGroup()
+                                .addComponent(jLabel23)
+                                .addGap(189, 189, 189))
+                            .addComponent(cmbAuthState, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(pnlAuthLayout.createSequentialGroup()
+                                .addComponent(errAuthState)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addComponent(jScrollPane5)
+                    .addGroup(pnlAuthLayout.createSequentialGroup()
+                        .addGroup(pnlAuthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel19)
+                            .addGroup(pnlAuthLayout.createSequentialGroup()
+                                .addComponent(jLabel20)
+                                .addGap(18, 18, 18)
+                                .addComponent(cmbAuthSearchType, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(pnlAuthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtAuthSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                            .addComponent(cmbAuthSearch, 0, 140, Short.MAX_VALUE))
+                        .addGap(35, 35, 35)
+                        .addComponent(btnAuthSearchReset))
+                    .addGroup(pnlAuthLayout.createSequentialGroup()
+                        .addComponent(btnAuthClear)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnAuthAction, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        pnlAuthLayout.setVerticalGroup(
+            pnlAuthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlAuthLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel19)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlAuthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel20)
+                    .addComponent(cmbAuthSearchType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbAuthSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtAuthSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAuthSearchReset))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(97, 97, 97)
+                .addGroup(pnlAuthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlAuthLayout.createSequentialGroup()
+                        .addComponent(jLabel23)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbAuthState, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9)
+                        .addComponent(errAuthState))
+                    .addGroup(pnlAuthLayout.createSequentialGroup()
+                        .addComponent(jLabel21)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtAuthName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(errAuthName)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
+                .addGroup(pnlAuthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAuthClear)
+                    .addComponent(btnAuthAction))
+                .addContainerGap())
+        );
+
+        pnlMain.add(pnlAuth, "crdAuth");
+
+        pnlProv.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel22.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel22.setText("Proveedores");
+
+        jLabel24.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel24.setText("Buscar por:");
+
+        cmbProvSearchType.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbProvSearchType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nombre", "Estado" }));
+        cmbProvSearchType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbProvSearchTypeActionPerformed(evt);
+            }
+        });
+
+        txtProvSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtProvSearch.setForeground(new java.awt.Color(6, 43, 51));
+
+        cmbProvSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbProvSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        btnProvSearchReset.setBackground(new java.awt.Color(121, 121, 101));
+        btnProvSearchReset.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnProvSearchReset.setForeground(new java.awt.Color(255, 255, 255));
+        btnProvSearchReset.setText("Revertir");
+        btnProvSearchReset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        tblProv.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nombre", "Estado"
+            }
+        ));
+        jScrollPane6.setViewportView(tblProv);
+
+        jLabel25.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel25.setText("Nombre:");
+
+        txtProvName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtProvName.setForeground(new java.awt.Color(6, 43, 51));
+
+        errProvName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        errProvName.setForeground(new java.awt.Color(255, 0, 0));
+        errProvName.setText("Error:");
+        errProvName.setName(""); // NOI18N
+
+        jLabel26.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel26.setText("Estado:");
+
+        errProvState.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        errProvState.setForeground(new java.awt.Color(255, 0, 0));
+        errProvState.setText("Error:");
+        errProvState.setName(""); // NOI18N
+
+        cmbProvState.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbProvState.setForeground(new java.awt.Color(6, 43, 51));
+        cmbProvState.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
+
+        btnProvClear.setBackground(new java.awt.Color(121, 121, 101));
+        btnProvClear.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnProvClear.setForeground(new java.awt.Color(255, 255, 255));
+        btnProvClear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/clear-button.png"))); // NOI18N
+        btnProvClear.setText("Limpiar");
+        btnProvClear.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnProvClear.setIconTextGap(6);
+        btnProvClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProvClearActionPerformed(evt);
+            }
+        });
+
+        btnProvAction.setBackground(new java.awt.Color(0, 50, 180));
+        btnProvAction.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnProvAction.setForeground(new java.awt.Color(255, 255, 255));
+        btnProvAction.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/save-icon.png"))); // NOI18N
+        btnProvAction.setText("Añadir");
+        btnProvAction.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnProvAction.setIconTextGap(6);
+
+        javax.swing.GroupLayout pnlProvLayout = new javax.swing.GroupLayout(pnlProv);
+        pnlProv.setLayout(pnlProvLayout);
+        pnlProvLayout.setHorizontalGroup(
+            pnlProvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator5)
+            .addGroup(pnlProvLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlProvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlProvLayout.createSequentialGroup()
+                        .addGroup(pnlProvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtProvName, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(errProvName)
+                            .addComponent(jLabel25))
+                        .addGap(52, 52, 52)
+                        .addGroup(pnlProvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlProvLayout.createSequentialGroup()
+                                .addComponent(jLabel26)
+                                .addGap(189, 189, 189))
+                            .addComponent(cmbProvState, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(pnlProvLayout.createSequentialGroup()
+                                .addComponent(errProvState)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addComponent(jScrollPane6)
+                    .addGroup(pnlProvLayout.createSequentialGroup()
+                        .addGroup(pnlProvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel22)
+                            .addGroup(pnlProvLayout.createSequentialGroup()
+                                .addComponent(jLabel24)
+                                .addGap(18, 18, 18)
+                                .addComponent(cmbProvSearchType, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(pnlProvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtProvSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                            .addComponent(cmbProvSearch, 0, 140, Short.MAX_VALUE))
+                        .addGap(35, 35, 35)
+                        .addComponent(btnProvSearchReset))
+                    .addGroup(pnlProvLayout.createSequentialGroup()
+                        .addComponent(btnProvClear)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnProvAction, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        pnlProvLayout.setVerticalGroup(
+            pnlProvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlProvLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel22)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlProvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel24)
+                    .addComponent(cmbProvSearchType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbProvSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtProvSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnProvSearchReset))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(97, 97, 97)
+                .addGroup(pnlProvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlProvLayout.createSequentialGroup()
+                        .addComponent(jLabel26)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbProvState, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9)
+                        .addComponent(errProvState))
+                    .addGroup(pnlProvLayout.createSequentialGroup()
+                        .addComponent(jLabel25)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtProvName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(errProvName)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
+                .addGroup(pnlProvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnProvClear)
+                    .addComponent(btnProvAction))
+                .addContainerGap())
+        );
+
+        pnlMain.add(pnlProv, "crdProv");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(86, 86, 86)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(206, Short.MAX_VALUE)
-                .addComponent(btnLogout)
-                .addGap(129, 129, 129))
+                .addComponent(pnlMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(pnlMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(73, 73, 73)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 179, Short.MAX_VALUE)
-                .addComponent(btnLogout)
-                .addContainerGap())
+            .addComponent(pnlMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pnlMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        pnlMenu.getAccessibleContext().setAccessibleDescription("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Cambia el panel actual
+     * @param cardName Nombre del panel a mostrar
+     */
+    private void showCard(String cardName) {
+        CardLayout card = (CardLayout) pnlMain.getLayout();
+        card.show(pnlMain, cardName);
+    }
+    
+    /**
+     * Hace que el primer componente argumentado se muestre, y el segundo se oculte
+     * @param visible
+     * @param invisible 
+     */
+    private void toggleVisible(JComponent visible, JComponent invisible) {
+        visible.setVisible(true);
+        invisible.setVisible(false);
+    }
+    
+    /**
+     * Cambia un botón de acción, de 'Añadir' a 'Modificar' y viceversa
+     * @param btn El botón a cambiar
+     * @param changeToSave true si se cambiará a 'Añadir', false si se cambiará a 'Modificar'
+     */
+    private void toggleAction(JButton btn, boolean changeToSave) {
+        if (changeToSave) {
+            btn.setText("Añadir");
+            btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/save-icon.png")));
+        }
+        else {
+            btn.setText("Modificar");
+            btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/refresh-button.png")));
+        }
+    }
+    
+    /**
+     * Resalta el botón del menú seleccionado y normaliza los demás
+     * @param btn 
+     */
+    private void selectItem (JButton item) {
+        for(JButton btn : adminBtns) {
+            btn.setBackground(new Color(94,151,103));
+        }
+        item.setBackground(new Color(0,74,101));
+    }
+    
+    
+    
+    
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         Login form = new Login();
         form.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnLogoutActionPerformed
+
+    private void btnMenuUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuUserActionPerformed
+        showCard("crdUser");
+        selectItem((JButton) evt.getSource());
+    }//GEN-LAST:event_btnMenuUserActionPerformed
+
+    private void cmbUserSearchTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbUserSearchTypeActionPerformed
+        if (cmbUserSearchType.getSelectedIndex() <= 2)
+            toggleVisible(txtUserSearch, cmbUserSearch);
+        else
+            toggleVisible(cmbUserSearch, txtUserSearch);
+    }//GEN-LAST:event_cmbUserSearchTypeActionPerformed
+
+    private void btnUserClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserClearActionPerformed
+        
+    }//GEN-LAST:event_btnUserClearActionPerformed
+
+    private void cmbTypeSearchTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTypeSearchTypeActionPerformed
+        if (cmbTypeSearchType.getSelectedIndex() <= 0)
+            toggleVisible(txtTypeSearch, cmbTypeSearch);
+        else
+            toggleVisible(cmbTypeSearch, txtTypeSearch);
+    }//GEN-LAST:event_cmbTypeSearchTypeActionPerformed
+
+    private void btnTypeClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTypeClearActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnTypeClearActionPerformed
+
+    private void btnMenuTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuTypeActionPerformed
+        showCard("crdType");
+        selectItem((JButton) evt.getSource());
+    }//GEN-LAST:event_btnMenuTypeActionPerformed
+
+    private void cmbSchoolSearchTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbSchoolSearchTypeActionPerformed
+        if (cmbSchoolSearchType.getSelectedIndex() <= 1)
+            toggleVisible(txtSchoolSearch, cmbSchoolSearch);
+        else
+            toggleVisible(cmbSchoolSearch, txtSchoolSearch);
+    }//GEN-LAST:event_cmbSchoolSearchTypeActionPerformed
+
+    private void btnSchoolClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSchoolClearActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSchoolClearActionPerformed
+
+    private void btnMenuSchoolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuSchoolActionPerformed
+        showCard("crdSchool");
+        selectItem((JButton) evt.getSource());
+    }//GEN-LAST:event_btnMenuSchoolActionPerformed
+
+    private void cmbAuthSearchTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbAuthSearchTypeActionPerformed
+        if (cmbAuthSearchType.getSelectedIndex() <= 0)
+            toggleVisible(txtAuthSearch, cmbAuthSearch);
+        else
+            toggleVisible(cmbAuthSearch, txtAuthSearch);
+    }//GEN-LAST:event_cmbAuthSearchTypeActionPerformed
+
+    private void btnAuthClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAuthClearActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAuthClearActionPerformed
+
+    private void btnMenuAuthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuAuthActionPerformed
+        showCard("crdAuth");
+        selectItem((JButton) evt.getSource());
+    }//GEN-LAST:event_btnMenuAuthActionPerformed
+
+    private void cmbProvSearchTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbProvSearchTypeActionPerformed
+        if (cmbProvSearchType.getSelectedIndex() <= 0)
+            toggleVisible(txtProvSearch, cmbProvSearch);
+        else
+            toggleVisible(cmbProvSearch, txtProvSearch);
+    }//GEN-LAST:event_cmbProvSearchTypeActionPerformed
+
+    private void btnProvClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProvClearActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnProvClearActionPerformed
+
+    private void btnMenuProvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuProvActionPerformed
+        showCard("crdProv");
+        selectItem((JButton) evt.getSource());
+    }//GEN-LAST:event_btnMenuProvActionPerformed
+
+    private void btnMenuNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuNewActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnMenuNewActionPerformed
+
+    private void btnMenuCallsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuCallsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnMenuCallsActionPerformed
+
+    private void btnMenuReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuReportsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnMenuReportsActionPerformed
+
+    private void btnMenuProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuProfileActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnMenuProfileActionPerformed
 
     /**
      * @param args the command line arguments
@@ -89,12 +1610,13 @@ public class MainFrame extends javax.swing.JFrame {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            /*for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
-            }
+            }*/
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
@@ -116,7 +1638,129 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAuthAction;
+    private javax.swing.JButton btnAuthClear;
+    private javax.swing.JButton btnAuthSearchReset;
     private javax.swing.JButton btnLogout;
+    private javax.swing.JButton btnMenuAuth;
+    private javax.swing.JButton btnMenuCalls;
+    private javax.swing.JButton btnMenuNew;
+    private javax.swing.JButton btnMenuProfile;
+    private javax.swing.JButton btnMenuProv;
+    private javax.swing.JButton btnMenuReports;
+    private javax.swing.JButton btnMenuSchool;
+    private javax.swing.JButton btnMenuType;
+    private javax.swing.JButton btnMenuUser;
+    private javax.swing.JButton btnProvAction;
+    private javax.swing.JButton btnProvClear;
+    private javax.swing.JButton btnProvSearchReset;
+    private javax.swing.JButton btnSchoolAction;
+    private javax.swing.JButton btnSchoolClear;
+    private javax.swing.JButton btnSchoolSearchReset;
+    private javax.swing.JButton btnTypeAction;
+    private javax.swing.JButton btnTypeClear;
+    private javax.swing.JButton btnTypeSearchReset;
+    private javax.swing.JButton btnUserAction;
+    private javax.swing.JButton btnUserClear;
+    private javax.swing.JButton btnUserSearchReset;
+    private javax.swing.JComboBox<String> cmbAuthSearch;
+    private javax.swing.JComboBox<String> cmbAuthSearchType;
+    private javax.swing.JComboBox<String> cmbAuthState;
+    private javax.swing.JComboBox<String> cmbProvSearch;
+    private javax.swing.JComboBox<String> cmbProvSearchType;
+    private javax.swing.JComboBox<String> cmbProvState;
+    private javax.swing.JComboBox<String> cmbSchoolSearch;
+    private javax.swing.JComboBox<String> cmbSchoolSearchType;
+    private javax.swing.JComboBox<String> cmbSchoolState;
+    private javax.swing.JComboBox<String> cmbTypeAction;
+    private javax.swing.JComboBox<String> cmbTypeSearch;
+    private javax.swing.JComboBox<String> cmbTypeSearchType;
+    private javax.swing.JComboBox<String> cmbTypeState;
+    private javax.swing.JComboBox<String> cmbUserSearch;
+    private javax.swing.JComboBox<String> cmbUserSearchType;
+    private javax.swing.JComboBox<String> cmbUserState;
+    private javax.swing.JComboBox<String> cmbUserType;
+    private javax.swing.JLabel errAuthName;
+    private javax.swing.JLabel errAuthState;
+    private javax.swing.JLabel errProvName;
+    private javax.swing.JLabel errProvState;
+    private javax.swing.JLabel errSchoolAddress;
+    private javax.swing.JLabel errSchoolName;
+    private javax.swing.JLabel errSchoolState;
+    private javax.swing.JLabel errTypeAction;
+    private javax.swing.JLabel errTypeName;
+    private javax.swing.JLabel errTypeState;
+    private javax.swing.JLabel errUserEmail;
+    private javax.swing.JLabel errUserLastname;
+    private javax.swing.JLabel errUserName;
+    private javax.swing.JLabel errUserPass;
+    private javax.swing.JLabel errUserState;
+    private javax.swing.JLabel errUserType;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JSeparator jSeparator5;
+    private org.jdesktop.swingx.JXLabel lblUser;
+    private javax.swing.JPanel pnlAuth;
+    private javax.swing.JPanel pnlMain;
+    private javax.swing.JPanel pnlMenu;
+    private javax.swing.JPanel pnlProv;
+    private javax.swing.JPanel pnlSchool;
+    private javax.swing.JPanel pnlType;
+    private javax.swing.JPanel pnlUser;
+    private javax.swing.JTable tblAuth;
+    private javax.swing.JTable tblProv;
+    private javax.swing.JTable tblSchool;
+    private javax.swing.JTable tblType;
+    private javax.swing.JTable tblUser;
+    private javax.swing.JTextField txtAuthName;
+    private javax.swing.JTextField txtAuthSearch;
+    private javax.swing.JTextField txtProvName;
+    private javax.swing.JTextField txtProvSearch;
+    private javax.swing.JTextArea txtSchoolAddress;
+    private javax.swing.JTextField txtSchoolName;
+    private javax.swing.JTextField txtSchoolSearch;
+    private javax.swing.JTextField txtTypeName;
+    private javax.swing.JTextField txtTypeSearch;
+    private javax.swing.JTextField txtUserEmail;
+    private javax.swing.JTextField txtUserLastame;
+    private javax.swing.JTextField txtUserName;
+    private javax.swing.JTextField txtUserPass;
+    private javax.swing.JTextField txtUserSearch;
     // End of variables declaration//GEN-END:variables
 }
