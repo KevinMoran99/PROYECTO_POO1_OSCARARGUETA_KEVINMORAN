@@ -13,14 +13,16 @@ public class Provider_asign {
     int id;
     Call call;
     Provider provider;
+    boolean content_removed;
 
     public Provider_asign() {
     }
 
-    public Provider_asign(int id, Call call, Provider provider) {
+    public Provider_asign(int id, Call call, Provider provider, boolean content_removed) {
         this.id = id;
         this.call = call;
         this.provider = provider;
+        this.content_removed = content_removed;
     }
 
     public int getId() {
@@ -46,6 +48,15 @@ public class Provider_asign {
     public void setProvider(Provider provider) {
         this.provider = provider;
     }
+
+    public boolean isContent_removed() {
+        return content_removed;
+    }
+
+    public void setContent_removed(boolean content_removed) {
+        this.content_removed = content_removed;
+    }
+    
     
     
 }

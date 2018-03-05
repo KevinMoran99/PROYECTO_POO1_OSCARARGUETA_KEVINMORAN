@@ -6,10 +6,14 @@
 package com.sv.udb.utilities;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.Timer;
-
+import java.awt.Container;
+import javax.swing.JTextField;
+        
 /**
  * Colección de animaciones custom y cualquier otro método relacionado al GUI
  * @author kevin
@@ -76,5 +80,25 @@ public class Animations {
     public static void hide(JComponent comp, int R, int G, int B){
         comp.setForeground(new Color(R, G, B, 0));
         comp.setBackground(new Color(255, 255, 255, 0));
+    }
+    
+    
+    /**
+     * Permite que el color de background de los JButton hijos del contenedor 
+     * argumentado abarque todo el botón
+     * @param ctn El contenedor cuyos botones serán estilizados
+     */
+    public static void initStyle(Container ctn) {
+        for (Component comp : ctn.getComponents()) {
+            if (comp instanceof Container) 
+                initStyle((Container) comp);
+            if (comp instanceof JButton){
+                ((JButton) comp).setContentAreaFilled(false);
+                ((JButton) comp).setOpaque(true);
+            } 
+            if (comp instanceof JTextField) {
+                
+            }
+        }
     }
 }

@@ -12,15 +12,17 @@ package com.sv.udb.models;
 public class Authority {
     int id;
     String name;
+    boolean state;
 
     public Authority() {
     }
 
-    public Authority(int id, String name) {
+    public Authority(int id, String name, boolean state) {
         this.id = id;
         this.name = name;
+        this.state = state;
     }
-
+    
     public int getId() {
         return id;
     }
@@ -36,6 +38,15 @@ public class Authority {
     public void setName(String name) {
         this.name = name;
     }
+
+    public boolean isState() {
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
+    }
+    
 
     @Override
     public String toString() {

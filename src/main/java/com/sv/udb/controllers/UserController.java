@@ -28,7 +28,7 @@ public class UserController {
     public User login (String email, String pass) {
         User resp = null;
         try {
-            String query = "SELECT u.id, u.name, u.lastname, u.email, u.pass, t.* "
+            String query = "SELECT u.id, u.name, u.lastname, u.email, u.pass, t.*, u.state "
                     + "FROM users u INNER JOIN user_types t ON u.user_type_id = t.id "
                     + "WHERE u.email = ? AND u.pass = ?";
             PreparedStatement cmd = this.conn.prepareStatement(query);
@@ -42,7 +42,8 @@ public class UserController {
                         rs.getString(3),
                         rs.getString(4),
                         rs.getString(5),
-                        new User_type(rs.getInt(6), rs.getString(7)));
+                        new User_type(rs.getInt(6), rs.getString(7)),
+                        rs.getBoolean(8));
             }
             
         } catch (SQLException ex) {

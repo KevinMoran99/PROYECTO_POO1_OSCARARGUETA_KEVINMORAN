@@ -19,11 +19,12 @@ public class Call {
     User user;
     String description;
     Date call_date;
+    boolean talk_given;
 
     public Call() {
     }
-
-    public Call(int id, School school, int viable, Complaint_type complaint_type, User user, String description, Date call_date) {
+    
+    public Call(int id, School school, int viable, Complaint_type complaint_type, User user, String description, Date call_date, boolean talk_given) {
         this.id = id;
         this.school = school;
         this.viable = viable;
@@ -31,7 +32,9 @@ public class Call {
         this.user = user;
         this.description = description;
         this.call_date = call_date;
+        this.talk_given = talk_given;
     }
+    
 
     public int getId() {
         return id;
@@ -89,6 +92,14 @@ public class Call {
         this.call_date = call_date;
     }
 
+    public boolean isTalk_given() {
+        return talk_given;
+    }
+
+    public void setTalk_given(boolean talk_given) {
+        this.talk_given = talk_given;
+    }
+    
     @Override
     public String toString() {
         return description;

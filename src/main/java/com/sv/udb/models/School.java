@@ -12,13 +12,17 @@ package com.sv.udb.models;
 public class School {
     int id;
     String name;
+    String address;
+    boolean state;
 
     public School() {
     }
 
-    public School(int id, String name) {
+    public School(int id, String name, String address, boolean state) {
         this.id = id;
         this.name = name;
+        this.address = address;
+        this.state = state;
     }
 
     public int getId() {
@@ -35,6 +39,22 @@ public class School {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public boolean isState() {
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
     }
 
     @Override

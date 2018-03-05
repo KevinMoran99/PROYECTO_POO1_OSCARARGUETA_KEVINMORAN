@@ -12,13 +12,17 @@ package com.sv.udb.models;
 public class Complaint_type {
     int id;
     String name;
+    String taken_action;
+    boolean state;
 
     public Complaint_type() {
     }
 
-    public Complaint_type(int id, String name) {
+    public Complaint_type(int id, String name, String taken_action, boolean state) {
         this.id = id;
         this.name = name;
+        this.taken_action = taken_action;
+        this.state = state;
     }
 
     public int getId() {
@@ -35,6 +39,22 @@ public class Complaint_type {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTaken_action() {
+        return taken_action;
+    }
+
+    public void setTaken_action(String taken_action) {
+        this.taken_action = taken_action;
+    }
+
+    public boolean isState() {
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
     }
 
     @Override

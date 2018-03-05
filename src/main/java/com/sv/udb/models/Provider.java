@@ -12,13 +12,15 @@ package com.sv.udb.models;
 public class Provider {
     int id;
     String name;
+    boolean state;
 
     public Provider() {
     }
 
-    public Provider(int id, String name) {
+    public Provider(int id, String name, boolean state) {
         this.id = id;
         this.name = name;
+        this.state = state;
     }
 
     public int getId() {
@@ -35,6 +37,14 @@ public class Provider {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isState() {
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
     }
 
     @Override
