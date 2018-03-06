@@ -13,6 +13,7 @@ import javax.swing.JComponent;
 import javax.swing.Timer;
 import java.awt.Container;
 import javax.swing.JTextField;
+import org.jdesktop.swingx.JXDatePicker;
         
 /**
  * Colección de animaciones custom y cualquier otro método relacionado al GUI
@@ -69,6 +70,8 @@ public class Animations {
         timer.start();
     }
     
+    
+    
     /**
      * Hace invisible a un componente (visualmente idéntico a setVisible(false),
      * funcionamiento distinto)
@@ -96,9 +99,47 @@ public class Animations {
                 ((JButton) comp).setContentAreaFilled(false);
                 ((JButton) comp).setOpaque(true);
             } 
-            if (comp instanceof JTextField) {
-                
+            if (comp instanceof JXDatePicker) {
+                ((JXDatePicker) comp).setFormats(new String[]{"dd/MM/yyyy"});
             }
         }
+    }
+    
+    
+    
+    /**
+     * Hace que el primer componente argumentado se muestre, y el segundo se oculte
+     * @param parent 
+     * @param visible
+     * @param invisible 
+     */
+    public static void toggleVisible(Component parent, JComponent visible, JComponent invisible) {
+        visible.setVisible(true);
+        invisible.setVisible(false);
+        parent.revalidate();
+    }
+    
+    /**
+     * Hace visibles a todos los componentes argumentados
+     * @param parent
+     * @param comps 
+     */
+    public static void visibilizeComponents (Component parent, JComponent... comps) {
+        for (JComponent comp : comps)
+            comp.setVisible(true);
+        
+        parent.revalidate();
+    }
+    
+    /**
+     * Hace invisibles a todos los componentes argumentados
+     * @param parent
+     * @param comps 
+     */
+    public static void invisibilizeComponents (Component parent, JComponent... comps) {
+        for (JComponent comp : comps)
+            comp.setVisible(false);
+        
+        parent.revalidate();
     }
 }
