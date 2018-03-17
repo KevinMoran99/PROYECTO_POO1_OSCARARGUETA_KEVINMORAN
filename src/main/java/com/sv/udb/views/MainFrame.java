@@ -1260,15 +1260,30 @@ public class MainFrame extends javax.swing.JFrame {
 
         txtAuthSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtAuthSearch.setForeground(new java.awt.Color(6, 43, 51));
+        txtAuthSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtAuthSearchKeyReleased(evt);
+            }
+        });
 
         cmbAuthSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        cmbAuthSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbAuthSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
+        cmbAuthSearch.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                cmbAuthSearchPropertyChange(evt);
+            }
+        });
 
         btnAuthSearchReset.setBackground(new java.awt.Color(121, 121, 101));
         btnAuthSearchReset.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnAuthSearchReset.setForeground(new java.awt.Color(255, 255, 255));
         btnAuthSearchReset.setText("Revertir");
         btnAuthSearchReset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAuthSearchReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAuthSearchResetActionPerformed(evt);
+            }
+        });
 
         tblAuth.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1328,6 +1343,11 @@ public class MainFrame extends javax.swing.JFrame {
         btnAuthAction.setText("Añadir");
         btnAuthAction.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAuthAction.setIconTextGap(6);
+        btnAuthAction.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAuthActionActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlAuthLayout = new javax.swing.GroupLayout(pnlAuth);
         pnlAuth.setLayout(pnlAuthLayout);
@@ -2693,6 +2713,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnAuthClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAuthClearActionPerformed
         // TODO add your handling code here:
+        clearAuthFields();
     }//GEN-LAST:event_btnAuthClearActionPerformed
 
     private void btnMenuAuthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuAuthActionPerformed
@@ -2896,7 +2917,41 @@ public class MainFrame extends javax.swing.JFrame {
     private void clearAuthFields(){
         txtAuthName.setText("");
         cmbAuthState.setSelectedIndex(0);
+        btnAuthAction.setText("Añadir");
         this.currentId = 0;
+        cmbAuthSearchType.setSelectedIndex(0);
+        Animations.hide(errAuthName, 255, 0, 0);
+    }
+    
+    private void triggerAuthSearch () {
+        try {
+            String param="";
+            int type = 0;
+            
+            switch(String.valueOf(cmbAuthSearchType.getSelectedItem())) {
+                case "Nombre":
+                    type = AuthorityController.BY_NAME;
+                    param = txtAuthSearch.getText().trim();
+                    break;
+                case "Estado":
+                    type = AuthorityController.BY_STATE;
+                    param = cmbAuthSearch.getSelectedItem().toString();
+                    break;
+                case "N/A":
+                    type = AuthorityController.NO_FIELD;
+                    break;
+            }
+            
+            DefaultTableModel model = (DefaultTableModel) tblAuth.getModel();
+            while (model.getRowCount() > 0) model.removeRow(0);
+
+            for (Authority object : new AuthorityController().search(type, param, false)){
+                
+                model.addRow(new Object[]{object,object.isState() ? "Activo":"Inactivo"});
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
                               
     private void pnlAuthFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pnlAuthFocusGained
@@ -2916,6 +2971,8 @@ public class MainFrame extends javax.swing.JFrame {
             Authority obje = (Authority) this.tblAuth.getValueAt(fila, 0);
             txtAuthName.setText(obje.getName());
             cmbAuthState.setSelectedIndex(obje.isState() ? 0 : 1);
+            this.currentId = obje.getId();
+            btnAuthAction.setText("Modificar");
         }
     }//GEN-LAST:event_tblAuthMouseClicked
 
@@ -2968,6 +3025,66 @@ public class MainFrame extends javax.swing.JFrame {
             new Animations().appear(errNewSchool, 255, 0, 0);
         }
     }//GEN-LAST:event_btnNewSaveActionPerformed
+
+    private void btnAuthActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAuthActionActionPerformed
+        // TODO add your handling code here:
+        if("Añadir".equals(btnAuthAction.getText())){
+            if(txtAuthName.getText().trim().isEmpty()){
+                errAuthName.setText("Campo vacio");
+                Animations.appear(errAuthName, 255, 0, 0);
+            }else{
+                Animations.hide(errAuthName, 255, 0, 0);
+                boolean state=true;
+                if(cmbAuthState.getSelectedIndex() == 1){
+                    state = false;
+                }
+                if(new AuthorityController().addAuthority(txtAuthName.getText(),state)){
+                    JOptionPane.showMessageDialog(this, "Agregado con exito");
+                    fillAuthTable();
+                    clearAuthFields();
+                }else{
+                    JOptionPane.showMessageDialog(this, "Error al agregar");
+                }
+            }
+        }
+        
+        if("Modificar".equals(btnAuthAction.getText())){
+            System.err.println("dos");
+            if(txtAuthName.getText().trim().isEmpty()){
+                errAuthName.setText("Campo vacio");
+                Animations.appear(errAuthName, 255, 0, 0);
+            }else{
+                Animations.hide(errAuthName, 255, 0, 0);
+                boolean state=true;
+                if(cmbAuthState.getSelectedIndex() == 1){
+                    state = false;
+                }
+                if(new AuthorityController().updateAuthority(currentId,txtAuthName.getText(),state)){
+                    JOptionPane.showMessageDialog(this, "Actualizado con exito");
+                    fillAuthTable();
+                    clearAuthFields();
+                }else{
+                    JOptionPane.showMessageDialog(this, "Error al actualizar");
+                }
+            }
+        }
+    }//GEN-LAST:event_btnAuthActionActionPerformed
+
+    private void txtAuthSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAuthSearchKeyReleased
+        // TODO add your handling code here:
+        triggerAuthSearch();
+    }//GEN-LAST:event_txtAuthSearchKeyReleased
+
+    private void cmbAuthSearchPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_cmbAuthSearchPropertyChange
+        // TODO add your handling code here:
+        triggerAuthSearch();
+    }//GEN-LAST:event_cmbAuthSearchPropertyChange
+
+    private void btnAuthSearchResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAuthSearchResetActionPerformed
+        // TODO add your handling code here:
+        clearAuthFields();
+        fillAuthTable();
+    }//GEN-LAST:event_btnAuthSearchResetActionPerformed
 
     /**
      * @param args the command line arguments

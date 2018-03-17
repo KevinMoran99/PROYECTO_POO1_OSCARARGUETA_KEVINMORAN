@@ -139,4 +139,57 @@ public class AuthorityController {
         }
         return resp;
     }
+    
+    public boolean addAuthority(String name, boolean state){
+        boolean resp = false;
+        
+        try {
+            PreparedStatement cmd = this.conn.prepareStatement("insert into authorities values(null,?,?)");
+            cmd.setString(1, name);
+            cmd.setBoolean(2, state);
+            cmd.executeUpdate();
+            resp = true;
+        } catch (Exception ex) {
+            System.err.println("Error al guardar autoridad" + ex.getMessage());
+        } finally {
+            try {
+                if (this.conn != null) {
+                    if (!this.conn.isClosed()) {
+                        this.conn.close();
+                    }
+                }
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar la conexion en autoridad: " + e.getMessage());
+            }
+        }
+        
+        return resp;
+    }
+    
+    public boolean updateAuthority(int id, String name, boolean state){
+        boolean resp = false;
+        
+        try {
+            PreparedStatement cmd = this.conn.prepareStatement("update authorities set name = ?, state=? where id = ?");
+            cmd.setString(1, name);
+            cmd.setBoolean(2, state);
+            cmd.setInt(3, id);
+            cmd.executeUpdate();
+            resp = true;
+        } catch (Exception ex) {
+            System.err.println("Error al modificar autoridad" + ex.getMessage());
+        } finally {
+            try {
+                if (this.conn != null) {
+                    if (!this.conn.isClosed()) {
+                        this.conn.close();
+                    }
+                }
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar la conexion en autoridad: " + e.getMessage());
+            }
+        }
+        
+        return resp;
+    }
 }
