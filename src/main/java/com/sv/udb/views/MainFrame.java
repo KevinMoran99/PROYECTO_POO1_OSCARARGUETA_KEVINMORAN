@@ -3003,6 +3003,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void tblAuthMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAuthMouseClicked
         // TODO add your handling code here:
+        Animations.hide(errAuthName, 255, 0, 0);
         int fila = this.tblAuth.getSelectedRow();
         if (fila >= 0) {
             Authority obje = (Authority) this.tblAuth.getValueAt(fila, 0);
@@ -3191,6 +3192,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void tblProvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProvMouseClicked
         // TODO add your handling code here:
         // TODO add your handling code here:
+        Animations.hide(errProvName, 255, 0, 0);
         int fila = this.tblProv.getSelectedRow();
         if (fila >= 0) {
             Provider obje = (Provider) this.tblProv.getValueAt(fila, 0);
@@ -3216,9 +3218,9 @@ public class MainFrame extends javax.swing.JFrame {
         if("Añadir".equals(btnProvAction.getText())){
             if(txtProvName.getText().trim().isEmpty()){
                 errProvName.setText("Campo vacio");
-                Animations.appear(errProvName, 255, 0, 0);
+                new Animations().appear(errProvName, 255, 0, 0);
             }else{
-                Animations.hide(errProvName, 255, 0, 0);
+                new Animations().hide(errProvName, 255, 0, 0);
                 boolean state=true;
                 if(cmbProvState.getSelectedIndex() == 1){
                     state = false;
@@ -3237,7 +3239,7 @@ public class MainFrame extends javax.swing.JFrame {
             System.err.println("dos");
             if(txtProvName.getText().trim().isEmpty()){
                 errProvName.setText("Campo vacio");
-                Animations.appear(errProvName, 255, 0, 0);
+                new Animations().appear(errProvName, 255, 0, 0);
             }else{
                 Animations.hide(errProvName, 255, 0, 0);
                 boolean state=true;
