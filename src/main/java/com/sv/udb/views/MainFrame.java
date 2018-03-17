@@ -40,8 +40,6 @@ public class MainFrame extends javax.swing.JFrame {
     JButton[] adminBtns, userBtns; //Botones del menu de admin, y de personal, respectivamente
     //Variables que alojaran los objetos padres de las nuevas denuncias y de las denuncias seleccionadas
     School callSchool;
-    Authority callAuth;
-    Provider callProv;
     
     /**
      * Creates new form AdminFrame
@@ -52,11 +50,6 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         
         lblUser.setText(Utils.wrapText(user.toString(), 12));
-        
-        Animations.invisibilizeComponents(this, cmbUserSearch, txtUserSearch, cmbTypeSearch, txtTypeSearch,
-                cmbSchoolSearch, txtSchoolSearch, cmbAuthSearch, txtAuthSearch, cmbProvSearch, 
-                txtProvSearch, cmbCallsSearch, txtCallsSearch, lblList, scrLstNew, btnNewListSearch, 
-                btnNewListDel, lblDetailArchived);
         
         //Estilizando componentes
         Animations.initStyle(this.getContentPane());
@@ -107,6 +100,11 @@ public class MainFrame extends javax.swing.JFrame {
             Animations.hide(err, 255, 0, 0);
         
         
+        //Ocultando componentes
+        Animations.invisibilizeComponents(this, cmbUserSearch, txtUserSearch, cmbTypeSearch, txtTypeSearch,
+                cmbSchoolSearch, txtSchoolSearch, cmbAuthSearch, txtAuthSearch, cmbProvSearch, 
+                txtProvSearch, cmbCallsSearch, txtCallsSearch, lblList, scrLstNew, btnNewListSearch, 
+                btnNewListDel, lblDetailArchived);
     }
 
 
@@ -1772,7 +1770,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         lblList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lblList.setText("Autoridades/Proveedores a notificar:");
+        lblList.setText("Autoridades a notificar:");
 
         lstNew.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lstNew.setForeground(new java.awt.Color(6, 43, 51));
@@ -1796,8 +1794,9 @@ public class MainFrame extends javax.swing.JFrame {
         btnNewListDel.setBackground(new java.awt.Color(121, 121, 101));
         btnNewListDel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnNewListDel.setForeground(new java.awt.Color(255, 255, 255));
-        btnNewListDel.setText("Eliminar autoridad/proveedor");
+        btnNewListDel.setText("Desvincular autoridad");
         btnNewListDel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnNewListDel.setEnabled(false);
 
         javax.swing.GroupLayout pnlNewLayout = new javax.swing.GroupLayout(pnlNew);
         pnlNew.setLayout(pnlNewLayout);
@@ -2524,6 +2523,46 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     
+     /*----------------------------- ------------------------------------------
+       -------------------------------▲---------------------------------------
+       ---------------- ------------ ▲‌ ▲--------------------------------------
+       --------------------------CODIGO DE NUEVA DENUNCIA ---------------------*/
+    
+    /**
+     * Muestra u oculta la lista de autoridades/proveedores en función de el tipo de denuncia seleccionado,
+     * y de si la denuncia está marcada como viable o no. Si se detecta un cambio de "Acción a tomar" (atributo
+     * del tipo de denuncia), se limpia la lista
+     */
+    private void showNewList () {
+        try {
+            if (((Complaint_type)cmbNewType.getSelectedItem()).getTaken_action().equals("Remitir con autoridad competente") && lblList.getText().equals("Proveedores a notificar:")) {
+                
+                lblList.setText("Autoridades a notificar:");
+                btnNewListDel.setText("Desvincular autoridad");
+                lstNew.removeAll();
+                
+            }
+            else if (((Complaint_type)cmbNewType.getSelectedItem()).getTaken_action().equals("Tomar contacto con ISP y colegio") && lblList.getText().equals("Autoridades a notificar:")){
+                lblList.setText("Proveedores a notificar:");
+                btnNewListDel.setText("Desvincular proveedor");
+                lstNew.removeAll();
+            }
+
+            if (chbNewViable.isSelected()) {
+                Animations.visibilizeComponents(this, lblList, scrLstNew, btnNewListSearch);
+            }
+            else {
+                Animations.invisibilizeComponents(this, lblList, scrLstNew, btnNewListSearch, btnNewListDel);
+                Animations.hide(errNewList, 255, 0, 0);
+            }
+            
+        } catch (Exception e) {
+            //Es normal que devuelva nullpointerexception la primera vez que se ejecuta
+            System.err.println(e);
+        }
+    }
+    
+    
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         Login form = new Login();
         form.setVisible(true);
@@ -2664,31 +2703,39 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnNewListSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewListSearchActionPerformed
         try {
-            //Se debe elegir uno de estos dos dependiendo del tipo de denuncia elegido
-            
-            /*SearchProvider dialog = new SearchProvider();
-            int result = JOptionPane.showConfirmDialog(this, dialog, "Seleccionar proveedor", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
-            if (result == JOptionPane.OK_OPTION) {
-                callProv = dialog.getValue();
-                ((DefaultListModel) lstNew.getModel()).addElement(callProv);
-            }*/
-            
-            /******************************************************************/
-            SearchAuthority dialog = new SearchAuthority();
-            int result = JOptionPane.showConfirmDialog(this, dialog, "Seleccionar autoridad", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
-            if (result == JOptionPane.OK_OPTION) {
-                callAuth = dialog.getValue();
-                ((DefaultListModel) lstNew.getModel()).addElement(callAuth);
+            if (((Complaint_type)cmbNewType.getSelectedItem()).getTaken_action().equals("Remitir con autoridad competente")) {SearchAuthority dialog = new SearchAuthority();
+                int result = JOptionPane.showConfirmDialog(this, dialog, "Seleccionar autoridad", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+                if (result == JOptionPane.OK_OPTION) {
+                    Authority callAuth = dialog.getValue();
+                    
+                    boolean isRepeated = false;
+                    DefaultListModel model = new DefaultListModel();
+                    for (int i = 0; i < lstNew.getModel().getSize(); i++) {
+                        /*if ( lstNew.getModel().add == callAuth) {
+                            
+                        }*/
+                        model.addElement(lstNew.getModel().getElementAt(i));
+                    }
+                    model.addElement(callAuth);
+                    lstNew.setModel(model);
+                }
+            }
+            else {
+                SearchProvider dialog = new SearchProvider();
+                int result = JOptionPane.showConfirmDialog(this, dialog, "Seleccionar proveedor", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+                if (result == JOptionPane.OK_OPTION) {
+                    Provider callProv = dialog.getValue();
+                    ((DefaultListModel) lstNew.getModel()).addElement(callProv);
+                }
             }
             
         } catch (Exception e) {
+            System.err.println(e);
         }
     }//GEN-LAST:event_btnNewListSearchActionPerformed
 
     private void cmbNewTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbNewTypeActionPerformed
-        //VISIBILIZAR COMPONENTES DE PROVEEDOR/AUTORIDAD AL ELEGIR UN TIPO DE 
-        //DENUNCIA, ELIGIENDO ENTRE USAR LAS COSAS DE PROVEEDOR O AUTORIDAD
-        Animations.visibilizeComponents(this, lblList, scrLstNew, btnNewListSearch, btnNewListDel);
+        showNewList();
     }//GEN-LAST:event_cmbNewTypeActionPerformed
 
     private void btnDetailBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailBackActionPerformed
@@ -2696,7 +2743,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDetailBackActionPerformed
 
     private void chbNewViableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chbNewViableActionPerformed
-        // TODO add your handling code here:
+        showNewList();
     }//GEN-LAST:event_chbNewViableActionPerformed
 
     private void btnNewSchoolSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewSchoolSearchActionPerformed
