@@ -5,6 +5,7 @@
  */
 package com.sv.udb.views;
 
+import com.sv.udb.controllers.AuthorityController;
 import com.sv.udb.controllers.ComplaintTypeController;
 import com.sv.udb.views.dialogs.SearchSchool;
 import com.sv.udb.models.Authority;
@@ -29,6 +30,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -42,7 +44,7 @@ public class MainFrame extends javax.swing.JFrame {
     School callSchool;
     Authority callAuth;
     Provider callProv;
-    
+    int currentId=0;
     /**
      * Creates new form AdminFrame
      * @param user
@@ -1230,6 +1232,19 @@ public class MainFrame extends javax.swing.JFrame {
         pnlMain.add(pnlSchool, "crdSchool");
 
         pnlAuth.setBackground(new java.awt.Color(255, 255, 255));
+        pnlAuth.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                pnlAuthFocusGained(evt);
+            }
+        });
+        pnlAuth.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
+                pnlAuthComponentHidden(evt);
+            }
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                pnlAuthComponentShown(evt);
+            }
+        });
 
         jLabel19.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel19.setText("Autoridades");
@@ -1265,6 +1280,11 @@ public class MainFrame extends javax.swing.JFrame {
                 "Nombre", "Estado"
             }
         ));
+        tblAuth.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblAuthMouseClicked(evt);
+            }
+        });
         jScrollPane5.setViewportView(tblAuth);
 
         jLabel21.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -2737,6 +2757,53 @@ public class MainFrame extends javax.swing.JFrame {
         txtProfilePass.setEnabled(true);
         txtProfileConfirm.setEnabled(true);
     }//GEN-LAST:event_btnEditPassActionPerformed
+
+    /*----------------------------- ------------------------------------------
+     -------------------------------▲-----------------------------------------
+     ---------------- ------------ ▲‌ ▲---------------------------------------
+    --------------------------CODIGO DE AUTH ---------------------------------*/
+    
+    //llenar tabla
+    private void fillAuthTable(){
+        
+        DefaultTableModel df = (DefaultTableModel) tblAuth.getModel();
+        while (df.getRowCount() > 0){ df.removeRow(0);};
+        
+        for(Authority obj : new AuthorityController().getAll(false)){
+            df.addRow(new Object[]{obj,obj.isState() ? "Activo":"Inactivo"});
+        }
+    }
+    
+    private void clearAuthFields(){
+        txtAuthName.setText("");
+        cmbAuthState.setSelectedIndex(0);
+        this.currentId = 0;
+    }
+                              
+    private void pnlAuthFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pnlAuthFocusGained
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_pnlAuthFocusGained
+
+    private void pnlAuthComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlAuthComponentShown
+        // TODO add your handling code here:
+        fillAuthTable();
+    }//GEN-LAST:event_pnlAuthComponentShown
+
+    private void tblAuthMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAuthMouseClicked
+        // TODO add your handling code here:
+        int fila = this.tblAuth.getSelectedRow();
+        if (fila >= 0) {
+            Authority obje = (Authority) this.tblAuth.getValueAt(fila, 0);
+            txtAuthName.setText(obje.getName());
+            cmbAuthState.setSelectedIndex(obje.isState() ? 0 : 1);
+        }
+    }//GEN-LAST:event_tblAuthMouseClicked
+
+    private void pnlAuthComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlAuthComponentHidden
+        // TODO add your handling code here:
+        clearAuthFields();
+    }//GEN-LAST:event_pnlAuthComponentHidden
 
     /**
      * @param args the command line arguments

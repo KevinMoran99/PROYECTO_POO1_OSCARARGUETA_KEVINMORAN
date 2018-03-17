@@ -114,4 +114,29 @@ public class AuthorityController {
         }
         return resp;
     }
+    
+    public Authority searchOne(int id){
+        Authority resp = null;
+        try {
+            PreparedStatement cmd = this.conn.prepareStatement("SELECT * FROM authorities where id = ?");
+            cmd.setInt(1, id);
+            ResultSet rs = cmd.executeQuery();
+            while (rs.next()) {
+                resp = new Authority(rs.getInt(1), rs.getString(2), Boolean.parseBoolean(rs.getString(3)));
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error al consultar: " + ex.getMessage());
+        } finally {
+            try {
+                if (this.conn != null) {
+                    if (!this.conn.isClosed()) {
+                        this.conn.close();
+                    }
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error al cerrar la conexión");
+            }
+        }
+        return resp;
+    }
 }
