@@ -114,4 +114,57 @@ public class ProviderController {
         }
         return resp;
     }
+    
+    public boolean addProvider(String name, boolean state){
+        boolean resp = false;
+        
+        try {
+            PreparedStatement cmd = this.conn.prepareStatement("insert into providers values(null,?,?)");
+            cmd.setString(1, name);
+            cmd.setBoolean(2, state);
+            cmd.executeUpdate();
+            resp = true;
+        } catch (Exception ex) {
+            System.err.println("Error al guardar proveedor" + ex.getMessage());
+        } finally {
+            try {
+                if (this.conn != null) {
+                    if (!this.conn.isClosed()) {
+                        this.conn.close();
+                    }
+                }
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar la conexion en proveedor: " + e.getMessage());
+            }
+        }
+        
+        return resp;
+    }
+    
+    public boolean updateProvider(int id, String name, boolean state){
+        boolean resp = false;
+        
+        try {
+            PreparedStatement cmd = this.conn.prepareStatement("update providers set name = ?, state=? where id = ?");
+            cmd.setString(1, name);
+            cmd.setBoolean(2, state);
+            cmd.setInt(3, id);
+            cmd.executeUpdate();
+            resp = true;
+        } catch (Exception ex) {
+            System.err.println("Error al modificar proveedor" + ex.getMessage());
+        } finally {
+            try {
+                if (this.conn != null) {
+                    if (!this.conn.isClosed()) {
+                        this.conn.close();
+                    }
+                }
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar la conexion en proveedor: " + e.getMessage());
+            }
+        }
+        
+        return resp;
+    }
 }
