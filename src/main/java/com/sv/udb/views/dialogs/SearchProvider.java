@@ -5,8 +5,10 @@
  */
 package com.sv.udb.views.dialogs;
 
+import com.sv.udb.controllers.ProviderController;
 import com.sv.udb.models.Provider;
 import com.sv.udb.utilities.Animations;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -25,6 +27,12 @@ public class SearchProvider extends javax.swing.JPanel {
     public SearchProvider() {
         initComponents();
         Animations.initStyle(this);
+        
+        DefaultTableModel model = (DefaultTableModel) tblProv.getModel();
+        while (model.getRowCount() > 0) model.removeRow(0);
+        
+        for (Provider object : new ProviderController().getAll(true))
+            model.addRow(new Object[]{object});
     }
     
     /**
@@ -71,6 +79,11 @@ public class SearchProvider extends javax.swing.JPanel {
 
         txtProvSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtProvSearch.setForeground(new java.awt.Color(6, 43, 51));
+        txtProvSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtProvSearchKeyReleased(evt);
+            }
+        });
 
         btnProvSearchReset.setBackground(new java.awt.Color(121, 121, 101));
         btnProvSearchReset.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -90,13 +103,24 @@ public class SearchProvider extends javax.swing.JPanel {
             new String [] {
                 "Nombre"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tblProv.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblProvMouseClicked(evt);
             }
         });
         jScrollPane6.setViewportView(tblProv);
+        if (tblProv.getColumnModel().getColumnCount() > 0) {
+            tblProv.getColumnModel().getColumn(0).setResizable(false);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -137,20 +161,51 @@ public class SearchProvider extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void triggerSearch () {
+        try {
+            String param = txtProvSearch.getText().trim();
+            int type = 0;
+            
+            switch(String.valueOf(cmbProvSearchType.getSelectedItem())) {
+                case "Nombre":
+                    type = ProviderController.BY_NAME;
+                    break;
+                case "N/A":
+                    type = ProviderController.NO_FIELD;
+                    break;
+            }
+            
+            DefaultTableModel model = (DefaultTableModel) tblProv.getModel();
+            while (model.getRowCount() > 0) model.removeRow(0);
+
+            for (Provider object : new ProviderController().search(type, param, true))
+                model.addRow(new Object[]{object});
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
     private void cmbProvSearchTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbProvSearchTypeActionPerformed
         if (cmbProvSearchType.getSelectedIndex() == 1)
             txtProvSearch.setVisible(false);
         else 
             txtProvSearch.setVisible(true);
+        this.revalidate();
+        triggerSearch();    
     }//GEN-LAST:event_cmbProvSearchTypeActionPerformed
 
     private void btnProvSearchResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProvSearchResetActionPerformed
-        // TODO add your handling code here:
+        cmbProvSearchType.setSelectedIndex(1);
+        txtProvSearch.setText("");
     }//GEN-LAST:event_btnProvSearchResetActionPerformed
 
     private void tblProvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProvMouseClicked
         prov = (Provider) tblProv.getValueAt(tblProv.getSelectedRow(), 0);
     }//GEN-LAST:event_tblProvMouseClicked
+
+    private void txtProvSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProvSearchKeyReleased
+        triggerSearch();
+    }//GEN-LAST:event_txtProvSearchKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

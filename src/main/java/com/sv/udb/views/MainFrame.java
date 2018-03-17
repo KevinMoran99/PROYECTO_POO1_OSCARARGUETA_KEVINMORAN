@@ -5,8 +5,10 @@
  */
 package com.sv.udb.views;
 
+import com.sv.udb.controllers.ComplaintTypeController;
 import com.sv.udb.views.dialogs.SearchSchool;
 import com.sv.udb.models.Authority;
+import com.sv.udb.models.Complaint_type;
 import com.sv.udb.models.Provider;
 import com.sv.udb.models.School;
 import com.sv.udb.models.User;
@@ -79,10 +81,14 @@ public class MainFrame extends javax.swing.JFrame {
         }
         
         //Vista inicial
-        if (user.getUser_type().getId() == 1)
+        if (user.getUser_type().getId() == 1) {
             showCard("crdUser");
-        else
+            refreshAdmin();
+        }
+        else {
             showCard("crdCalls");
+            refreshUser();
+        }
         
         
         //Todos los label de error
@@ -1722,6 +1728,7 @@ public class MainFrame extends javax.swing.JFrame {
         lblNewSchool.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lblNewSchool.setForeground(new java.awt.Color(6, 43, 51));
         lblNewSchool.setText("Ninguna");
+        lblNewSchool.setPreferredSize(new java.awt.Dimension(302, 17));
 
         jLabel35.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel35.setText("Descripción:");
@@ -1804,7 +1811,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGroup(pnlNewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlNewLayout.createSequentialGroup()
                                 .addComponent(btnNewClear)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 331, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnNewSave, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane8, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlNewLayout.createSequentialGroup()
@@ -1835,8 +1842,8 @@ public class MainFrame extends javax.swing.JFrame {
                     .addGroup(pnlNewLayout.createSequentialGroup()
                         .addComponent(jLabel34)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblNewSchool)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblNewSchool, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(btnNewSchoolSearch)
                         .addContainerGap())
                     .addGroup(pnlNewLayout.createSequentialGroup()
@@ -1858,7 +1865,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(pnlNewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel34)
-                    .addComponent(lblNewSchool)
+                    .addComponent(lblNewSchool, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnNewSchoolSearch))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(errNewSchool)
@@ -2498,7 +2505,23 @@ public class MainFrame extends javax.swing.JFrame {
         item.setBackground(new Color(0,74,101));
     }
     
+    /**
+     * Refrezca la información de los controles de modo admin
+     */
+    private void refreshAdmin () {
+        
+    }
     
+    /**
+     * Refrezca la información de los controles de modo personal
+     */
+    private void refreshUser () {
+        DefaultComboBoxModel model = (DefaultComboBoxModel) cmbNewType.getModel();
+        model.removeAllElements();
+        
+        for (Complaint_type type : new ComplaintTypeController().getAll(true))
+            model.addElement(type);
+    }
     
     
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
@@ -2624,10 +2647,10 @@ public class MainFrame extends javax.swing.JFrame {
             case 5:
                 Animations.invisibilizeComponents(this, txtCallsSearch, cmbCallsSearch);
                 break;
-            case 1:
             case 3:
                 Animations.toggleVisible(this, txtCallsSearch, cmbCallsSearch);
                 break;
+            case 1:
             case 2:
             case 4:
                 Animations.toggleVisible(this, cmbCallsSearch, txtCallsSearch);
@@ -2643,20 +2666,20 @@ public class MainFrame extends javax.swing.JFrame {
         try {
             //Se debe elegir uno de estos dos dependiendo del tipo de denuncia elegido
             
-            SearchProvider dialog = new SearchProvider();
+            /*SearchProvider dialog = new SearchProvider();
             int result = JOptionPane.showConfirmDialog(this, dialog, "Seleccionar proveedor", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
             if (result == JOptionPane.OK_OPTION) {
                 callProv = dialog.getValue();
                 ((DefaultListModel) lstNew.getModel()).addElement(callProv);
-            }
+            }*/
             
             /******************************************************************/
-            /*SearchAuthority dialog = new SearchAuthority();
+            SearchAuthority dialog = new SearchAuthority();
             int result = JOptionPane.showConfirmDialog(this, dialog, "Seleccionar autoridad", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
             if (result == JOptionPane.OK_OPTION) {
                 callAuth = dialog.getValue();
                 ((DefaultListModel) lstNew.getModel()).addElement(callAuth);
-            }*/
+            }
             
         } catch (Exception e) {
         }
@@ -2762,10 +2785,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnDetailReport;
     private javax.swing.JButton btnDetailSave;
     private javax.swing.JButton btnEditEmail;
-    private javax.swing.JButton btnEditEmail1;
-    private javax.swing.JButton btnEditEmail2;
     private javax.swing.JButton btnEditName;
-    private javax.swing.JButton btnEditName1;
     private javax.swing.JButton btnEditPass;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnMenuAuth;
@@ -2894,10 +2914,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel50;
     private javax.swing.JLabel jLabel51;
-    private javax.swing.JLabel jLabel52;
-    private javax.swing.JLabel jLabel53;
-    private javax.swing.JLabel jLabel54;
-    private javax.swing.JLabel jLabel55;
     private javax.swing.JLabel jLabel56;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -2905,10 +2921,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -2965,12 +2978,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextField txtCallsSearch;
     private javax.swing.JTextField txtProfileConfirm;
     private javax.swing.JTextField txtProfileEmail;
-    private javax.swing.JTextField txtProfileEmail1;
-    private javax.swing.JTextField txtProfileEmail2;
     private javax.swing.JTextField txtProfileLastName;
-    private javax.swing.JTextField txtProfileLastName1;
     private javax.swing.JTextField txtProfileName;
-    private javax.swing.JTextField txtProfileName1;
     private javax.swing.JTextField txtProfilePass;
     private javax.swing.JTextField txtProvName;
     private javax.swing.JTextField txtProvSearch;

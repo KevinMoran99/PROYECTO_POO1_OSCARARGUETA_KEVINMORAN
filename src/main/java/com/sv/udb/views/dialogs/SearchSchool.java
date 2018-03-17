@@ -5,9 +5,11 @@
  */
 package com.sv.udb.views.dialogs;
 
+import com.sv.udb.controllers.SchoolController;
 import com.sv.udb.models.School;
 import com.sv.udb.utilities.Animations;
 import javax.swing.JDialog;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -27,6 +29,11 @@ public class SearchSchool extends javax.swing.JPanel {
         initComponents();
         Animations.initStyle(this);
         
+        DefaultTableModel model = (DefaultTableModel) tblSchool.getModel();
+        while (model.getRowCount() > 0) model.removeRow(0);
+        
+        for (School object : new SchoolController().getAll(true))
+            model.addRow(new Object[]{object, object.getAddress()});
     }
     
     /**
@@ -71,12 +78,22 @@ public class SearchSchool extends javax.swing.JPanel {
 
         txtSchoolSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtSchoolSearch.setForeground(new java.awt.Color(6, 43, 51));
+        txtSchoolSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSchoolSearchKeyReleased(evt);
+            }
+        });
 
         btnSchoolSearchReset.setBackground(new java.awt.Color(121, 121, 101));
         btnSchoolSearchReset.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnSchoolSearchReset.setForeground(new java.awt.Color(255, 255, 255));
         btnSchoolSearchReset.setText("Revertir");
         btnSchoolSearchReset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSchoolSearchReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSchoolSearchResetActionPerformed(evt);
+            }
+        });
 
         tblSchool.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -87,7 +104,7 @@ public class SearchSchool extends javax.swing.JPanel {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, false
+                false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -136,6 +153,33 @@ public class SearchSchool extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void triggerSearch () {
+        try {
+            String param = txtSchoolSearch.getText().trim();
+            int type = 0;
+            
+            switch(String.valueOf(cmbSchoolSearchType.getSelectedItem())) {
+                case "Nombre":
+                    type = SchoolController.BY_NAME;
+                    break;
+                case "Dirección":
+                    type = SchoolController.BY_ADDRESS;
+                    break;
+                case "N/A":
+                    type = SchoolController.NO_FIELD;
+                    break;
+            }
+            
+            DefaultTableModel model = (DefaultTableModel) tblSchool.getModel();
+            while (model.getRowCount() > 0) model.removeRow(0);
+
+            for (School object : new SchoolController().search(type, param, true))
+                model.addRow(new Object[]{object, object.getAddress()});
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
     //Obteniendo escuela seleccionada
     private void tblSchoolMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSchoolMouseClicked
         school = (School) tblSchool.getValueAt(tblSchool.getSelectedRow(), 0);
@@ -147,7 +191,17 @@ public class SearchSchool extends javax.swing.JPanel {
         else 
             txtSchoolSearch.setVisible(true);
         this.revalidate();
+        triggerSearch();
     }//GEN-LAST:event_cmbSchoolSearchTypeActionPerformed
+
+    private void txtSchoolSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSchoolSearchKeyReleased
+        triggerSearch();
+    }//GEN-LAST:event_txtSchoolSearchKeyReleased
+
+    private void btnSchoolSearchResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSchoolSearchResetActionPerformed
+        cmbSchoolSearchType.setSelectedIndex(2);
+        txtSchoolSearch.setText("");
+    }//GEN-LAST:event_btnSchoolSearchResetActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

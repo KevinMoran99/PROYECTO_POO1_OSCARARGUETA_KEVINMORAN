@@ -5,8 +5,10 @@
  */
 package com.sv.udb.views.dialogs;
 
+import com.sv.udb.controllers.AuthorityController;
 import com.sv.udb.models.Authority;
 import com.sv.udb.utilities.Animations;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -25,6 +27,12 @@ public class SearchAuthority extends javax.swing.JPanel {
     public SearchAuthority() {
         initComponents();
         Animations.initStyle(this);
+        
+        DefaultTableModel model = (DefaultTableModel) tblAuth.getModel();
+        while (model.getRowCount() > 0) model.removeRow(0);
+        
+        for (Authority object : new AuthorityController().getAll(true))
+            model.addRow(new Object[]{object});
     }
     
     /**
@@ -69,12 +77,22 @@ public class SearchAuthority extends javax.swing.JPanel {
 
         txtAuthSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtAuthSearch.setForeground(new java.awt.Color(6, 43, 51));
+        txtAuthSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtAuthSearchKeyReleased(evt);
+            }
+        });
 
         btnAuthSearchReset.setBackground(new java.awt.Color(121, 121, 101));
         btnAuthSearchReset.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnAuthSearchReset.setForeground(new java.awt.Color(255, 255, 255));
         btnAuthSearchReset.setText("Revertir");
         btnAuthSearchReset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAuthSearchReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAuthSearchResetActionPerformed(evt);
+            }
+        });
 
         tblAuth.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -83,13 +101,24 @@ public class SearchAuthority extends javax.swing.JPanel {
             new String [] {
                 "Nombre"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tblAuth.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblAuthMouseClicked(evt);
             }
         });
         jScrollPane5.setViewportView(tblAuth);
+        if (tblAuth.getColumnModel().getColumnCount() > 0) {
+            tblAuth.getColumnModel().getColumn(0).setResizable(false);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -126,16 +155,51 @@ public class SearchAuthority extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void triggerSearch () {
+        try {
+            String param = txtAuthSearch.getText().trim();
+            int type = 0;
+            
+            switch(String.valueOf(cmbAuthSearchType.getSelectedItem())) {
+                case "Nombre":
+                    type = AuthorityController.BY_NAME;
+                    break;
+                case "N/A":
+                    type = AuthorityController.NO_FIELD;
+                    break;
+            }
+            
+            DefaultTableModel model = (DefaultTableModel) tblAuth.getModel();
+            while (model.getRowCount() > 0) model.removeRow(0);
+
+            for (Authority object : new AuthorityController().search(type, param, true))
+                model.addRow(new Object[]{object});
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
     private void cmbAuthSearchTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbAuthSearchTypeActionPerformed
         if (cmbAuthSearchType.getSelectedIndex() == 1)
             txtAuthSearch.setVisible(false);
         else 
             txtAuthSearch.setVisible(true);
+        this.revalidate();
+        triggerSearch();   
     }//GEN-LAST:event_cmbAuthSearchTypeActionPerformed
 
     private void tblAuthMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAuthMouseClicked
         auth = (Authority) tblAuth.getValueAt(tblAuth.getSelectedRow(), 0);
     }//GEN-LAST:event_tblAuthMouseClicked
+
+    private void txtAuthSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAuthSearchKeyReleased
+        triggerSearch();
+    }//GEN-LAST:event_txtAuthSearchKeyReleased
+
+    private void btnAuthSearchResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAuthSearchResetActionPerformed
+        cmbAuthSearchType.setSelectedIndex(1);
+        txtAuthSearch.setText("");
+    }//GEN-LAST:event_btnAuthSearchResetActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
