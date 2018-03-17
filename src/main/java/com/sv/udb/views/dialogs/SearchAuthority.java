@@ -110,6 +110,7 @@ public class SearchAuthority extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblAuth.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblAuth.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblAuthMouseClicked(evt);

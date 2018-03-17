@@ -111,6 +111,7 @@ public class SearchSchool extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblSchool.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblSchool.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblSchoolMouseClicked(evt);

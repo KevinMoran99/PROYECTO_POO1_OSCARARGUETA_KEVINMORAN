@@ -108,8 +108,11 @@ public class Login extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         try {
-            String email = txtEmail.getText().trim(); /*"user@gmail.com";*/
-            String pass = txtPass.getText().trim();/* "123";*/
+            String email = txtEmail.getText().trim(); 
+            String pass = txtPass.getText().trim();
+            
+            email = "user@gmail.com";
+            pass = "123";
             
             if(!(email.equals("") || pass.equals(""))) {
                 User user = new UserController().login(email, pass);
@@ -122,17 +125,17 @@ public class Login extends javax.swing.JFrame {
                     }
                     else {
                         lblError.setText("El usuario especificado no tiene acceso al sistema");
-                        Animations.appear(lblError, 255, 0, 0);
+                        new Animations().appear(lblError, 255, 0, 0);
                     }
                 }
                 else {
                     lblError.setText("El correo o contraseña proporcionados son incorrectos");
-                    Animations.appear(lblError, 255, 0, 0);
+                    new Animations().appear(lblError, 255, 0, 0);
                 }
             }
             else {
                 lblError.setText("Por favor, rellene todos los campos");
-                Animations.appear(lblError, 255, 0, 0);
+                new Animations().appear(lblError, 255, 0, 0);
             }
         } catch (Exception e) {
         }

@@ -269,7 +269,7 @@ public class MainFrame extends javax.swing.JFrame {
         lblNewSchool = new javax.swing.JLabel();
         jLabel35 = new javax.swing.JLabel();
         jScrollPane8 = new javax.swing.JScrollPane();
-        txtSchoolAddress1 = new javax.swing.JTextArea();
+        txtNewDesc = new javax.swing.JTextArea();
         errNewDescription = new javax.swing.JLabel();
         jLabel33 = new javax.swing.JLabel();
         cmbNewType = new javax.swing.JComboBox<>();
@@ -1732,6 +1732,11 @@ public class MainFrame extends javax.swing.JFrame {
         btnNewSave.setText("Añadir");
         btnNewSave.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnNewSave.setIconTextGap(6);
+        btnNewSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewSaveActionPerformed(evt);
+            }
+        });
 
         btnNewSchoolSearch.setBackground(new java.awt.Color(204, 204, 204));
         btnNewSchoolSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -1751,11 +1756,11 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel35.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel35.setText("Descripción:");
 
-        txtSchoolAddress1.setColumns(20);
-        txtSchoolAddress1.setForeground(new java.awt.Color(6, 43, 51));
-        txtSchoolAddress1.setLineWrap(true);
-        txtSchoolAddress1.setRows(2);
-        jScrollPane8.setViewportView(txtSchoolAddress1);
+        txtNewDesc.setColumns(20);
+        txtNewDesc.setForeground(new java.awt.Color(6, 43, 51));
+        txtNewDesc.setLineWrap(true);
+        txtNewDesc.setRows(2);
+        jScrollPane8.setViewportView(txtNewDesc);
 
         errNewDescription.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         errNewDescription.setForeground(new java.awt.Color(255, 0, 0));
@@ -1794,6 +1799,12 @@ public class MainFrame extends javax.swing.JFrame {
 
         lstNew.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lstNew.setForeground(new java.awt.Color(6, 43, 51));
+        lstNew.setModel(new DefaultListModel());
+        lstNew.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstNewValueChanged(evt);
+            }
+        });
         scrLstNew.setViewportView(lstNew);
 
         errNewList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -1816,7 +1827,11 @@ public class MainFrame extends javax.swing.JFrame {
         btnNewListDel.setForeground(new java.awt.Color(255, 255, 255));
         btnNewListDel.setText("Desvincular autoridad");
         btnNewListDel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnNewListDel.setEnabled(false);
+        btnNewListDel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewListDelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlNewLayout = new javax.swing.GroupLayout(pnlNew);
         pnlNew.setLayout(pnlNewLayout);
@@ -1907,7 +1922,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(lblList)
                     .addComponent(btnNewListSearch))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrLstNew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scrLstNew, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlNewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnNewListDel)
@@ -2538,6 +2553,8 @@ public class MainFrame extends javax.swing.JFrame {
         DefaultComboBoxModel model = (DefaultComboBoxModel) cmbNewType.getModel();
         model.removeAllElements();
         
+        model.addElement("Ninguno");
+        
         for (Complaint_type type : new ComplaintTypeController().getAll(true))
             model.addElement(type);
     }
@@ -2559,13 +2576,13 @@ public class MainFrame extends javax.swing.JFrame {
                 
                 lblList.setText("Autoridades a notificar:");
                 btnNewListDel.setText("Desvincular autoridad");
-                lstNew.removeAll();
+                ((DefaultListModel) lstNew.getModel()).removeAllElements();
                 
             }
             else if (((Complaint_type)cmbNewType.getSelectedItem()).getTaken_action().equals("Tomar contacto con ISP y colegio") && lblList.getText().equals("Autoridades a notificar:")){
                 lblList.setText("Proveedores a notificar:");
                 btnNewListDel.setText("Desvincular proveedor");
-                lstNew.removeAll();
+                ((DefaultListModel) lstNew.getModel()).removeAllElements();
             }
 
             if (chbNewViable.isSelected()) {
@@ -2577,9 +2594,30 @@ public class MainFrame extends javax.swing.JFrame {
             }
             
         } catch (Exception e) {
-            //Es normal que devuelva nullpointerexception la primera vez que se ejecuta
-            System.err.println(e);
+            Animations.invisibilizeComponents(this, lblList, scrLstNew, btnNewListSearch, btnNewListDel);
+            Animations.hide(errNewList, 255, 0, 0);
         }
+    }
+    
+    /**
+     * Devuelve los campos de pnlNew a sus valores por defecto
+     */
+    private void clearPnlNew () {
+        callSchool = null;
+        lblNewSchool.setText("Ninguna");
+        txtNewDesc.setText("");
+        cmbNewType.setSelectedIndex(0);
+        chbNewViable.setSelected(true);
+        ((DefaultListModel)lstNew.getModel()).removeAllElements();
+        Animations.invisibilizeComponents(this, lblList, btnNewListSearch, lstNew, btnNewListDel);
+        
+        JLabel[] errorList = {
+            errNewSchool, errNewDescription, errNewType, errNewList,
+        };
+        
+        //Ocultando los label de error
+        for(JLabel err : errorList)
+            Animations.hide(err, 255, 0, 0);
     }
     
     
@@ -2718,39 +2756,73 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_cmbCallsSearchTypeActionPerformed
 
     private void btnNewClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewClearActionPerformed
-        // TODO add your handling code here:
+        clearPnlNew();
     }//GEN-LAST:event_btnNewClearActionPerformed
 
     private void btnNewListSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewListSearchActionPerformed
         try {
-            if (((Complaint_type)cmbNewType.getSelectedItem()).getTaken_action().equals("Remitir con autoridad competente")) {SearchAuthority dialog = new SearchAuthority();
+            if (((Complaint_type)cmbNewType.getSelectedItem()).getTaken_action().equals("Remitir con autoridad competente")) {
+                //Añadir autoridad
+                SearchAuthority dialog = new SearchAuthority();
                 int result = JOptionPane.showConfirmDialog(this, dialog, "Seleccionar autoridad", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
                     Authority callAuth = dialog.getValue();
                     
-                    boolean isRepeated = false;
-                    DefaultListModel model = new DefaultListModel();
-                    for (int i = 0; i < lstNew.getModel().getSize(); i++) {
-                        /*if ( lstNew.getModel().add == callAuth) {
-                            
-                        }*/
-                        model.addElement(lstNew.getModel().getElementAt(i));
+                    //Validando si no se seleccionó autoridad
+                    if (callAuth != null) {
+                        //Validando datos repetidos
+                        boolean isRepeated = false;
+                        for (int i = 0; i < ( lstNew.getModel()).getSize(); i++) {
+                            if ((((DefaultListModel) lstNew.getModel()).getElementAt(i)).toString().equals(callAuth.toString())) {
+                                isRepeated = true;
+                                break;
+                            }
+                        }
+                        if (isRepeated) {
+                            JOptionPane.showMessageDialog(this, "Esa autoridad ya fue seleccionada", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                        }
+                        else {
+                            //La autoridad es añadida
+                            ((DefaultListModel) lstNew.getModel()).addElement(callAuth);
+                        }
                     }
-                    model.addElement(callAuth);
-                    lstNew.setModel(model);
+                    else {
+                        JOptionPane.showMessageDialog(this, "No seleccionó ninguna autoridad", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    }
                 }
             }
             else {
+                //Añadir proveedor
                 SearchProvider dialog = new SearchProvider();
                 int result = JOptionPane.showConfirmDialog(this, dialog, "Seleccionar proveedor", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
                     Provider callProv = dialog.getValue();
-                    ((DefaultListModel) lstNew.getModel()).addElement(callProv);
+                    
+                    //Validando si no se seleccionó proveedor
+                    if (callProv != null) {
+                        //Validando datos repetidos
+                        boolean isRepeated = false;
+                        for (int i = 0; i < ( lstNew.getModel()).getSize(); i++) {
+                            if ((((DefaultListModel) lstNew.getModel()).getElementAt(i)).toString().equals(callProv.toString())) {
+                                isRepeated = true;
+                                break;
+                            }
+                        }
+                        if (isRepeated) {
+                            JOptionPane.showMessageDialog(this, "Ese proveedor ya fue seleccionado", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                        }
+                        else {
+                            ((DefaultListModel) lstNew.getModel()).addElement(callProv);
+                        }
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(this, "No seleccionó ningún proveedor", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    }
                 }
             }
             
         } catch (Exception e) {
-            System.err.println(e);
+            System.out.println(e);
         }
     }//GEN-LAST:event_btnNewListSearchActionPerformed
 
@@ -2851,6 +2923,51 @@ public class MainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         clearAuthFields();
     }//GEN-LAST:event_pnlAuthComponentHidden
+
+    private void lstNewValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstNewValueChanged
+        //Mostrando boton de desvicular autoridad/proveedor
+        try {
+            if(lstNew.getSelectedIndex() > -1) {
+                btnNewListDel.setVisible(true);
+            }
+            else {
+                btnNewListDel.setVisible(false);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+    }//GEN-LAST:event_lstNewValueChanged
+
+    private void btnNewListDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewListDelActionPerformed
+        //Desvinculando autoridad/proveedor
+        try {
+            if (lstNew.getSelectedIndex() > -1) {
+                ((DefaultListModel)lstNew.getModel()).remove(lstNew.getSelectedIndex());
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "No se pudo desvincular el objeto seleccionado");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_btnNewListDelActionPerformed
+
+    private void btnNewSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewSaveActionPerformed
+        //Guardar denuncia
+        
+        //Ocultando los label de error
+        JLabel[] errorList = {
+            errNewSchool, errNewDescription, errNewType, errNewList,
+        };
+        for(JLabel err : errorList)
+            new Animations().hide(err, 255, 0, 0);
+        
+        //Validaciones
+        if (callSchool == null) {
+            new Animations().appear(errNewSchool, 255, 0, 0);
+        }
+    }//GEN-LAST:event_btnNewSaveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -3090,6 +3207,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextField txtAuthName;
     private javax.swing.JTextField txtAuthSearch;
     private javax.swing.JTextField txtCallsSearch;
+    private javax.swing.JTextArea txtNewDesc;
     private javax.swing.JTextField txtProfileConfirm;
     private javax.swing.JTextField txtProfileEmail;
     private javax.swing.JTextField txtProfileLastName;
@@ -3098,7 +3216,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextField txtProvName;
     private javax.swing.JTextField txtProvSearch;
     private javax.swing.JTextArea txtSchoolAddress;
-    private javax.swing.JTextArea txtSchoolAddress1;
     private javax.swing.JTextField txtSchoolName;
     private javax.swing.JTextField txtSchoolSearch;
     private javax.swing.JTextField txtTypeName;

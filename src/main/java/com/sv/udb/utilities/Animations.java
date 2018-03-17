@@ -21,8 +21,8 @@ import org.jdesktop.swingx.JXDatePicker;
  */
 public class Animations {
     
-    private static int alpha;
-    private static Timer timer;
+    private int alpha;
+    private Timer timer;
 
     public Animations() {
     }
@@ -35,7 +35,7 @@ public class Animations {
      * @param G Valor G del RGB del foreground del componente
      * @param B Valor B del RGB del foreground del componente 
      */
-    public static void appear(JComponent comp, int R, int G, int B){
+    public void appear(JComponent comp, int R, int G, int B){
         alpha = 0;
         
         timer = new Timer(10, (ActionEvent ae) -> {
@@ -56,15 +56,15 @@ public class Animations {
      * @param G Valor G del RGB del foreground del componente
      * @param B Valor B del RGB del foreground del componente 
      */
-    public static void fade(JComponent comp, int R, int G, int B){
+    public void fade(JComponent comp, int R, int G, int B){
         alpha = 255;
-        
         timer = new Timer(10, (ActionEvent ae) -> {
             alpha = alpha - 15;
             comp.setForeground(new Color(R, G, B, alpha));
             comp.setBackground(new Color(255, 255, 255, alpha));
-            if (alpha == 0) 
+            if (alpha == 0) {
                 timer.stop();
+            }
             
         });
         timer.start();

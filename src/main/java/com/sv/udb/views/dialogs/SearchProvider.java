@@ -112,6 +112,7 @@ public class SearchProvider extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblProv.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblProv.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblProvMouseClicked(evt);
