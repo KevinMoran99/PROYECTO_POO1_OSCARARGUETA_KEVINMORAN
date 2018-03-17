@@ -3031,7 +3031,7 @@ public class MainFrame extends javax.swing.JFrame {
         if("Añadir".equals(btnAuthAction.getText())){
             if(txtAuthName.getText().trim().isEmpty()){
                 errAuthName.setText("Campo vacio");
-                Animations.appear(errAuthName, 255, 0, 0);
+                new Animations().appear(errAuthName, 255, 0, 0);
             }else{
                 Animations.hide(errAuthName, 255, 0, 0);
                 boolean state=true;
@@ -3052,7 +3052,7 @@ public class MainFrame extends javax.swing.JFrame {
             System.err.println("dos");
             if(txtAuthName.getText().trim().isEmpty()){
                 errAuthName.setText("Campo vacio");
-                Animations.appear(errAuthName, 255, 0, 0);
+                new Animations().appear(errAuthName, 255, 0, 0);
             }else{
                 Animations.hide(errAuthName, 255, 0, 0);
                 boolean state=true;
