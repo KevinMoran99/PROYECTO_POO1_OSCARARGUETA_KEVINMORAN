@@ -14,7 +14,7 @@ import java.util.Date;
 public class Call {
     int id;
     School school;
-    int viable;
+    boolean viable;
     Complaint_type complaint_type;
     User user;
     String description;
@@ -24,7 +24,7 @@ public class Call {
     public Call() {
     }
     
-    public Call(int id, School school, int viable, Complaint_type complaint_type, User user, String description, Date call_date, boolean talk_given) {
+    public Call(int id, School school, boolean viable, Complaint_type complaint_type, User user, String description, Date call_date, boolean talk_given) {
         this.id = id;
         this.school = school;
         this.viable = viable;
@@ -52,11 +52,11 @@ public class Call {
         this.school = school;
     }
 
-    public int getViable() {
+    public boolean getViable() {
         return viable;
     }
 
-    public void setViable(int viable) {
+    public void setViable(boolean viable) {
         this.viable = viable;
     }
 

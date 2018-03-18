@@ -52,4 +52,29 @@ public class ComplaintTypeController {
         return resp;
     }
     
+    public Complaint_type getOne(int id){
+        Complaint_type resp = null;
+        try {
+            PreparedStatement cmd = this.conn.prepareStatement("SELECT * FROM complaint_types where id = ?");
+            cmd.setInt(1, id);
+            ResultSet rs = cmd.executeQuery();
+            while (rs.next()) {
+                resp = new Complaint_type(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(4));
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error al consultar: " + ex.getMessage());
+        } finally {
+            try {
+                if (this.conn != null) {
+                    if (!this.conn.isClosed()) {
+                        this.conn.close();
+                    }
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error al cerrar la conexión");
+            }
+        }
+        return resp;
+    }
+    
 }

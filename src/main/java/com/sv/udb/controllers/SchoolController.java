@@ -63,6 +63,31 @@ public class SchoolController {
         return resp;
     }
     
+    public School getOne(int id){
+        School resp = null;
+        try {
+            PreparedStatement cmd = this.conn.prepareStatement("SELECT * FROM schools where id = ?");
+            cmd.setInt(1, id);
+            ResultSet rs = cmd.executeQuery();
+            while (rs.next()) {
+                resp = new School(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(4));
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error al consultar: " + ex.getMessage());
+        } finally {
+            try {
+                if (this.conn != null) {
+                    if (!this.conn.isClosed()) {
+                        this.conn.close();
+                    }
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error al cerrar la conexión");
+            }
+        }
+        return resp;
+    }
+    
     /**
      * Devuelve todas las escuelas bajo parámetros de búsqueda
      * @param type int indicando el campo por el que se filtrará

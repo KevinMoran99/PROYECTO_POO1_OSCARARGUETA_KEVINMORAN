@@ -115,7 +115,7 @@ public class AuthorityController {
         return resp;
     }
     
-    public Authority searchOne(int id){
+    public Authority getOne(int id){
         Authority resp = null;
         try {
             PreparedStatement cmd = this.conn.prepareStatement("SELECT * FROM authorities where id = ?");

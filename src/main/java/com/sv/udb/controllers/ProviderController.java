@@ -62,6 +62,30 @@ public class ProviderController {
         return resp;
     }
     
+    public Provider getOne(int id){
+        Provider resp = null;
+        try {
+            PreparedStatement cmd = this.conn.prepareStatement("SELECT * FROM providers where id = ?");
+            cmd.setInt(1, id);
+            ResultSet rs = cmd.executeQuery();
+            while (rs.next()) {
+                resp = new Provider(rs.getInt(1), rs.getString(2), Boolean.parseBoolean(rs.getString(3)));
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error al consultar: " + ex.getMessage());
+        } finally {
+            try {
+                if (this.conn != null) {
+                    if (!this.conn.isClosed()) {
+                        this.conn.close();
+                    }
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error al cerrar la conexión");
+            }
+        }
+        return resp;
+    }
     
     /**
      * Devuelve todas los proveedores bajo parámetros de búsqueda

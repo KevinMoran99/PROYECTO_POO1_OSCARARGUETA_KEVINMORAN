@@ -5,10 +5,14 @@
  */
 package com.sv.udb.views;
 
+import com.sv.udb.controllers.AuthAsignController;
 import com.sv.udb.controllers.AuthorityController;
+import com.sv.udb.controllers.CallController;
 import com.sv.udb.controllers.ComplaintTypeController;
+import com.sv.udb.controllers.ProvAsignController;
 import com.sv.udb.views.dialogs.SearchSchool;
 import com.sv.udb.models.Authority;
+import com.sv.udb.models.Call;
 import com.sv.udb.models.Complaint_type;
 import com.sv.udb.models.Provider;
 import com.sv.udb.models.School;
@@ -1729,7 +1733,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         errNewSchool.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         errNewSchool.setForeground(new java.awt.Color(255, 0, 0));
-        errNewSchool.setText("Error:");
+        errNewSchool.setText("Seleccione la escuela desde la que se está denunciando");
         errNewSchool.setName(""); // NOI18N
 
         btnNewClear.setBackground(new java.awt.Color(121, 121, 101));
@@ -1784,7 +1788,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         errNewDescription.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         errNewDescription.setForeground(new java.awt.Color(255, 0, 0));
-        errNewDescription.setText("Error:");
+        errNewDescription.setText("Proporcione una descripción de la denuncia");
         errNewDescription.setName(""); // NOI18N
 
         jLabel33.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -1801,7 +1805,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         errNewType.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         errNewType.setForeground(new java.awt.Color(255, 0, 0));
-        errNewType.setText("Error:");
+        errNewType.setText("Elija un tipo de denuncia");
         errNewType.setName(""); // NOI18N
 
         chbNewViable.setBackground(new java.awt.Color(255, 255, 255));
@@ -1829,7 +1833,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         errNewList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         errNewList.setForeground(new java.awt.Color(255, 0, 0));
-        errNewList.setText("Error:");
+        errNewList.setText("Seleccione al menos una autoridad a notificar");
         errNewList.setName(""); // NOI18N
 
         btnNewListSearch.setBackground(new java.awt.Color(204, 204, 204));
@@ -2596,12 +2600,14 @@ public class MainFrame extends javax.swing.JFrame {
                 
                 lblList.setText("Autoridades a notificar:");
                 btnNewListDel.setText("Desvincular autoridad");
+                errNewList.setText("Seleccione al menos una autoridad a notificar");
                 ((DefaultListModel) lstNew.getModel()).removeAllElements();
                 
             }
             else if (((Complaint_type)cmbNewType.getSelectedItem()).getTaken_action().equals("Tomar contacto con ISP y colegio") && lblList.getText().equals("Autoridades a notificar:")){
                 lblList.setText("Proveedores a notificar:");
                 btnNewListDel.setText("Desvincular proveedor");
+                errNewList.setText("Seleccione al menos un proveedor a notificar");
                 ((DefaultListModel) lstNew.getModel()).removeAllElements();
             }
 
@@ -3012,18 +3018,77 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnNewSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewSaveActionPerformed
         //Guardar denuncia
-        
-        //Ocultando los label de error
-        JLabel[] errorList = {
-            errNewSchool, errNewDescription, errNewType, errNewList,
-        };
-        for(JLabel err : errorList)
-            new Animations().hide(err, 255, 0, 0);
-        
-        //Validaciones
-        if (callSchool == null) {
-            new Animations().appear(errNewSchool, 255, 0, 0);
+        try {
+            //Indica si se pasan todas las validaciones
+            boolean isValid = true;
+
+            //Ocultando los label de error
+            JLabel[] errorList = {
+                errNewSchool, errNewDescription, errNewType, errNewList,
+            };
+            for(JLabel err : errorList)
+                Animations.hide(err, 255, 0, 0);
+
+            //Validaciones
+            if (callSchool == null) {
+                new Animations().appear(errNewSchool, 255, 0, 0);
+                isValid = false;
+            }
+            if (txtNewDesc.getText().trim().equals("")) {
+                new Animations().appear(errNewDescription, 255, 0, 0);
+                isValid = false;
+            }
+            if (cmbNewType.getSelectedIndex() == 0) {
+                new Animations().appear(errNewType, 255, 0, 0);
+                isValid = false;
+            }
+            if (lstNew.getModel().getSize() < 1 && chbNewViable.isSelected() && cmbNewType.getSelectedIndex() != 0) {
+                new Animations().appear(errNewList, 255, 0, 0);
+                isValid = false;
+            }
+            
+            //Si pasa todas las validaciones, guarda
+            if (isValid) {
+                if (new CallController().addCall(
+                        callSchool, 
+                        chbNewViable.isSelected(), 
+                        (Complaint_type) cmbNewType.getSelectedItem(), 
+                        user, 
+                        txtNewDesc.getText().trim()
+                )) {
+                    if (chbNewViable.isSelected()) {
+                        Call call = new CallController().getLast();
+                        
+                        for (int i = 0; i < ( lstNew.getModel()).getSize(); i++) {
+                            if (((Complaint_type)cmbNewType.getSelectedItem()).getTaken_action().equals("Remitir con autoridad competente")) {
+                                if (!(new AuthAsignController().addAuthAsign(call, (Authority)(((DefaultListModel) lstNew.getModel()).getElementAt(i))))) {
+                                    JOptionPane.showMessageDialog(this, "Error al guardar autoridad relacionada a denuncia", "Operación denegada", JOptionPane.WARNING_MESSAGE);
+                                }
+                            }
+                            else {
+                                if (!(new ProvAsignController().addAuthAsign(call, (Provider)(((DefaultListModel) lstNew.getModel()).getElementAt(i))))) {
+                                    JOptionPane.showMessageDialog(this, "Error al guardar proveedor relacionado a denuncia", "Operación denegada", JOptionPane.WARNING_MESSAGE);
+                                }
+                            }
+                        }
+                        
+                        
+                    }
+                    
+                    
+                    
+                    JOptionPane.showMessageDialog(this, "Denuncia guardada", "Operación exitosa", JOptionPane.INFORMATION_MESSAGE);
+                    clearPnlNew();
+                }
+                else {
+                    JOptionPane.showMessageDialog(this, "La denuncia no pudo ser guardada", "Operación denegada", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+            
+        } catch (Exception e) {
+            System.out.println(e);
         }
+        
     }//GEN-LAST:event_btnNewSaveActionPerformed
 
     private void btnAuthActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAuthActionActionPerformed
