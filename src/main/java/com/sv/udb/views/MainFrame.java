@@ -20,6 +20,7 @@ import com.sv.udb.models.Complaint_type;
 import com.sv.udb.models.Provider;
 import com.sv.udb.models.School;
 import com.sv.udb.models.User;
+import com.sv.udb.models.User_type;
 import com.sv.udb.utilities.Animations;
 import com.sv.udb.utilities.Utils;
 import com.sv.udb.views.dialogs.SearchAuthority;
@@ -165,7 +166,7 @@ public class MainFrame extends javax.swing.JFrame {
         txtUserEmail = new javax.swing.JTextField();
         errUserEmail = new javax.swing.JLabel();
         errUserPass = new javax.swing.JLabel();
-        txtUserPass = new javax.swing.JTextField();
+        txtUserPass = new javax.swing.JPasswordField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -608,6 +609,11 @@ public class MainFrame extends javax.swing.JFrame {
         btnUserSearchReset.setForeground(new java.awt.Color(255, 255, 255));
         btnUserSearchReset.setText("Revertir");
         btnUserSearchReset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnUserSearchReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUserSearchResetActionPerformed(evt);
+            }
+        });
 
         tblUser.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -650,6 +656,11 @@ public class MainFrame extends javax.swing.JFrame {
 
         txtUserEmail.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtUserEmail.setForeground(new java.awt.Color(6, 43, 51));
+        txtUserEmail.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtUserEmailKeyReleased(evt);
+            }
+        });
 
         errUserEmail.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         errUserEmail.setForeground(new java.awt.Color(255, 0, 0));
@@ -685,7 +696,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         cmbUserType.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         cmbUserType.setForeground(new java.awt.Color(6, 43, 51));
-        cmbUserType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbUserType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Personal" }));
 
         cmbUserState.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         cmbUserState.setForeground(new java.awt.Color(6, 43, 51));
@@ -711,6 +722,11 @@ public class MainFrame extends javax.swing.JFrame {
         btnUserAction.setText("Añadir");
         btnUserAction.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnUserAction.setIconTextGap(6);
+        btnUserAction.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUserActionActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlUserLayout = new javax.swing.GroupLayout(pnlUser);
         pnlUser.setLayout(pnlUserLayout);
@@ -2779,7 +2795,8 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_cmbUserSearchTypeActionPerformed
 
     private void btnUserClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserClearActionPerformed
-        
+        clearUserFields();
+        fillUserTable();
     }//GEN-LAST:event_btnUserClearActionPerformed
 
     private void cmbTypeSearchTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTypeSearchTypeActionPerformed
@@ -3752,21 +3769,114 @@ public class MainFrame extends javax.swing.JFrame {
             df.addRow(new Object[]{obj,obj.getLastname(),obj.getEmail(),obj.getUser_type().getName(),obj.isState() ? "Activo":"Inactivo"});
         }
     }
-    /*
-    private void clearTypeFields(){
-        txtTypeName.setText("");
-        cmbTypeAction.setSelectedIndex(0);
-        cmbTypeState.setSelectedIndex(0);
-        btnTypeAction.setText("Añadir");
+    
+    private void clearUserFields(){
+        txtUserName.setText("");
+        txtUserLastame.setText("");
+        txtUserEmail.setText("");
+        txtUserPass.setText("");
+        cmbUserState.setSelectedIndex(0);
+        cmbUserType.setSelectedIndex(0);
+        btnUserAction.setText("Añadir");
         this.currentId = 0;
-        cmbTypeSearchType.setSelectedIndex(0);
-        Animations.hide(errTypeName, 255, 0, 0);
+        cmbUserSearchType.setSelectedIndex(0);
+        Animations.hide(errUserName, 255, 0, 0);
+        Animations.hide(errUserLastname, 255, 0, 0);
+        Animations.hide(errUserEmail, 255, 0, 0);
+        Animations.hide(errUserPass, 255, 0, 0);
         //Animations.hide(errSchoolAddress, 255, 0, 0);
-    }*/
+    }
     private void pnlUserComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlUserComponentShown
         // TODO add your handling code here:
         fillUserTable();
     }//GEN-LAST:event_pnlUserComponentShown
+
+    private void btnUserSearchResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserSearchResetActionPerformed
+        // TODO add your handling code here:
+        clearUserFields();
+        fillUserTable();
+    }//GEN-LAST:event_btnUserSearchResetActionPerformed
+
+    private void btnUserActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserActionActionPerformed
+        // TODO add your handling code here:
+        // TODO add your handling code here:
+        if("Añadir".equals(btnUserAction.getText())){
+            boolean flag = true;
+            if(txtUserName.getText().trim().isEmpty()){
+                errUserName.setText("Campo vacio");
+                new Animations().appear(errUserName, 255, 0, 0);
+                flag=false;
+            }else{
+                Animations.hide(errUserName, 255, 0, 0);
+            }
+            if(txtUserLastame.getText().trim().isEmpty()){
+                errUserLastname.setText("Campo vacio");
+                new Animations().appear(errUserLastname, 255, 0, 0);
+                flag=false;
+            }else{
+                Animations.hide(errUserLastname, 255, 0, 0);
+            }
+            if(!new Utils().validate(txtUserEmail.getText())){
+                errUserEmail.setText("Formato de correo no valido");
+                new Animations().appear(errUserEmail, 255, 0, 0);
+                flag=false;
+            }else{
+                Animations.hide(errUserEmail, 255, 0, 0);
+            }
+            if(txtUserPass.getText().trim().length()<6){
+                errUserPass.setText("Clave demasiado corta");
+                new Animations().appear(errUserPass, 255, 0, 0);
+                flag=false;
+            }else{
+                Animations.hide(errUserPass, 255, 0, 0);
+            }
+            
+            if(flag){
+                boolean state=true;
+                int index = 1;
+                if(cmbUserType.getSelectedIndex()!=0){
+                    index=2;
+                }
+                if(cmbUserState.getSelectedIndex()==1){
+                    state = false;
+                }
+                if(new UserController().addUser(txtUserName.getText(),txtUserLastame.getText(),txtUserEmail.getText(),txtUserPass.getText(),index,state)){
+                    JOptionPane.showMessageDialog(this, "Agregado con exito");
+                    fillUserTable();
+                    clearUserFields();
+                }else{
+                    JOptionPane.showMessageDialog(this, "Error al agregar");
+                }
+            }
+            
+        }
+        
+        if("Modificar".equals(btnTypeAction.getText())){
+            System.err.println("dos");
+            if(txtTypeName.getText().trim().isEmpty()){
+                errTypeName.setText("Campo vacio");
+                new Animations().appear(errTypeName, 255, 0, 0);
+            }else{
+                Animations.hide(errTypeName, 255, 0, 0);
+                boolean state=true;
+                if(cmbTypeState.getSelectedIndex() == 1){
+                    state = false;
+                }
+                if(new ComplaintTypeController().updateComplaintType(currentId,txtTypeName.getText(),String.valueOf(cmbTypeAction.getSelectedItem()),state)){
+                    JOptionPane.showMessageDialog(this, "Modificado con exito");
+                    fillTypeTable();
+                    clearTypeFields();
+                }else{
+                    JOptionPane.showMessageDialog(this, "Error al modificar");
+                }
+            }
+        }
+    }//GEN-LAST:event_btnUserActionActionPerformed
+
+    private void txtUserEmailKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUserEmailKeyReleased
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_txtUserEmailKeyReleased
 
     /**
      * @param args the command line arguments

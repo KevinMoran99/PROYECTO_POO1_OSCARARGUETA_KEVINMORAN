@@ -13,7 +13,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import org.jasypt.util.text.BasicTextEncryptor;
 
 /**
  *
@@ -113,6 +115,39 @@ public class UserController {
                 System.err.println("Error al cerrar la conexión al consultar usuario: " + ex.getMessage());
             }
         }
+        return resp;
+    }
+    
+    public boolean addUser(String name, String lastname, String email, String pass, int user_type, boolean state){
+        boolean resp = false;
+        BasicTextEncryptor bte = new BasicTextEncryptor();
+        bte.setPassword("poo1");
+        
+        String encrypt = bte.encrypt(pass);
+        try {
+            PreparedStatement cmd = this.conn.prepareStatement("insert into users values(null,?,?,?,?,?,?)");
+            cmd.setString(1, name);
+            cmd.setString(2, lastname);
+            cmd.setString(3, email);
+            cmd.setString(4, encrypt);
+            cmd.setInt(5, user_type);
+            cmd.setBoolean(6, state);
+            cmd.executeUpdate();
+            resp = true;
+        } catch (Exception ex) {
+            System.err.println("Error al guardar usuario" + ex.getMessage());
+        } finally {
+            try {
+                if (this.conn != null) {
+                    if (!this.conn.isClosed()) {
+                        this.conn.close();
+                    }
+                }
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar la conexion en usuario: " + e.getMessage());
+            }
+        }
+        
         return resp;
     }
 }
