@@ -12,6 +12,7 @@ import com.sv.udb.controllers.ComplaintTypeController;
 import com.sv.udb.controllers.ProvAsignController;
 import com.sv.udb.controllers.ProviderController;
 import com.sv.udb.controllers.SchoolController;
+import com.sv.udb.controllers.UserController;
 import com.sv.udb.views.dialogs.SearchSchool;
 import com.sv.udb.models.Authority;
 import com.sv.udb.models.Call;
@@ -57,7 +58,7 @@ public class MainFrame extends javax.swing.JFrame {
         this.user = user;
         initComponents();
         
-        lblUser.setText(Utils.wrapText(user.toString(), 12));
+        lblUser.setText(user.getName()+" "+user.getLastname());
         
         //Estilizando componentes
         Animations.initStyle(this.getContentPane());
@@ -113,6 +114,10 @@ public class MainFrame extends javax.swing.JFrame {
                 cmbSchoolSearch, txtSchoolSearch, cmbAuthSearch, txtAuthSearch, cmbProvSearch, 
                 txtProvSearch, cmbCallsSearch, txtCallsSearch, lblList, scrLstNew, btnNewListSearch, 
                 btnNewListDel, lblDetailArchived);
+        
+        
+        //llenando tabla de usuarios
+        fillUserTable();
     }
 
 
@@ -572,6 +577,11 @@ public class MainFrame extends javax.swing.JFrame {
         pnlMain.setLayout(new java.awt.CardLayout());
 
         pnlUser.setBackground(new java.awt.Color(255, 255, 255));
+        pnlUser.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                pnlUserComponentShown(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Usuarios");
@@ -604,15 +614,13 @@ public class MainFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Usuario", "Email", "Tipo", "Estado"
+                "Nombre", "Apellido", "Email", "Tipo", "Estado"
             }
         ));
         jScrollPane1.setViewportView(tblUser);
         if (tblUser.getColumnModel().getColumnCount() > 0) {
-            tblUser.getColumnModel().getColumn(1).setResizable(false);
-            tblUser.getColumnModel().getColumn(2).setHeaderValue("Tipo");
-            tblUser.getColumnModel().getColumn(3).setResizable(false);
-            tblUser.getColumnModel().getColumn(3).setHeaderValue("Estado");
+            tblUser.getColumnModel().getColumn(2).setResizable(false);
+            tblUser.getColumnModel().getColumn(4).setResizable(false);
         }
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -3728,6 +3736,37 @@ public class MainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         triggerTypeSearch();
     }//GEN-LAST:event_cmbTypeSearchPropertyChange
+
+    /*----------------------------- ------------------------------------------
+     -------------------------------▲-----------------------------------------
+     ---------------- ------------ ▲‌ ▲---------------------------------------
+    -------------------CODIGO DE USUARIOS ---------------------------------*/
+    //llenar tabla
+    private void fillUserTable(){
+        
+        DefaultTableModel df = (DefaultTableModel) tblUser.getModel();
+        while (df.getRowCount() > 0){ df.removeRow(0);};
+        
+        for(User obj : new UserController().getAll(false)){
+            System.err.println(obj.isState());
+            df.addRow(new Object[]{obj,obj.getLastname(),obj.getEmail(),obj.getUser_type().getName(),obj.isState() ? "Activo":"Inactivo"});
+        }
+    }
+    /*
+    private void clearTypeFields(){
+        txtTypeName.setText("");
+        cmbTypeAction.setSelectedIndex(0);
+        cmbTypeState.setSelectedIndex(0);
+        btnTypeAction.setText("Añadir");
+        this.currentId = 0;
+        cmbTypeSearchType.setSelectedIndex(0);
+        Animations.hide(errTypeName, 255, 0, 0);
+        //Animations.hide(errSchoolAddress, 255, 0, 0);
+    }*/
+    private void pnlUserComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlUserComponentShown
+        // TODO add your handling code here:
+        fillUserTable();
+    }//GEN-LAST:event_pnlUserComponentShown
 
     /**
      * @param args the command line arguments
