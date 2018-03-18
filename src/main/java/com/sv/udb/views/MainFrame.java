@@ -50,20 +50,22 @@ public class MainFrame extends javax.swing.JFrame {
     JButton[] adminBtns, userBtns; //Botones del menu de admin, y de personal, respectivamente
     //Variables que alojaran los objetos padres de las nuevas denuncias y de las denuncias seleccionadas
     School callSchool;
-    int currentId=0;
+    int currentId = 0;
+
     /**
      * Creates new form AdminFrame
+     *
      * @param user
      */
     public MainFrame(User user) {
         this.user = user;
         initComponents();
-        
-        lblUser.setText(user.getName()+" "+user.getLastname());
-        
+
+        lblUser.setText(user.getName() + " " + user.getLastname());
+
         //Estilizando componentes
         Animations.initStyle(this.getContentPane());
-        
+
         //Botones del menu
         adminBtns = new JButton[5];
         adminBtns[0] = btnMenuUser;
@@ -71,29 +73,27 @@ public class MainFrame extends javax.swing.JFrame {
         adminBtns[2] = btnMenuSchool;
         adminBtns[3] = btnMenuAuth;
         adminBtns[4] = btnMenuProv;
-        
+
         userBtns = new JButton[4];
         userBtns[0] = btnMenuNew;
         userBtns[1] = btnMenuCalls;
         userBtns[2] = btnMenuReports;
         userBtns[3] = btnMenuProfile;
-        
+
         //Invisibilizando botones según usuario logeado
         for (JButton btn : user.getUser_type().getId() == 1 ? userBtns : adminBtns) {
             btn.setVisible(false);
         }
-        
+
         //Vista inicial
         if (user.getUser_type().getId() == 1) {
             showCard("crdUser");
             refreshAdmin();
-        }
-        else {
+        } else {
             showCard("crdCalls");
             refreshUser();
         }
-        
-        
+
         //Todos los label de error
         JLabel[] errorList = {
             errUserName, errUserLastname, errUserEmail, errUserPass, errUserType, errUserState,
@@ -104,23 +104,21 @@ public class MainFrame extends javax.swing.JFrame {
             errNewSchool, errNewDescription, errNewType, errNewList,
             errProfileName, errProfileEmail, errProfilePass
         };
-        
+
         //Ocultando los label de error
-        for(JLabel err : errorList)
+        for (JLabel err : errorList) {
             Animations.hide(err, 255, 0, 0);
-        
-        
+        }
+
         //Ocultando componentes
         Animations.invisibilizeComponents(this, cmbUserSearch, txtUserSearch, cmbTypeSearch, txtTypeSearch,
-                cmbSchoolSearch, txtSchoolSearch, cmbAuthSearch, txtAuthSearch, cmbProvSearch, 
-                txtProvSearch, cmbCallsSearch, txtCallsSearch, lblList, scrLstNew, btnNewListSearch, 
+                cmbSchoolSearch, txtSchoolSearch, cmbAuthSearch, txtAuthSearch, cmbProvSearch,
+                txtProvSearch, cmbCallsSearch, txtCallsSearch, lblList, scrLstNew, btnNewListSearch,
                 btnNewListDel, lblDetailArchived);
-        
-        
+
         //llenando tabla de usuarios
         fillUserTable();
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -600,9 +598,24 @@ public class MainFrame extends javax.swing.JFrame {
 
         txtUserSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtUserSearch.setForeground(new java.awt.Color(6, 43, 51));
+        txtUserSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUserSearchActionPerformed(evt);
+            }
+        });
+        txtUserSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtUserSearchKeyReleased(evt);
+            }
+        });
 
         cmbUserSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         cmbUserSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbUserSearch.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                cmbUserSearchPropertyChange(evt);
+            }
+        });
 
         btnUserSearchReset.setBackground(new java.awt.Color(121, 121, 101));
         btnUserSearchReset.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -623,6 +636,11 @@ public class MainFrame extends javax.swing.JFrame {
                 "Nombre", "Apellido", "Email", "Tipo", "Estado"
             }
         ));
+        tblUser.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblUserMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblUser);
         if (tblUser.getColumnModel().getColumnCount() > 0) {
             tblUser.getColumnModel().getColumn(2).setResizable(false);
@@ -1548,6 +1566,11 @@ public class MainFrame extends javax.swing.JFrame {
         cmbProvSearchType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbProvSearchTypeActionPerformed(evt);
+            }
+        });
+        cmbProvSearchType.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                cmbProvSearchTypePropertyChange(evt);
             }
         });
 
@@ -2651,86 +2674,87 @@ public class MainFrame extends javax.swing.JFrame {
 
     /**
      * Cambia el panel actual
+     *
      * @param cardName Nombre del panel a mostrar
      */
     private void showCard(String cardName) {
         CardLayout card = (CardLayout) pnlMain.getLayout();
         card.show(pnlMain, cardName);
     }
-    
-    
+
     /**
      * Cambia un botón de acción, de 'Añadir' a 'Modificar' y viceversa
+     *
      * @param btn El botón a cambiar
-     * @param changeToSave true si se cambiará a 'Añadir', false si se cambiará a 'Modificar'
+     * @param changeToSave true si se cambiará a 'Añadir', false si se cambiará
+     * a 'Modificar'
      */
     private void toggleAction(JButton btn, boolean changeToSave) {
         if (changeToSave) {
             btn.setText("Añadir");
             btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/save-icon.png")));
-        }
-        else {
+        } else {
             btn.setText("Modificar");
             btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/refresh-button.png")));
         }
     }
-    
+
     /**
      * Resalta el botón del menú seleccionado y normaliza los demás
-     * @param btn 
+     *
+     * @param btn
      */
-    private void selectItem (JButton item) {
-        for(JButton btn : adminBtns) {
-            btn.setBackground(new Color(94,151,103));
+    private void selectItem(JButton item) {
+        for (JButton btn : adminBtns) {
+            btn.setBackground(new Color(94, 151, 103));
         }
-        for(JButton btn : userBtns) {
-            btn.setBackground(new Color(94,151,103));
+        for (JButton btn : userBtns) {
+            btn.setBackground(new Color(94, 151, 103));
         }
-        item.setBackground(new Color(0,74,101));
+        item.setBackground(new Color(0, 74, 101));
     }
-    
+
     /**
      * Refrezca la información de los controles de modo admin
      */
-    private void refreshAdmin () {
-        
+    private void refreshAdmin() {
+
     }
-    
+
     /**
      * Refrezca la información de los controles de modo personal
      */
-    private void refreshUser () {
+    private void refreshUser() {
         DefaultComboBoxModel model = (DefaultComboBoxModel) cmbNewType.getModel();
         model.removeAllElements();
-        
+
         model.addElement("Ninguno");
-        
-        for (Complaint_type type : new ComplaintTypeController().getAll(true))
+
+        for (Complaint_type type : new ComplaintTypeController().getAll(true)) {
             model.addElement(type);
+        }
     }
-    
-    
-     /*----------------------------- ------------------------------------------
+
+    /*----------------------------- ------------------------------------------
        -------------------------------▲---------------------------------------
        ---------------- ------------ ▲‌ ▲--------------------------------------
        --------------------------CODIGO DE NUEVA DENUNCIA ---------------------*/
-    
     /**
-     * Muestra u oculta la lista de autoridades/proveedores en función de el tipo de denuncia seleccionado,
-     * y de si la denuncia está marcada como viable o no. Si se detecta un cambio de "Acción a tomar" (atributo
-     * del tipo de denuncia), se limpia la lista
+     * Muestra u oculta la lista de autoridades/proveedores en función de el
+     * tipo de denuncia seleccionado, y de si la denuncia está marcada como
+     * viable o no. Si se detecta un cambio de "Acción a tomar" (atributo del
+     * tipo de denuncia), se limpia la lista
      */
-    private void showNewList () {
+    private void showNewList() {
         try {
-            if (((Complaint_type)cmbNewType.getSelectedItem()).getTaken_action().equals("Remitir con autoridad competente") && lblList.getText().equals("Proveedores a notificar:")) {
-                
+            if (((Complaint_type) cmbNewType.getSelectedItem()).getTaken_action().equals("Remitir con autoridad competente") && lblList.getText().equals("Proveedores a notificar:")) {
+
                 lblList.setText("Autoridades a notificar:");
                 btnNewListDel.setText("Desvincular autoridad");
                 errNewList.setText("Seleccione al menos una autoridad a notificar");
                 ((DefaultListModel) lstNew.getModel()).removeAllElements();
-                
-            }
-            else if (((Complaint_type)cmbNewType.getSelectedItem()).getTaken_action().equals("Tomar contacto con ISP y colegio") && lblList.getText().equals("Autoridades a notificar:")){
+
+            } else if (((Complaint_type) cmbNewType.getSelectedItem()).getTaken_action().equals("Tomar contacto con ISP y colegio") && lblList.getText().equals("Autoridades a notificar:")) {
                 lblList.setText("Proveedores a notificar:");
                 btnNewListDel.setText("Desvincular proveedor");
                 errNewList.setText("Seleccione al menos un proveedor a notificar");
@@ -2739,40 +2763,39 @@ public class MainFrame extends javax.swing.JFrame {
 
             if (chbNewViable.isSelected()) {
                 Animations.visibilizeComponents(this, lblList, scrLstNew, btnNewListSearch);
-            }
-            else {
+            } else {
                 Animations.invisibilizeComponents(this, lblList, scrLstNew, btnNewListSearch, btnNewListDel);
                 Animations.hide(errNewList, 255, 0, 0);
             }
-            
+
         } catch (Exception e) {
             Animations.invisibilizeComponents(this, lblList, scrLstNew, btnNewListSearch, btnNewListDel);
             Animations.hide(errNewList, 255, 0, 0);
         }
     }
-    
+
     /**
      * Devuelve los campos de pnlNew a sus valores por defecto
      */
-    private void clearPnlNew () {
+    private void clearPnlNew() {
         callSchool = null;
         lblNewSchool.setText("Ninguna");
         txtNewDesc.setText("");
         cmbNewType.setSelectedIndex(0);
         chbNewViable.setSelected(true);
-        ((DefaultListModel)lstNew.getModel()).removeAllElements();
+        ((DefaultListModel) lstNew.getModel()).removeAllElements();
         Animations.invisibilizeComponents(this, lblList, btnNewListSearch, lstNew, btnNewListDel);
-        
+
         JLabel[] errorList = {
-            errNewSchool, errNewDescription, errNewType, errNewList,
-        };
-        
+            errNewSchool, errNewDescription, errNewType, errNewList,};
+
         //Ocultando los label de error
-        for(JLabel err : errorList)
+        for (JLabel err : errorList) {
             Animations.hide(err, 255, 0, 0);
+        }
     }
-    
-    
+
+
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         Login form = new Login();
         form.setVisible(true);
@@ -2785,13 +2808,24 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMenuUserActionPerformed
 
     private void cmbUserSearchTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbUserSearchTypeActionPerformed
-        if (cmbUserSearchType.getSelectedIndex() == 0)
+        if (cmbUserSearchType.getSelectedIndex() == 0) {
             Animations.invisibilizeComponents(this, txtUserSearch, cmbUserSearch);
-        else if (cmbUserSearchType.getSelectedIndex() <= 3)
+        } else if (cmbUserSearchType.getSelectedIndex() <= 3) {
             Animations.toggleVisible(this, txtUserSearch, cmbUserSearch);
-        else
+        } else {
             Animations.toggleVisible(this, cmbUserSearch, txtUserSearch);
-        
+        }
+        DefaultComboBoxModel df = new DefaultComboBoxModel();
+        if(cmbUserSearchType.getSelectedIndex()==4){
+            
+            df.addElement(new User_type(1,"Administrador"));
+            df.addElement(new User_type(2,"Personal"));
+        }else if(cmbUserSearchType.getSelectedIndex()==5){
+            df.addElement("Activo");
+            df.addElement("Inactivo");
+        }
+        cmbUserSearch.setModel(df);
+
     }//GEN-LAST:event_cmbUserSearchTypeActionPerformed
 
     private void btnUserClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserClearActionPerformed
@@ -2800,17 +2834,17 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnUserClearActionPerformed
 
     private void cmbTypeSearchTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTypeSearchTypeActionPerformed
-        if (cmbTypeSearchType.getSelectedIndex() == 0)
+        if (cmbTypeSearchType.getSelectedIndex() == 0) {
             Animations.invisibilizeComponents(this, txtTypeSearch, cmbTypeSearch);
-        else if (cmbTypeSearchType.getSelectedIndex() <= 1){
+        } else if (cmbTypeSearchType.getSelectedIndex() <= 1) {
             Animations.toggleVisible(this, txtTypeSearch, cmbTypeSearch);
-        }else{
+        } else {
             Animations.toggleVisible(this, cmbTypeSearch, txtTypeSearch);
             DefaultComboBoxModel df = new DefaultComboBoxModel();
-            if(cmbTypeSearchType.getSelectedIndex() == 2){
+            if (cmbTypeSearchType.getSelectedIndex() == 2) {
                 df.addElement("Remitir con autoridad competente");
                 df.addElement("Tomar contacto con ISP y colegio");
-            }else{
+            } else {
                 df.addElement("Activo");
                 df.addElement("Inactivo");
             }
@@ -2830,12 +2864,13 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMenuTypeActionPerformed
 
     private void cmbSchoolSearchTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbSchoolSearchTypeActionPerformed
-        if (cmbSchoolSearchType.getSelectedIndex() == 0)
+        if (cmbSchoolSearchType.getSelectedIndex() == 0) {
             Animations.invisibilizeComponents(this, txtSchoolSearch, cmbSchoolSearch);
-        else if (cmbSchoolSearchType.getSelectedIndex() <= 2)
+        } else if (cmbSchoolSearchType.getSelectedIndex() <= 2) {
             Animations.toggleVisible(this, txtSchoolSearch, cmbSchoolSearch);
-        else
+        } else {
             Animations.toggleVisible(this, cmbSchoolSearch, txtSchoolSearch);
+        }
     }//GEN-LAST:event_cmbSchoolSearchTypeActionPerformed
 
     private void btnSchoolClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSchoolClearActionPerformed
@@ -2850,12 +2885,13 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMenuSchoolActionPerformed
 
     private void cmbAuthSearchTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbAuthSearchTypeActionPerformed
-        if (cmbAuthSearchType.getSelectedIndex() == 0)
+        if (cmbAuthSearchType.getSelectedIndex() == 0) {
             Animations.invisibilizeComponents(this, txtAuthSearch, cmbAuthSearch);
-        else if (cmbAuthSearchType.getSelectedIndex() <= 1)
+        } else if (cmbAuthSearchType.getSelectedIndex() <= 1) {
             Animations.toggleVisible(this, txtAuthSearch, cmbAuthSearch);
-        else
+        } else {
             Animations.toggleVisible(this, cmbAuthSearch, txtAuthSearch);
+        }
     }//GEN-LAST:event_cmbAuthSearchTypeActionPerformed
 
     private void btnAuthClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAuthClearActionPerformed
@@ -2870,12 +2906,13 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMenuAuthActionPerformed
 
     private void cmbProvSearchTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbProvSearchTypeActionPerformed
-        if (cmbProvSearchType.getSelectedIndex() == 0)
+        if (cmbProvSearchType.getSelectedIndex() == 0) {
             Animations.invisibilizeComponents(this, txtProvSearch, cmbProvSearch);
-        else if (cmbProvSearchType.getSelectedIndex() <= 1)
+        } else if (cmbProvSearchType.getSelectedIndex() <= 1) {
             Animations.toggleVisible(this, txtProvSearch, cmbProvSearch);
-        else
+        } else {
             Animations.toggleVisible(this, cmbProvSearch, txtProvSearch);
+        }
     }//GEN-LAST:event_cmbProvSearchTypeActionPerformed
 
     private void btnProvClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProvClearActionPerformed
@@ -2932,18 +2969,18 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnNewListSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewListSearchActionPerformed
         try {
-            if (((Complaint_type)cmbNewType.getSelectedItem()).getTaken_action().equals("Remitir con autoridad competente")) {
+            if (((Complaint_type) cmbNewType.getSelectedItem()).getTaken_action().equals("Remitir con autoridad competente")) {
                 //Añadir autoridad
                 SearchAuthority dialog = new SearchAuthority();
                 int result = JOptionPane.showConfirmDialog(this, dialog, "Seleccionar autoridad", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
                     Authority callAuth = dialog.getValue();
-                    
+
                     //Validando si no se seleccionó autoridad
                     if (callAuth != null) {
                         //Validando datos repetidos
                         boolean isRepeated = false;
-                        for (int i = 0; i < ( lstNew.getModel()).getSize(); i++) {
+                        for (int i = 0; i < (lstNew.getModel()).getSize(); i++) {
                             if ((((DefaultListModel) lstNew.getModel()).getElementAt(i)).toString().equals(callAuth.toString())) {
                                 isRepeated = true;
                                 break;
@@ -2951,29 +2988,26 @@ public class MainFrame extends javax.swing.JFrame {
                         }
                         if (isRepeated) {
                             JOptionPane.showMessageDialog(this, "Esa autoridad ya fue seleccionada", "Advertencia", JOptionPane.WARNING_MESSAGE);
-                        }
-                        else {
+                        } else {
                             //La autoridad es añadida
                             ((DefaultListModel) lstNew.getModel()).addElement(callAuth);
                         }
-                    }
-                    else {
+                    } else {
                         JOptionPane.showMessageDialog(this, "No seleccionó ninguna autoridad", "Advertencia", JOptionPane.WARNING_MESSAGE);
                     }
                 }
-            }
-            else {
+            } else {
                 //Añadir proveedor
                 SearchProvider dialog = new SearchProvider();
                 int result = JOptionPane.showConfirmDialog(this, dialog, "Seleccionar proveedor", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
                     Provider callProv = dialog.getValue();
-                    
+
                     //Validando si no se seleccionó proveedor
                     if (callProv != null) {
                         //Validando datos repetidos
                         boolean isRepeated = false;
-                        for (int i = 0; i < ( lstNew.getModel()).getSize(); i++) {
+                        for (int i = 0; i < (lstNew.getModel()).getSize(); i++) {
                             if ((((DefaultListModel) lstNew.getModel()).getElementAt(i)).toString().equals(callProv.toString())) {
                                 isRepeated = true;
                                 break;
@@ -2981,17 +3015,15 @@ public class MainFrame extends javax.swing.JFrame {
                         }
                         if (isRepeated) {
                             JOptionPane.showMessageDialog(this, "Ese proveedor ya fue seleccionado", "Advertencia", JOptionPane.WARNING_MESSAGE);
-                        }
-                        else {
+                        } else {
                             ((DefaultListModel) lstNew.getModel()).addElement(callProv);
                         }
-                    }
-                    else {
+                    } else {
                         JOptionPane.showMessageDialog(this, "No seleccionó ningún proveedor", "Advertencia", JOptionPane.WARNING_MESSAGE);
                     }
                 }
             }
-            
+
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -3022,8 +3054,9 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNewSchoolSearchActionPerformed
 
     private void btnDetailSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailSaveActionPerformed
-        if (JOptionPane.showConfirmDialog(this, "¿Desea guardar los cambios? Esta operación es irreversible") == JOptionPane.OK_OPTION)
+        if (JOptionPane.showConfirmDialog(this, "¿Desea guardar los cambios? Esta operación es irreversible") == JOptionPane.OK_OPTION) {
             showCard("crdCalls");
+        }
     }//GEN-LAST:event_btnDetailSaveActionPerformed
 
     private void btnCallsDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCallsDetailActionPerformed
@@ -3052,19 +3085,20 @@ public class MainFrame extends javax.swing.JFrame {
      -------------------------------▲-----------------------------------------
      ---------------- ------------ ▲‌ ▲---------------------------------------
     --------------------------CODIGO DE AUTH ---------------------------------*/
-    
     //llenar tabla
-    private void fillAuthTable(){
-        
+    private void fillAuthTable() {
+
         DefaultTableModel df = (DefaultTableModel) tblAuth.getModel();
-        while (df.getRowCount() > 0){ df.removeRow(0);};
-        
-        for(Authority obj : new AuthorityController().getAll(false)){
-            df.addRow(new Object[]{obj,obj.isState() ? "Activo":"Inactivo"});
+        while (df.getRowCount() > 0) {
+            df.removeRow(0);
+        };
+
+        for (Authority obj : new AuthorityController().getAll(false)) {
+            df.addRow(new Object[]{obj, obj.isState() ? "Activo" : "Inactivo"});
         }
     }
-    
-    private void clearAuthFields(){
+
+    private void clearAuthFields() {
         txtAuthName.setText("");
         cmbAuthState.setSelectedIndex(0);
         btnAuthAction.setText("Añadir");
@@ -3072,13 +3106,13 @@ public class MainFrame extends javax.swing.JFrame {
         cmbAuthSearchType.setSelectedIndex(0);
         Animations.hide(errAuthName, 255, 0, 0);
     }
-    
-    private void triggerAuthSearch () {
+
+    private void triggerAuthSearch() {
         try {
-            String param="";
+            String param = "";
             int type = 0;
-            
-            switch(String.valueOf(cmbAuthSearchType.getSelectedItem())) {
+
+            switch (String.valueOf(cmbAuthSearchType.getSelectedItem())) {
                 case "Nombre":
                     type = AuthorityController.BY_NAME;
                     param = txtAuthSearch.getText().trim();
@@ -3093,22 +3127,24 @@ public class MainFrame extends javax.swing.JFrame {
                     fillAuthTable();
                     break;
             }
-            
-            DefaultTableModel model = (DefaultTableModel) tblAuth.getModel();
-            while (model.getRowCount() > 0) model.removeRow(0);
 
-            for (Authority object : new AuthorityController().search(type, param, false)){
-                
-                model.addRow(new Object[]{object,object.isState() ? "Activo":"Inactivo"});
+            DefaultTableModel model = (DefaultTableModel) tblAuth.getModel();
+            while (model.getRowCount() > 0) {
+                model.removeRow(0);
+            }
+
+            for (Authority object : new AuthorityController().search(type, param, false)) {
+
+                model.addRow(new Object[]{object, object.isState() ? "Activo" : "Inactivo"});
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-                              
+
     private void pnlAuthFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pnlAuthFocusGained
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_pnlAuthFocusGained
 
     private void pnlAuthComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlAuthComponentShown
@@ -3118,6 +3154,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void tblAuthMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAuthMouseClicked
         // TODO add your handling code here:
+        clearAuthFields();
         Animations.hide(errAuthName, 255, 0, 0);
         int fila = this.tblAuth.getSelectedRow();
         if (fila >= 0) {
@@ -3137,25 +3174,23 @@ public class MainFrame extends javax.swing.JFrame {
     private void lstNewValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstNewValueChanged
         //Mostrando boton de desvicular autoridad/proveedor
         try {
-            if(lstNew.getSelectedIndex() > -1) {
+            if (lstNew.getSelectedIndex() > -1) {
                 btnNewListDel.setVisible(true);
-            }
-            else {
+            } else {
                 btnNewListDel.setVisible(false);
             }
         } catch (Exception e) {
             System.out.println(e);
         }
-        
+
     }//GEN-LAST:event_lstNewValueChanged
 
     private void btnNewListDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewListDelActionPerformed
         //Desvinculando autoridad/proveedor
         try {
             if (lstNew.getSelectedIndex() > -1) {
-                ((DefaultListModel)lstNew.getModel()).remove(lstNew.getSelectedIndex());
-            }
-            else {
+                ((DefaultListModel) lstNew.getModel()).remove(lstNew.getSelectedIndex());
+            } else {
                 JOptionPane.showMessageDialog(this, "No se pudo desvincular el objeto seleccionado");
             }
         } catch (Exception e) {
@@ -3171,10 +3206,10 @@ public class MainFrame extends javax.swing.JFrame {
 
             //Ocultando los label de error
             JLabel[] errorList = {
-                errNewSchool, errNewDescription, errNewType, errNewList,
-            };
-            for(JLabel err : errorList)
+                errNewSchool, errNewDescription, errNewType, errNewList,};
+            for (JLabel err : errorList) {
                 Animations.hide(err, 255, 0, 0);
+            }
 
             //Validaciones
             if (callSchool == null) {
@@ -3193,89 +3228,84 @@ public class MainFrame extends javax.swing.JFrame {
                 new Animations().appear(errNewList, 255, 0, 0);
                 isValid = false;
             }
-            
+
             //Si pasa todas las validaciones, guarda
             if (isValid) {
                 if (new CallController().addCall(
-                        callSchool, 
-                        chbNewViable.isSelected(), 
-                        (Complaint_type) cmbNewType.getSelectedItem(), 
-                        user, 
+                        callSchool,
+                        chbNewViable.isSelected(),
+                        (Complaint_type) cmbNewType.getSelectedItem(),
+                        user,
                         txtNewDesc.getText().trim()
                 )) {
                     if (chbNewViable.isSelected()) {
                         Call call = new CallController().getLast();
-                        
-                        for (int i = 0; i < ( lstNew.getModel()).getSize(); i++) {
-                            if (((Complaint_type)cmbNewType.getSelectedItem()).getTaken_action().equals("Remitir con autoridad competente")) {
-                                if (!(new AuthAsignController().addAuthAsign(call, (Authority)(((DefaultListModel) lstNew.getModel()).getElementAt(i))))) {
+
+                        for (int i = 0; i < (lstNew.getModel()).getSize(); i++) {
+                            if (((Complaint_type) cmbNewType.getSelectedItem()).getTaken_action().equals("Remitir con autoridad competente")) {
+                                if (!(new AuthAsignController().addAuthAsign(call, (Authority) (((DefaultListModel) lstNew.getModel()).getElementAt(i))))) {
                                     JOptionPane.showMessageDialog(this, "Error al guardar autoridad relacionada a denuncia", "Operación denegada", JOptionPane.WARNING_MESSAGE);
                                 }
-                            }
-                            else {
-                                if (!(new ProvAsignController().addAuthAsign(call, (Provider)(((DefaultListModel) lstNew.getModel()).getElementAt(i))))) {
+                            } else {
+                                if (!(new ProvAsignController().addAuthAsign(call, (Provider) (((DefaultListModel) lstNew.getModel()).getElementAt(i))))) {
                                     JOptionPane.showMessageDialog(this, "Error al guardar proveedor relacionado a denuncia", "Operación denegada", JOptionPane.WARNING_MESSAGE);
                                 }
                             }
                         }
-                        
-                        
+
                     }
-                    
-                    
-                    
+
                     JOptionPane.showMessageDialog(this, "Denuncia guardada", "Operación exitosa", JOptionPane.INFORMATION_MESSAGE);
                     clearPnlNew();
-                }
-                else {
+                } else {
                     JOptionPane.showMessageDialog(this, "La denuncia no pudo ser guardada", "Operación denegada", JOptionPane.WARNING_MESSAGE);
                 }
             }
-            
+
         } catch (Exception e) {
             System.out.println(e);
         }
-        
+
     }//GEN-LAST:event_btnNewSaveActionPerformed
 
     private void btnAuthActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAuthActionActionPerformed
         // TODO add your handling code here:
-        if("Añadir".equals(btnAuthAction.getText())){
-            if(txtAuthName.getText().trim().isEmpty()){
+        if ("Añadir".equals(btnAuthAction.getText())) {
+            if (txtAuthName.getText().trim().isEmpty()) {
                 errAuthName.setText("Campo vacio");
                 new Animations().appear(errAuthName, 255, 0, 0);
-            }else{
+            } else {
                 Animations.hide(errAuthName, 255, 0, 0);
-                boolean state=true;
-                if(cmbAuthState.getSelectedIndex() == 1){
+                boolean state = true;
+                if (cmbAuthState.getSelectedIndex() == 1) {
                     state = false;
                 }
-                if(new AuthorityController().addAuthority(txtAuthName.getText(),state)){
+                if (new AuthorityController().addAuthority(txtAuthName.getText(), state)) {
                     JOptionPane.showMessageDialog(this, "Agregado con exito");
                     fillAuthTable();
                     clearAuthFields();
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(this, "Error al agregar");
                 }
             }
         }
-        
-        if("Modificar".equals(btnAuthAction.getText())){
+
+        if ("Modificar".equals(btnAuthAction.getText())) {
             System.err.println("dos");
-            if(txtAuthName.getText().trim().isEmpty()){
+            if (txtAuthName.getText().trim().isEmpty()) {
                 errAuthName.setText("Campo vacio");
                 new Animations().appear(errAuthName, 255, 0, 0);
-            }else{
+            } else {
                 Animations.hide(errAuthName, 255, 0, 0);
-                boolean state=true;
-                if(cmbAuthState.getSelectedIndex() == 1){
+                boolean state = true;
+                if (cmbAuthState.getSelectedIndex() == 1) {
                     state = false;
                 }
-                if(new AuthorityController().updateAuthority(currentId,txtAuthName.getText(),state)){
+                if (new AuthorityController().updateAuthority(currentId, txtAuthName.getText(), state)) {
                     JOptionPane.showMessageDialog(this, "Actualizado con exito");
                     fillAuthTable();
                     clearAuthFields();
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(this, "Error al actualizar");
                 }
             }
@@ -3302,19 +3332,20 @@ public class MainFrame extends javax.swing.JFrame {
      -------------------------------▲-----------------------------------------
      ---------------- ------------ ▲‌ ▲---------------------------------------
     --------------------------CODIGO DE PROV ---------------------------------*/
-    
     //llenar tabla
-    private void fillProvTable(){
-        
+    private void fillProvTable() {
+
         DefaultTableModel df = (DefaultTableModel) tblProv.getModel();
-        while (df.getRowCount() > 0){ df.removeRow(0);};
-        
-        for(Provider obj : new ProviderController().getAll(false)){
-            df.addRow(new Object[]{obj,obj.isState() ? "Activo":"Inactivo"});
+        while (df.getRowCount() > 0) {
+            df.removeRow(0);
+        };
+
+        for (Provider obj : new ProviderController().getAll(false)) {
+            df.addRow(new Object[]{obj, obj.isState() ? "Activo" : "Inactivo"});
         }
     }
-    
-    private void clearProvFields(){
+
+    private void clearProvFields() {
         txtProvName.setText("");
         cmbProvState.setSelectedIndex(0);
         btnProvAction.setText("Añadir");
@@ -3322,13 +3353,13 @@ public class MainFrame extends javax.swing.JFrame {
         cmbProvSearchType.setSelectedIndex(0);
         Animations.hide(errAuthName, 255, 0, 0);
     }
-    
-    private void triggerProvSearch () {
+
+    private void triggerProvSearch() {
         try {
-            String param="";
+            String param = "";
             int type = 0;
-            
-            switch(String.valueOf(cmbProvSearchType.getSelectedItem())) {
+
+            switch (String.valueOf(cmbProvSearchType.getSelectedItem())) {
                 case "Nombre":
                     type = ProviderController.BY_NAME;
                     param = txtProvSearch.getText().trim();
@@ -3343,18 +3374,20 @@ public class MainFrame extends javax.swing.JFrame {
                     fillProvTable();
                     break;
             }
-            
-            DefaultTableModel model = (DefaultTableModel) tblProv.getModel();
-            while (model.getRowCount() > 0) model.removeRow(0);
 
-            for (Provider object : new ProviderController().search(type, param, false)){
-                model.addRow(new Object[]{object,object.isState() ? "Activo":"Inactivo"});
+            DefaultTableModel model = (DefaultTableModel) tblProv.getModel();
+            while (model.getRowCount() > 0) {
+                model.removeRow(0);
+            }
+
+            for (Provider object : new ProviderController().search(type, param, false)) {
+                model.addRow(new Object[]{object, object.isState() ? "Activo" : "Inactivo"});
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-    
+
     private void pnlProvComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlProvComponentShown
         // TODO add your handling code here:
         fillProvTable();
@@ -3368,6 +3401,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void tblProvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProvMouseClicked
         // TODO add your handling code here:
         // TODO add your handling code here:
+        clearProvFields();
         Animations.hide(errProvName, 255, 0, 0);
         int fila = this.tblProv.getSelectedRow();
         if (fila >= 0) {
@@ -3391,47 +3425,47 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnProvActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProvActionActionPerformed
         // TODO add your handling code here:// TODO add your handling code here:
-        if("Añadir".equals(btnProvAction.getText())){
-            if(txtProvName.getText().trim().isEmpty()){
+        if ("Añadir".equals(btnProvAction.getText())) {
+            if (txtProvName.getText().trim().isEmpty()) {
                 errProvName.setText("Campo vacio");
                 new Animations().appear(errProvName, 255, 0, 0);
-            }else{
+            } else {
                 new Animations().hide(errProvName, 255, 0, 0);
-                boolean state=true;
-                if(cmbProvState.getSelectedIndex() == 1){
+                boolean state = true;
+                if (cmbProvState.getSelectedIndex() == 1) {
                     state = false;
                 }
-                if(new ProviderController().addProvider(txtProvName.getText(),state)){
+                if (new ProviderController().addProvider(txtProvName.getText(), state)) {
                     JOptionPane.showMessageDialog(this, "Agregado con exito");
                     fillProvTable();
                     clearProvFields();
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(this, "Error al agregar");
                 }
             }
         }
-        
-        if("Modificar".equals(btnProvAction.getText())){
+
+        if ("Modificar".equals(btnProvAction.getText())) {
             System.err.println("dos");
-            if(txtProvName.getText().trim().isEmpty()){
+            if (txtProvName.getText().trim().isEmpty()) {
                 errProvName.setText("Campo vacio");
                 new Animations().appear(errProvName, 255, 0, 0);
-            }else{
+            } else {
                 Animations.hide(errProvName, 255, 0, 0);
-                boolean state=true;
-                if(cmbProvState.getSelectedIndex() == 1){
+                boolean state = true;
+                if (cmbProvState.getSelectedIndex() == 1) {
                     state = false;
                 }
-                if(new ProviderController().updateProvider(currentId,txtProvName.getText(),state)){
+                if (new ProviderController().updateProvider(currentId, txtProvName.getText(), state)) {
                     JOptionPane.showMessageDialog(this, "Actualizado con exito");
                     fillProvTable();
                     clearProvFields();
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(this, "Error al actualizar");
                 }
             }
         }
-        
+
     }//GEN-LAST:event_btnProvActionActionPerformed
 
     private void btnProvSearchResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProvSearchResetActionPerformed
@@ -3444,19 +3478,20 @@ public class MainFrame extends javax.swing.JFrame {
      -------------------------------▲-----------------------------------------
      ---------------- ------------ ▲‌ ▲---------------------------------------
     --------------------------CODIGO DE SCHOOL ---------------------------------*/
-    
     //llenar tabla
-    private void fillSchoolTable(){
-        
+    private void fillSchoolTable() {
+
         DefaultTableModel df = (DefaultTableModel) tblSchool.getModel();
-        while (df.getRowCount() > 0){ df.removeRow(0);};
-        
-        for(School obj : new SchoolController().getAll(false)){
-            df.addRow(new Object[]{obj,obj.getAddress(),obj.isState() ? "Activo":"Inactivo"});
+        while (df.getRowCount() > 0) {
+            df.removeRow(0);
+        };
+
+        for (School obj : new SchoolController().getAll(false)) {
+            df.addRow(new Object[]{obj, obj.getAddress(), obj.isState() ? "Activo" : "Inactivo"});
         }
     }
-    
-    private void clearSchoolFields(){
+
+    private void clearSchoolFields() {
         txtSchoolName.setText("");
         txtSchoolAddress.setText("");
         cmbSchoolState.setSelectedIndex(0);
@@ -3466,13 +3501,13 @@ public class MainFrame extends javax.swing.JFrame {
         Animations.hide(errSchoolName, 255, 0, 0);
         Animations.hide(errSchoolAddress, 255, 0, 0);
     }
-    
-    private void triggerSchoolSearch () {
+
+    private void triggerSchoolSearch() {
         try {
-            String param="";
+            String param = "";
             int type = 0;
-            
-            switch(String.valueOf(cmbSchoolSearchType.getSelectedItem())) {
+
+            switch (String.valueOf(cmbSchoolSearchType.getSelectedItem())) {
                 case "Nombre":
                     type = SchoolController.BY_NAME;
                     param = txtSchoolSearch.getText().trim();
@@ -3491,18 +3526,20 @@ public class MainFrame extends javax.swing.JFrame {
                     fillSchoolTable();
                     break;
             }
-            
-            DefaultTableModel model = (DefaultTableModel) tblSchool.getModel();
-            while (model.getRowCount() > 0) model.removeRow(0);
 
-            for (School object : new SchoolController().search(type, param, false)){
-                model.addRow(new Object[]{object,object.getAddress(),object.isState() ? "Activo":"Inactivo"});
+            DefaultTableModel model = (DefaultTableModel) tblSchool.getModel();
+            while (model.getRowCount() > 0) {
+                model.removeRow(0);
+            }
+
+            for (School object : new SchoolController().search(type, param, false)) {
+                model.addRow(new Object[]{object, object.getAddress(), object.isState() ? "Activo" : "Inactivo"});
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-    
+
     private void pnlSchoolComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlSchoolComponentShown
         // TODO add your handling code here:
         fillSchoolTable();
@@ -3530,60 +3567,60 @@ public class MainFrame extends javax.swing.JFrame {
     private void btnSchoolActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSchoolActionActionPerformed
         // TODO add your handling code here:
         // TODO add your handling code here:// TODO add your handling code here:
-        if("Añadir".equals(btnSchoolAction.getText())){
+        if ("Añadir".equals(btnSchoolAction.getText())) {
             boolean flag = true;
-            if(txtSchoolName.getText().trim().isEmpty()){
+            if (txtSchoolName.getText().trim().isEmpty()) {
                 errSchoolName.setText("Campo vacio");
                 new Animations().appear(errSchoolName, 255, 0, 0);
                 flag = false;
             }
-            if(txtSchoolAddress.getText().trim().isEmpty()){
+            if (txtSchoolAddress.getText().trim().isEmpty()) {
                 errSchoolAddress.setText("Campo vacio");
                 new Animations().appear(errSchoolAddress, 255, 0, 0);
                 flag = false;
             }
-            if(flag){
+            if (flag) {
                 Animations.hide(errSchoolName, 255, 0, 0);
                 Animations.hide(errSchoolAddress, 255, 0, 0);
-                boolean state=true;
-                if(cmbSchoolState.getSelectedIndex() == 1){
+                boolean state = true;
+                if (cmbSchoolState.getSelectedIndex() == 1) {
                     state = false;
                 }
-                if(new SchoolController().addSchool(txtSchoolName.getText(),txtSchoolAddress.getText(),state)){
+                if (new SchoolController().addSchool(txtSchoolName.getText(), txtSchoolAddress.getText(), state)) {
                     JOptionPane.showMessageDialog(this, "Agregado con exito");
                     fillSchoolTable();
                     clearSchoolFields();
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(this, "Error al agregar");
                 }
             }
         }
-        
-        if("Modificar".equals(btnSchoolAction.getText())){
+
+        if ("Modificar".equals(btnSchoolAction.getText())) {
             System.err.println("dos");
             boolean flag = true;
-            if(txtSchoolName.getText().trim().isEmpty()){
+            if (txtSchoolName.getText().trim().isEmpty()) {
                 errSchoolName.setText("Campo vacio");
                 new Animations().appear(errSchoolName, 255, 0, 0);
                 flag = false;
             }
-            if(txtSchoolAddress.getText().trim().isEmpty()){
+            if (txtSchoolAddress.getText().trim().isEmpty()) {
                 errSchoolAddress.setText("Campo vacio");
                 new Animations().appear(errSchoolAddress, 255, 0, 0);
                 flag = false;
             }
-            if(flag){
+            if (flag) {
                 Animations.hide(errSchoolName, 255, 0, 0);
                 Animations.hide(errSchoolAddress, 255, 0, 0);
-                boolean state=true;
-                if(cmbSchoolState.getSelectedIndex() == 1){
+                boolean state = true;
+                if (cmbSchoolState.getSelectedIndex() == 1) {
                     state = false;
                 }
-                if(new SchoolController().updateSchool(currentId,txtSchoolName.getText(),txtSchoolAddress.getText(),state)){
+                if (new SchoolController().updateSchool(currentId, txtSchoolName.getText(), txtSchoolAddress.getText(), state)) {
                     JOptionPane.showMessageDialog(this, "Modificado con exito");
                     fillSchoolTable();
                     clearSchoolFields();
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(this, "Error al modificar");
                 }
             }
@@ -3592,6 +3629,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void tblSchoolMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSchoolMouseClicked
         // TODO add your handling code here:
+        clearSchoolFields();
         Animations.hide(errSchoolName, 255, 0, 0);
         Animations.hide(errSchoolAddress, 255, 0, 0);
         int fila = this.tblSchool.getSelectedRow();
@@ -3615,19 +3653,20 @@ public class MainFrame extends javax.swing.JFrame {
      -------------------------------▲-----------------------------------------
      ---------------- ------------ ▲‌ ▲---------------------------------------
     -------------------CODIGO DE COMPLAINT TYPE ---------------------------------*/
-    
     //llenar tabla
-    private void fillTypeTable(){
-        
+    private void fillTypeTable() {
+
         DefaultTableModel df = (DefaultTableModel) tblType.getModel();
-        while (df.getRowCount() > 0){ df.removeRow(0);};
-        
-        for(Complaint_type obj : new ComplaintTypeController().getAll(false)){
-            df.addRow(new Object[]{obj,obj.getTaken_action(),obj.isState() ? "Activo":"Inactivo"});
+        while (df.getRowCount() > 0) {
+            df.removeRow(0);
+        };
+
+        for (Complaint_type obj : new ComplaintTypeController().getAll(false)) {
+            df.addRow(new Object[]{obj, obj.getTaken_action(), obj.isState() ? "Activo" : "Inactivo"});
         }
     }
-    
-    private void clearTypeFields(){
+
+    private void clearTypeFields() {
         txtTypeName.setText("");
         cmbTypeAction.setSelectedIndex(0);
         cmbTypeState.setSelectedIndex(0);
@@ -3637,13 +3676,13 @@ public class MainFrame extends javax.swing.JFrame {
         Animations.hide(errTypeName, 255, 0, 0);
         //Animations.hide(errSchoolAddress, 255, 0, 0);
     }
-    
-    private void triggerTypeSearch () {
+
+    private void triggerTypeSearch() {
         try {
-            String param="";
+            String param = "";
             int type = 0;
-            
-            switch(String.valueOf(cmbTypeSearchType.getSelectedItem())) {
+
+            switch (String.valueOf(cmbTypeSearchType.getSelectedItem())) {
                 case "Nombre":
                     type = ComplaintTypeController.BY_NAME;
                     param = txtTypeSearch.getText().trim();
@@ -3662,18 +3701,20 @@ public class MainFrame extends javax.swing.JFrame {
                     fillProvTable();
                     break;
             }
-            
-            DefaultTableModel model = (DefaultTableModel) tblType.getModel();
-            while (model.getRowCount() > 0) model.removeRow(0);
 
-            for (Complaint_type object : new ComplaintTypeController().search(type, param, false)){
-                model.addRow(new Object[]{object,object.getTaken_action(),object.isState() ? "Activo":"Inactivo"});
+            DefaultTableModel model = (DefaultTableModel) tblType.getModel();
+            while (model.getRowCount() > 0) {
+                model.removeRow(0);
+            }
+
+            for (Complaint_type object : new ComplaintTypeController().search(type, param, false)) {
+                model.addRow(new Object[]{object, object.getTaken_action(), object.isState() ? "Activo" : "Inactivo"});
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-    
+
     private void pnlTypeComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlTypeComponentShown
         // TODO add your handling code here:
         fillTypeTable();
@@ -3681,42 +3722,42 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnTypeActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTypeActionActionPerformed
         // TODO add your handling code here:
-        if("Añadir".equals(btnTypeAction.getText())){
-            if(txtTypeName.getText().trim().isEmpty()){
+        if ("Añadir".equals(btnTypeAction.getText())) {
+            if (txtTypeName.getText().trim().isEmpty()) {
                 errTypeName.setText("Campo vacio");
                 new Animations().appear(errTypeName, 255, 0, 0);
-            }else{
+            } else {
                 Animations.hide(errTypeName, 255, 0, 0);
-                boolean state=true;
-                if(cmbTypeState.getSelectedIndex() == 1){
+                boolean state = true;
+                if (cmbTypeState.getSelectedIndex() == 1) {
                     state = false;
                 }
-                if(new ComplaintTypeController().addComplaintType(txtTypeName.getText(),String.valueOf(cmbTypeAction.getSelectedItem()),state)){
+                if (new ComplaintTypeController().addComplaintType(txtTypeName.getText(), String.valueOf(cmbTypeAction.getSelectedItem()), state)) {
                     JOptionPane.showMessageDialog(this, "Agregado con exito");
                     fillTypeTable();
                     clearTypeFields();
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(this, "Error al agregar");
                 }
             }
         }
-        
-        if("Modificar".equals(btnTypeAction.getText())){
+
+        if ("Modificar".equals(btnTypeAction.getText())) {
             System.err.println("dos");
-            if(txtTypeName.getText().trim().isEmpty()){
+            if (txtTypeName.getText().trim().isEmpty()) {
                 errTypeName.setText("Campo vacio");
                 new Animations().appear(errTypeName, 255, 0, 0);
-            }else{
+            } else {
                 Animations.hide(errTypeName, 255, 0, 0);
-                boolean state=true;
-                if(cmbTypeState.getSelectedIndex() == 1){
+                boolean state = true;
+                if (cmbTypeState.getSelectedIndex() == 1) {
                     state = false;
                 }
-                if(new ComplaintTypeController().updateComplaintType(currentId,txtTypeName.getText(),String.valueOf(cmbTypeAction.getSelectedItem()),state)){
+                if (new ComplaintTypeController().updateComplaintType(currentId, txtTypeName.getText(), String.valueOf(cmbTypeAction.getSelectedItem()), state)) {
                     JOptionPane.showMessageDialog(this, "Modificado con exito");
                     fillTypeTable();
                     clearTypeFields();
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(this, "Error al modificar");
                 }
             }
@@ -3726,6 +3767,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void tblTypeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTypeMouseClicked
         // TODO add your handling code here:
         // TODO add your handling code here:
+        clearTypeFields();
         Animations.hide(errTypeName, 255, 0, 0);
         int fila = this.tblType.getSelectedRow();
         if (fila >= 0) {
@@ -3758,19 +3800,73 @@ public class MainFrame extends javax.swing.JFrame {
      -------------------------------▲-----------------------------------------
      ---------------- ------------ ▲‌ ▲---------------------------------------
     -------------------CODIGO DE USUARIOS ---------------------------------*/
-    //llenar tabla
-    private void fillUserTable(){
-        
-        DefaultTableModel df = (DefaultTableModel) tblUser.getModel();
-        while (df.getRowCount() > 0){ df.removeRow(0);};
-        
-        for(User obj : new UserController().getAll(false)){
-            System.err.println(obj.isState());
-            df.addRow(new Object[]{obj,obj.getLastname(),obj.getEmail(),obj.getUser_type().getName(),obj.isState() ? "Activo":"Inactivo"});
+    
+    private void triggerUserSearch(){
+        try {
+            String param = "";
+            int type = 0;
+
+            switch (String.valueOf(cmbUserSearchType.getSelectedItem())) {
+                case "Nombre":
+                    type = UserController.BY_NAME;
+                    param = txtUserSearch.getText().trim();
+                    break;
+                case "Apellido":
+                    type = UserController.BY_LASTNAME;
+                    param = txtUserSearch.getText().trim();
+                    break;
+                case "Email":
+                    type = UserController.BY_EMAIL;
+                    param = txtUserSearch.getText().trim();
+                    break;
+                case "Tipo de usuario":
+                    type = UserController.BY_USER_TYPE;
+                    User_type temp =  (User_type) cmbUserSearch.getSelectedItem();
+                    param = String.valueOf(temp.getId());
+                    break;
+                case "Estado":
+                    type = UserController.BY_STATE;
+                    param = cmbUserSearch.getSelectedItem().toString();
+                    break;
+                case "N/A":
+                    type = AuthorityController.NO_FIELD;
+                    clearAuthFields();
+                    fillAuthTable();
+                    break;
+            }
+
+            DefaultTableModel model = (DefaultTableModel) tblUser.getModel();
+            while (model.getRowCount() > 0) {
+                model.removeRow(0);
+            }
+
+            for (User object : new UserController().search(type, param, false)) {
+                String temp ="Administrador";
+                if(object.getUser_type().getId()==2){
+                    temp="Personal";
+                }
+                model.addRow(new Object[]{object,object.getLastname(),object.getEmail(),temp,object.isState() ? "Activo" : "Inactivo"});
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
     
-    private void clearUserFields(){
+    //llenar tabla
+    private void fillUserTable() {
+
+        DefaultTableModel df = (DefaultTableModel) tblUser.getModel();
+        while (df.getRowCount() > 0) {
+            df.removeRow(0);
+        };
+
+        for (User obj : new UserController().getAll(false)) {
+            System.err.println(obj.isState());
+            df.addRow(new Object[]{obj, obj.getLastname(), obj.getEmail(), obj.getUser_type().getName(), obj.isState() ? "Activo" : "Inactivo"});
+        }
+    }
+
+    private void clearUserFields() {
         txtUserName.setText("");
         txtUserLastame.setText("");
         txtUserEmail.setText("");
@@ -3800,73 +3896,80 @@ public class MainFrame extends javax.swing.JFrame {
     private void btnUserActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserActionActionPerformed
         // TODO add your handling code here:
         // TODO add your handling code here:
-        if("Añadir".equals(btnUserAction.getText())){
-            boolean flag = true;
-            if(txtUserName.getText().trim().isEmpty()){
-                errUserName.setText("Campo vacio");
-                new Animations().appear(errUserName, 255, 0, 0);
-                flag=false;
-            }else{
-                Animations.hide(errUserName, 255, 0, 0);
-            }
-            if(txtUserLastame.getText().trim().isEmpty()){
-                errUserLastname.setText("Campo vacio");
-                new Animations().appear(errUserLastname, 255, 0, 0);
-                flag=false;
-            }else{
-                Animations.hide(errUserLastname, 255, 0, 0);
-            }
-            if(!new Utils().validate(txtUserEmail.getText())){
-                errUserEmail.setText("Formato de correo no valido");
-                new Animations().appear(errUserEmail, 255, 0, 0);
-                flag=false;
-            }else{
-                Animations.hide(errUserEmail, 255, 0, 0);
-            }
-            if(txtUserPass.getText().trim().length()<6){
+        boolean flag = true;
+        if (txtUserName.getText().trim().isEmpty()) {
+            errUserName.setText("Campo vacio");
+            new Animations().appear(errUserName, 255, 0, 0);
+            flag = false;
+        } else {
+            Animations.hide(errUserName, 255, 0, 0);
+        }
+        if (txtUserLastame.getText().trim().isEmpty()) {
+            errUserLastname.setText("Campo vacio");
+            new Animations().appear(errUserLastname, 255, 0, 0);
+            flag = false;
+        } else {
+            Animations.hide(errUserLastname, 255, 0, 0);
+        }
+        if (!new Utils().validate(txtUserEmail.getText())) {
+            errUserEmail.setText("Formato de correo no valido");
+            new Animations().appear(errUserEmail, 255, 0, 0);
+            flag = false;
+        } else {
+            Animations.hide(errUserEmail, 255, 0, 0);
+        }
+        
+        if ("Añadir".equals(btnUserAction.getText())) {
+            if (txtUserPass.getText().trim().length() < 6) {
                 errUserPass.setText("Clave demasiado corta");
                 new Animations().appear(errUserPass, 255, 0, 0);
-                flag=false;
-            }else{
+                flag = false;
+            } else {
                 Animations.hide(errUserPass, 255, 0, 0);
             }
-            
-            if(flag){
-                boolean state=true;
+            if (flag) {
+                boolean state = true;
                 int index = 1;
-                if(cmbUserType.getSelectedIndex()!=0){
-                    index=2;
+                if (cmbUserType.getSelectedIndex() != 0) {
+                    index = 2;
                 }
-                if(cmbUserState.getSelectedIndex()==1){
+                if (cmbUserState.getSelectedIndex() == 1) {
                     state = false;
                 }
-                if(new UserController().addUser(txtUserName.getText(),txtUserLastame.getText(),txtUserEmail.getText(),txtUserPass.getText(),index,state)){
+                if (new UserController().addUser(txtUserName.getText(), txtUserLastame.getText(), txtUserEmail.getText(), txtUserPass.getText(), index, state)) {
                     JOptionPane.showMessageDialog(this, "Agregado con exito");
                     fillUserTable();
                     clearUserFields();
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(this, "Error al agregar");
                 }
             }
-            
+
         }
-        
-        if("Modificar".equals(btnTypeAction.getText())){
-            System.err.println("dos");
-            if(txtTypeName.getText().trim().isEmpty()){
-                errTypeName.setText("Campo vacio");
-                new Animations().appear(errTypeName, 255, 0, 0);
-            }else{
-                Animations.hide(errTypeName, 255, 0, 0);
-                boolean state=true;
-                if(cmbTypeState.getSelectedIndex() == 1){
+
+        if ("Modificar".equals(btnUserAction.getText())) {
+            if (txtUserPass.getText().trim().length() < 6 && !txtUserPass.getText().trim().isEmpty()) {
+                errUserPass.setText("Clave demasiado corta");
+                new Animations().appear(errUserPass, 255, 0, 0);
+                flag = false;
+            } else {
+                Animations.hide(errUserPass, 255, 0, 0);
+            }
+            if (flag) {
+                boolean state = true;
+                int index = 1;
+                
+                if (cmbUserType.getSelectedIndex() != 0) {
+                    index = 2;
+                }
+                if (cmbUserState.getSelectedIndex() == 1) {
                     state = false;
                 }
-                if(new ComplaintTypeController().updateComplaintType(currentId,txtTypeName.getText(),String.valueOf(cmbTypeAction.getSelectedItem()),state)){
+                if (new UserController().updateUser(currentId,txtUserName.getText(), txtUserLastame.getText(), txtUserEmail.getText(), txtUserPass.getText(), index, state)) {
                     JOptionPane.showMessageDialog(this, "Modificado con exito");
-                    fillTypeTable();
-                    clearTypeFields();
-                }else{
+                    fillUserTable();
+                    clearUserFields();
+                } else {
                     JOptionPane.showMessageDialog(this, "Error al modificar");
                 }
             }
@@ -3875,8 +3978,47 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void txtUserEmailKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUserEmailKeyReleased
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_txtUserEmailKeyReleased
+
+    private void tblUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUserMouseClicked
+        // TODO add your handling code here:
+        //clearUserFields();
+        int fila = this.tblUser.getSelectedRow();
+        if (fila >= 0) {
+            User obje = (User) this.tblUser.getValueAt(fila, 0);
+            txtUserName.setText(obje.getName());
+            txtUserLastame.setText(obje.getLastname());
+            txtUserEmail.setText(obje.getEmail());
+            int userType = 0;
+            if(obje.getUser_type().getId()==2){
+                userType=1;
+            }
+            cmbUserType.setSelectedIndex(userType);
+            cmbUserState.setSelectedIndex(obje.isState() ? 0 : 1);
+            this.currentId = obje.getId();
+            btnUserAction.setText("Modificar");
+        }
+    }//GEN-LAST:event_tblUserMouseClicked
+
+    private void cmbProvSearchTypePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_cmbProvSearchTypePropertyChange
+        // TODO add your handling code here:4/5
+        
+    }//GEN-LAST:event_cmbProvSearchTypePropertyChange
+
+    private void cmbUserSearchPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_cmbUserSearchPropertyChange
+        // TODO add your handling code here:
+        triggerUserSearch();
+    }//GEN-LAST:event_cmbUserSearchPropertyChange
+
+    private void txtUserSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUserSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUserSearchActionPerformed
+
+    private void txtUserSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUserSearchKeyReleased
+        // TODO add your handling code here:
+        triggerUserSearch();
+    }//GEN-LAST:event_txtUserSearchKeyReleased
 
     /**
      * @param args the command line arguments
