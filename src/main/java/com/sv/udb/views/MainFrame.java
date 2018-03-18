@@ -838,6 +838,11 @@ public class MainFrame extends javax.swing.JFrame {
         pnlMain.add(pnlUser, "crdUser");
 
         pnlType.setBackground(new java.awt.Color(255, 255, 255));
+        pnlType.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                pnlTypeComponentShown(evt);
+            }
+        });
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel9.setText("Tipos de denuncias");
@@ -855,28 +860,47 @@ public class MainFrame extends javax.swing.JFrame {
 
         txtTypeSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtTypeSearch.setForeground(new java.awt.Color(6, 43, 51));
+        txtTypeSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtTypeSearchKeyReleased(evt);
+            }
+        });
 
         cmbTypeSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         cmbTypeSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbTypeSearch.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                cmbTypeSearchPropertyChange(evt);
+            }
+        });
 
         btnTypeSearchReset.setBackground(new java.awt.Color(121, 121, 101));
         btnTypeSearchReset.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnTypeSearchReset.setForeground(new java.awt.Color(255, 255, 255));
         btnTypeSearchReset.setText("Revertir");
         btnTypeSearchReset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnTypeSearchReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTypeSearchResetActionPerformed(evt);
+            }
+        });
 
         tblType.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Nombre", "Acción tomada", "Estado"
+                "Nombre", "Accion", "Estado"
             }
         ));
+        tblType.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblTypeMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblType);
         if (tblType.getColumnModel().getColumnCount() > 0) {
             tblType.getColumnModel().getColumn(1).setResizable(false);
-            tblType.getColumnModel().getColumn(1).setHeaderValue("Dirección");
         }
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -934,6 +958,11 @@ public class MainFrame extends javax.swing.JFrame {
         btnTypeAction.setText("Añadir");
         btnTypeAction.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnTypeAction.setIconTextGap(6);
+        btnTypeAction.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTypeActionActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlTypeLayout = new javax.swing.GroupLayout(pnlType);
         pnlType.setLayout(pnlTypeLayout);
@@ -2748,14 +2777,26 @@ public class MainFrame extends javax.swing.JFrame {
     private void cmbTypeSearchTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTypeSearchTypeActionPerformed
         if (cmbTypeSearchType.getSelectedIndex() == 0)
             Animations.invisibilizeComponents(this, txtTypeSearch, cmbTypeSearch);
-        else if (cmbTypeSearchType.getSelectedIndex() <= 1)
+        else if (cmbTypeSearchType.getSelectedIndex() <= 1){
             Animations.toggleVisible(this, txtTypeSearch, cmbTypeSearch);
-        else
+        }else{
             Animations.toggleVisible(this, cmbTypeSearch, txtTypeSearch);
+            DefaultComboBoxModel df = new DefaultComboBoxModel();
+            if(cmbTypeSearchType.getSelectedIndex() == 2){
+                df.addElement("Remitir con autoridad competente");
+                df.addElement("Tomar contacto con ISP y colegio");
+            }else{
+                df.addElement("Activo");
+                df.addElement("Inactivo");
+            }
+            cmbTypeSearch.setModel(df);
+        }
     }//GEN-LAST:event_cmbTypeSearchTypeActionPerformed
 
     private void btnTypeClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTypeClearActionPerformed
         // TODO add your handling code here:
+        clearTypeFields();
+        fillTypeTable();
     }//GEN-LAST:event_btnTypeClearActionPerformed
 
     private void btnMenuTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuTypeActionPerformed
@@ -3544,6 +3585,149 @@ public class MainFrame extends javax.swing.JFrame {
         clearSchoolFields();
         fillSchoolTable();
     }//GEN-LAST:event_btnSchoolSearchResetActionPerformed
+
+    /*----------------------------- ------------------------------------------
+     -------------------------------▲-----------------------------------------
+     ---------------- ------------ ▲‌ ▲---------------------------------------
+    -------------------CODIGO DE COMPLAINT TYPE ---------------------------------*/
+    
+    //llenar tabla
+    private void fillTypeTable(){
+        
+        DefaultTableModel df = (DefaultTableModel) tblType.getModel();
+        while (df.getRowCount() > 0){ df.removeRow(0);};
+        
+        for(Complaint_type obj : new ComplaintTypeController().getAll(false)){
+            df.addRow(new Object[]{obj,obj.getTaken_action(),obj.isState() ? "Activo":"Inactivo"});
+        }
+    }
+    
+    private void clearTypeFields(){
+        txtTypeName.setText("");
+        cmbTypeAction.setSelectedIndex(0);
+        cmbTypeState.setSelectedIndex(0);
+        btnTypeAction.setText("Añadir");
+        this.currentId = 0;
+        cmbTypeSearchType.setSelectedIndex(0);
+        Animations.hide(errTypeName, 255, 0, 0);
+        //Animations.hide(errSchoolAddress, 255, 0, 0);
+    }
+    
+    private void triggerTypeSearch () {
+        try {
+            String param="";
+            int type = 0;
+            
+            switch(String.valueOf(cmbTypeSearchType.getSelectedItem())) {
+                case "Nombre":
+                    type = ComplaintTypeController.BY_NAME;
+                    param = txtTypeSearch.getText().trim();
+                    break;
+                case "Acción tomada":
+                    type = ComplaintTypeController.BY_ACTION;
+                    param = cmbTypeSearch.getSelectedItem().toString();
+                    break;
+                case "Estado":
+                    type = ComplaintTypeController.BY_STATE;
+                    param = cmbTypeSearch.getSelectedItem().toString();
+                    break;
+                case "N/A":
+                    type = ComplaintTypeController.NO_FIELD;
+                    clearProvFields();
+                    fillProvTable();
+                    break;
+            }
+            
+            DefaultTableModel model = (DefaultTableModel) tblType.getModel();
+            while (model.getRowCount() > 0) model.removeRow(0);
+
+            for (Complaint_type object : new ComplaintTypeController().search(type, param, false)){
+                model.addRow(new Object[]{object,object.getTaken_action(),object.isState() ? "Activo":"Inactivo"});
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    private void pnlTypeComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlTypeComponentShown
+        // TODO add your handling code here:
+        fillTypeTable();
+    }//GEN-LAST:event_pnlTypeComponentShown
+
+    private void btnTypeActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTypeActionActionPerformed
+        // TODO add your handling code here:
+        if("Añadir".equals(btnTypeAction.getText())){
+            if(txtTypeName.getText().trim().isEmpty()){
+                errTypeName.setText("Campo vacio");
+                new Animations().appear(errTypeName, 255, 0, 0);
+            }else{
+                Animations.hide(errTypeName, 255, 0, 0);
+                boolean state=true;
+                if(cmbTypeState.getSelectedIndex() == 1){
+                    state = false;
+                }
+                if(new ComplaintTypeController().addComplaintType(txtTypeName.getText(),String.valueOf(cmbTypeAction.getSelectedItem()),state)){
+                    JOptionPane.showMessageDialog(this, "Agregado con exito");
+                    fillTypeTable();
+                    clearTypeFields();
+                }else{
+                    JOptionPane.showMessageDialog(this, "Error al agregar");
+                }
+            }
+        }
+        
+        if("Modificar".equals(btnTypeAction.getText())){
+            System.err.println("dos");
+            if(txtTypeName.getText().trim().isEmpty()){
+                errTypeName.setText("Campo vacio");
+                new Animations().appear(errTypeName, 255, 0, 0);
+            }else{
+                Animations.hide(errTypeName, 255, 0, 0);
+                boolean state=true;
+                if(cmbTypeState.getSelectedIndex() == 1){
+                    state = false;
+                }
+                if(new ComplaintTypeController().updateComplaintType(currentId,txtTypeName.getText(),String.valueOf(cmbTypeAction.getSelectedItem()),state)){
+                    JOptionPane.showMessageDialog(this, "Modificado con exito");
+                    fillTypeTable();
+                    clearTypeFields();
+                }else{
+                    JOptionPane.showMessageDialog(this, "Error al modificar");
+                }
+            }
+        }
+    }//GEN-LAST:event_btnTypeActionActionPerformed
+
+    private void tblTypeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTypeMouseClicked
+        // TODO add your handling code here:
+        // TODO add your handling code here:
+        Animations.hide(errTypeName, 255, 0, 0);
+        int fila = this.tblType.getSelectedRow();
+        if (fila >= 0) {
+            Complaint_type obje = (Complaint_type) this.tblType.getValueAt(fila, 0);
+            txtTypeName.setText(obje.getName());
+            cmbTypeAction.setSelectedItem(obje.getTaken_action());
+            cmbTypeState.setSelectedIndex(obje.isState() ? 0 : 1);
+            this.currentId = obje.getId();
+            btnTypeAction.setText("Modificar");
+        }
+    }//GEN-LAST:event_tblTypeMouseClicked
+
+    private void btnTypeSearchResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTypeSearchResetActionPerformed
+        // TODO add your handling code here:
+        clearTypeFields();
+        fillTypeTable();
+    }//GEN-LAST:event_btnTypeSearchResetActionPerformed
+
+    private void txtTypeSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTypeSearchKeyReleased
+        // TODO add your handling code here:
+        triggerTypeSearch();
+    }//GEN-LAST:event_txtTypeSearchKeyReleased
+
+    private void cmbTypeSearchPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_cmbTypeSearchPropertyChange
+        // TODO add your handling code here:
+        triggerTypeSearch();
+    }//GEN-LAST:event_cmbTypeSearchPropertyChange
 
     /**
      * @param args the command line arguments
