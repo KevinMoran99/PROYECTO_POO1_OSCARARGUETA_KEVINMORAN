@@ -10,6 +10,7 @@ import com.sv.udb.controllers.AuthorityController;
 import com.sv.udb.controllers.CallController;
 import com.sv.udb.controllers.ComplaintTypeController;
 import com.sv.udb.controllers.ProvAsignController;
+import com.sv.udb.controllers.ProviderController;
 import com.sv.udb.views.dialogs.SearchSchool;
 import com.sv.udb.models.Authority;
 import com.sv.udb.models.Call;
@@ -1435,6 +1436,14 @@ public class MainFrame extends javax.swing.JFrame {
         pnlMain.add(pnlAuth, "crdAuth");
 
         pnlProv.setBackground(new java.awt.Color(255, 255, 255));
+        pnlProv.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
+                pnlProvComponentHidden(evt);
+            }
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                pnlProvComponentShown(evt);
+            }
+        });
 
         jLabel22.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel22.setText("Proveedores");
@@ -1452,15 +1461,30 @@ public class MainFrame extends javax.swing.JFrame {
 
         txtProvSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtProvSearch.setForeground(new java.awt.Color(6, 43, 51));
+        txtProvSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtProvSearchKeyReleased(evt);
+            }
+        });
 
         cmbProvSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        cmbProvSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbProvSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
+        cmbProvSearch.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                cmbProvSearchPropertyChange(evt);
+            }
+        });
 
         btnProvSearchReset.setBackground(new java.awt.Color(121, 121, 101));
         btnProvSearchReset.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnProvSearchReset.setForeground(new java.awt.Color(255, 255, 255));
         btnProvSearchReset.setText("Revertir");
         btnProvSearchReset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnProvSearchReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProvSearchResetActionPerformed(evt);
+            }
+        });
 
         tblProv.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1470,6 +1494,11 @@ public class MainFrame extends javax.swing.JFrame {
                 "Nombre", "Estado"
             }
         ));
+        tblProv.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblProvMouseClicked(evt);
+            }
+        });
         jScrollPane6.setViewportView(tblProv);
 
         jLabel25.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -1515,6 +1544,11 @@ public class MainFrame extends javax.swing.JFrame {
         btnProvAction.setText("Añadir");
         btnProvAction.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnProvAction.setIconTextGap(6);
+        btnProvAction.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProvActionActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlProvLayout = new javax.swing.GroupLayout(pnlProv);
         pnlProv.setLayout(pnlProvLayout);
@@ -2720,6 +2754,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void btnAuthClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAuthClearActionPerformed
         // TODO add your handling code here:
         clearAuthFields();
+        fillAuthTable();
     }//GEN-LAST:event_btnAuthClearActionPerformed
 
     private void btnMenuAuthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuAuthActionPerformed
@@ -2738,6 +2773,8 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnProvClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProvClearActionPerformed
         // TODO add your handling code here:
+        clearProvFields();
+        fillProvTable();
     }//GEN-LAST:event_btnProvClearActionPerformed
 
     private void btnMenuProvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuProvActionPerformed
@@ -2972,6 +3009,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void tblAuthMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAuthMouseClicked
         // TODO add your handling code here:
+        Animations.hide(errAuthName, 255, 0, 0);
         int fila = this.tblAuth.getSelectedRow();
         if (fila >= 0) {
             Authority obje = (Authority) this.tblAuth.getValueAt(fila, 0);
@@ -3150,6 +3188,146 @@ public class MainFrame extends javax.swing.JFrame {
         clearAuthFields();
         fillAuthTable();
     }//GEN-LAST:event_btnAuthSearchResetActionPerformed
+
+    /*----------------------------- ------------------------------------------
+     -------------------------------▲-----------------------------------------
+     ---------------- ------------ ▲‌ ▲---------------------------------------
+    --------------------------CODIGO DE PROV ---------------------------------*/
+    
+    //llenar tabla
+    private void fillProvTable(){
+        
+        DefaultTableModel df = (DefaultTableModel) tblProv.getModel();
+        while (df.getRowCount() > 0){ df.removeRow(0);};
+        
+        for(Provider obj : new ProviderController().getAll(false)){
+            df.addRow(new Object[]{obj,obj.isState() ? "Activo":"Inactivo"});
+        }
+    }
+    
+    private void clearProvFields(){
+        txtProvName.setText("");
+        cmbProvState.setSelectedIndex(0);
+        btnProvAction.setText("Añadir");
+        this.currentId = 0;
+        cmbProvSearchType.setSelectedIndex(0);
+        Animations.hide(errAuthName, 255, 0, 0);
+    }
+    
+    private void triggerProvSearch () {
+        try {
+            String param="";
+            int type = 0;
+            
+            switch(String.valueOf(cmbProvSearchType.getSelectedItem())) {
+                case "Nombre":
+                    type = ProviderController.BY_NAME;
+                    param = txtProvSearch.getText().trim();
+                    break;
+                case "Estado":
+                    type = ProviderController.BY_STATE;
+                    param = cmbProvSearch.getSelectedItem().toString();
+                    break;
+                case "N/A":
+                    type = ProviderController.NO_FIELD;
+                    break;
+            }
+            
+            DefaultTableModel model = (DefaultTableModel) tblProv.getModel();
+            while (model.getRowCount() > 0) model.removeRow(0);
+
+            for (Provider object : new ProviderController().search(type, param, false)){
+                model.addRow(new Object[]{object,object.isState() ? "Activo":"Inactivo"});
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    private void pnlProvComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlProvComponentShown
+        // TODO add your handling code here:
+        fillProvTable();
+    }//GEN-LAST:event_pnlProvComponentShown
+
+    private void pnlProvComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlProvComponentHidden
+        // TODO add your handling code here:
+        clearProvFields();
+    }//GEN-LAST:event_pnlProvComponentHidden
+
+    private void tblProvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProvMouseClicked
+        // TODO add your handling code here:
+        // TODO add your handling code here:
+        Animations.hide(errProvName, 255, 0, 0);
+        int fila = this.tblProv.getSelectedRow();
+        if (fila >= 0) {
+            Provider obje = (Provider) this.tblProv.getValueAt(fila, 0);
+            txtProvName.setText(obje.getName());
+            cmbProvState.setSelectedIndex(obje.isState() ? 0 : 1);
+            this.currentId = obje.getId();
+            btnProvAction.setText("Modificar");
+        }
+    }//GEN-LAST:event_tblProvMouseClicked
+
+    private void txtProvSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProvSearchKeyReleased
+        // TODO add your handling code here:
+        triggerProvSearch();
+    }//GEN-LAST:event_txtProvSearchKeyReleased
+
+    private void cmbProvSearchPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_cmbProvSearchPropertyChange
+        // TODO add your handling code here:
+        triggerProvSearch();
+    }//GEN-LAST:event_cmbProvSearchPropertyChange
+
+    private void btnProvActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProvActionActionPerformed
+        // TODO add your handling code here:// TODO add your handling code here:
+        if("Añadir".equals(btnProvAction.getText())){
+            if(txtProvName.getText().trim().isEmpty()){
+                errProvName.setText("Campo vacio");
+                new Animations().appear(errProvName, 255, 0, 0);
+            }else{
+                new Animations().hide(errProvName, 255, 0, 0);
+                boolean state=true;
+                if(cmbProvState.getSelectedIndex() == 1){
+                    state = false;
+                }
+                if(new ProviderController().addProvider(txtProvName.getText(),state)){
+                    JOptionPane.showMessageDialog(this, "Agregado con exito");
+                    fillProvTable();
+                    clearProvFields();
+                }else{
+                    JOptionPane.showMessageDialog(this, "Error al agregar");
+                }
+            }
+        }
+        
+        if("Modificar".equals(btnProvAction.getText())){
+            System.err.println("dos");
+            if(txtProvName.getText().trim().isEmpty()){
+                errProvName.setText("Campo vacio");
+                new Animations().appear(errProvName, 255, 0, 0);
+            }else{
+                Animations.hide(errProvName, 255, 0, 0);
+                boolean state=true;
+                if(cmbProvState.getSelectedIndex() == 1){
+                    state = false;
+                }
+                if(new ProviderController().updateProvider(currentId,txtProvName.getText(),state)){
+                    JOptionPane.showMessageDialog(this, "Actualizado con exito");
+                    fillProvTable();
+                    clearProvFields();
+                }else{
+                    JOptionPane.showMessageDialog(this, "Error al actualizar");
+                }
+            }
+        }
+        
+    }//GEN-LAST:event_btnProvActionActionPerformed
+
+    private void btnProvSearchResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProvSearchResetActionPerformed
+        // TODO add your handling code here:
+        clearProvFields();
+        fillProvTable();
+    }//GEN-LAST:event_btnProvSearchResetActionPerformed
 
     /**
      * @param args the command line arguments
