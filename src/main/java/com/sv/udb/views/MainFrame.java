@@ -11,6 +11,7 @@ import com.sv.udb.controllers.CallController;
 import com.sv.udb.controllers.ComplaintTypeController;
 import com.sv.udb.controllers.ProvAsignController;
 import com.sv.udb.controllers.ProviderController;
+import com.sv.udb.controllers.SchoolController;
 import com.sv.udb.views.dialogs.SearchSchool;
 import com.sv.udb.models.Authority;
 import com.sv.udb.models.Call;
@@ -1032,6 +1033,14 @@ public class MainFrame extends javax.swing.JFrame {
         pnlMain.add(pnlType, "crdType");
 
         pnlSchool.setBackground(new java.awt.Color(255, 255, 255));
+        pnlSchool.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
+                pnlSchoolComponentHidden(evt);
+            }
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                pnlSchoolComponentShown(evt);
+            }
+        });
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel12.setText("Escuelas");
@@ -1049,15 +1058,35 @@ public class MainFrame extends javax.swing.JFrame {
 
         txtSchoolSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtSchoolSearch.setForeground(new java.awt.Color(6, 43, 51));
+        txtSchoolSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSchoolSearchKeyReleased(evt);
+            }
+        });
 
         cmbSchoolSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        cmbSchoolSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbSchoolSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
+        cmbSchoolSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbSchoolSearchActionPerformed(evt);
+            }
+        });
+        cmbSchoolSearch.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                cmbSchoolSearchPropertyChange(evt);
+            }
+        });
 
         btnSchoolSearchReset.setBackground(new java.awt.Color(121, 121, 101));
         btnSchoolSearchReset.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnSchoolSearchReset.setForeground(new java.awt.Color(255, 255, 255));
         btnSchoolSearchReset.setText("Revertir");
         btnSchoolSearchReset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSchoolSearchReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSchoolSearchResetActionPerformed(evt);
+            }
+        });
 
         tblSchool.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1073,6 +1102,11 @@ public class MainFrame extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tblSchool.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSchoolMouseClicked(evt);
             }
         });
         jScrollPane3.setViewportView(tblSchool);
@@ -1132,6 +1166,11 @@ public class MainFrame extends javax.swing.JFrame {
         btnSchoolAction.setText("Añadir");
         btnSchoolAction.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnSchoolAction.setIconTextGap(6);
+        btnSchoolAction.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSchoolActionActionPerformed(evt);
+            }
+        });
 
         txtSchoolAddress.setColumns(20);
         txtSchoolAddress.setLineWrap(true);
@@ -2735,6 +2774,8 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnSchoolClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSchoolClearActionPerformed
         // TODO add your handling code here:
+        clearSchoolFields();
+        fillSchoolTable();
     }//GEN-LAST:event_btnSchoolClearActionPerformed
 
     private void btnMenuSchoolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuSchoolActionPerformed
@@ -2982,6 +3023,8 @@ public class MainFrame extends javax.swing.JFrame {
                     break;
                 case "N/A":
                     type = AuthorityController.NO_FIELD;
+                    clearAuthFields();
+                    fillAuthTable();
                     break;
             }
             
@@ -3230,6 +3273,8 @@ public class MainFrame extends javax.swing.JFrame {
                     break;
                 case "N/A":
                     type = ProviderController.NO_FIELD;
+                    clearProvFields();
+                    fillProvTable();
                     break;
             }
             
@@ -3328,6 +3373,177 @@ public class MainFrame extends javax.swing.JFrame {
         clearProvFields();
         fillProvTable();
     }//GEN-LAST:event_btnProvSearchResetActionPerformed
+
+    /*----------------------------- ------------------------------------------
+     -------------------------------▲-----------------------------------------
+     ---------------- ------------ ▲‌ ▲---------------------------------------
+    --------------------------CODIGO DE SCHOOL ---------------------------------*/
+    
+    //llenar tabla
+    private void fillSchoolTable(){
+        
+        DefaultTableModel df = (DefaultTableModel) tblSchool.getModel();
+        while (df.getRowCount() > 0){ df.removeRow(0);};
+        
+        for(School obj : new SchoolController().getAll(false)){
+            df.addRow(new Object[]{obj,obj.getAddress(),obj.isState() ? "Activo":"Inactivo"});
+        }
+    }
+    
+    private void clearSchoolFields(){
+        txtSchoolName.setText("");
+        txtSchoolAddress.setText("");
+        cmbSchoolState.setSelectedIndex(0);
+        btnSchoolAction.setText("Añadir");
+        this.currentId = 0;
+        cmbSchoolSearchType.setSelectedIndex(0);
+        Animations.hide(errSchoolName, 255, 0, 0);
+        Animations.hide(errSchoolAddress, 255, 0, 0);
+    }
+    
+    private void triggerSchoolSearch () {
+        try {
+            String param="";
+            int type = 0;
+            
+            switch(String.valueOf(cmbSchoolSearchType.getSelectedItem())) {
+                case "Nombre":
+                    type = SchoolController.BY_NAME;
+                    param = txtSchoolSearch.getText().trim();
+                    break;
+                case "Dirección":
+                    type = SchoolController.BY_ADDRESS;
+                    param = txtSchoolSearch.getText().trim();
+                    break;
+                case "Estado":
+                    type = SchoolController.BY_STATE;
+                    param = cmbSchoolSearch.getSelectedItem().toString();
+                    break;
+                case "N/A":
+                    type = SchoolController.NO_FIELD;
+                    clearSchoolFields();
+                    fillSchoolTable();
+                    break;
+            }
+            
+            DefaultTableModel model = (DefaultTableModel) tblSchool.getModel();
+            while (model.getRowCount() > 0) model.removeRow(0);
+
+            for (School object : new SchoolController().search(type, param, false)){
+                model.addRow(new Object[]{object,object.getAddress(),object.isState() ? "Activo":"Inactivo"});
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    private void pnlSchoolComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlSchoolComponentShown
+        // TODO add your handling code here:
+        fillSchoolTable();
+    }//GEN-LAST:event_pnlSchoolComponentShown
+
+    private void txtSchoolSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSchoolSearchKeyReleased
+        // TODO add your handling code here:
+        triggerSchoolSearch();
+    }//GEN-LAST:event_txtSchoolSearchKeyReleased
+
+    private void cmbSchoolSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbSchoolSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbSchoolSearchActionPerformed
+
+    private void cmbSchoolSearchPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_cmbSchoolSearchPropertyChange
+        // TODO add your handling code here:
+        triggerSchoolSearch();
+    }//GEN-LAST:event_cmbSchoolSearchPropertyChange
+
+    private void pnlSchoolComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlSchoolComponentHidden
+        // TODO add your handling code here:
+        clearSchoolFields();
+    }//GEN-LAST:event_pnlSchoolComponentHidden
+
+    private void btnSchoolActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSchoolActionActionPerformed
+        // TODO add your handling code here:
+        // TODO add your handling code here:// TODO add your handling code here:
+        if("Añadir".equals(btnSchoolAction.getText())){
+            boolean flag = true;
+            if(txtSchoolName.getText().trim().isEmpty()){
+                errSchoolName.setText("Campo vacio");
+                new Animations().appear(errSchoolName, 255, 0, 0);
+                flag = false;
+            }
+            if(txtSchoolAddress.getText().trim().isEmpty()){
+                errSchoolAddress.setText("Campo vacio");
+                new Animations().appear(errSchoolAddress, 255, 0, 0);
+                flag = false;
+            }
+            if(flag){
+                Animations.hide(errSchoolName, 255, 0, 0);
+                Animations.hide(errSchoolAddress, 255, 0, 0);
+                boolean state=true;
+                if(cmbSchoolState.getSelectedIndex() == 1){
+                    state = false;
+                }
+                if(new SchoolController().addSchool(txtSchoolName.getText(),txtSchoolAddress.getText(),state)){
+                    JOptionPane.showMessageDialog(this, "Agregado con exito");
+                    fillSchoolTable();
+                    clearSchoolFields();
+                }else{
+                    JOptionPane.showMessageDialog(this, "Error al agregar");
+                }
+            }
+        }
+        
+        if("Modificar".equals(btnSchoolAction.getText())){
+            System.err.println("dos");
+            boolean flag = true;
+            if(txtSchoolName.getText().trim().isEmpty()){
+                errSchoolName.setText("Campo vacio");
+                new Animations().appear(errSchoolName, 255, 0, 0);
+                flag = false;
+            }
+            if(txtSchoolAddress.getText().trim().isEmpty()){
+                errSchoolAddress.setText("Campo vacio");
+                new Animations().appear(errSchoolAddress, 255, 0, 0);
+                flag = false;
+            }
+            if(flag){
+                Animations.hide(errSchoolName, 255, 0, 0);
+                Animations.hide(errSchoolAddress, 255, 0, 0);
+                boolean state=true;
+                if(cmbSchoolState.getSelectedIndex() == 1){
+                    state = false;
+                }
+                if(new SchoolController().updateSchool(currentId,txtSchoolName.getText(),txtSchoolAddress.getText(),state)){
+                    JOptionPane.showMessageDialog(this, "Modificado con exito");
+                    fillSchoolTable();
+                    clearSchoolFields();
+                }else{
+                    JOptionPane.showMessageDialog(this, "Error al modificar");
+                }
+            }
+        }
+    }//GEN-LAST:event_btnSchoolActionActionPerformed
+
+    private void tblSchoolMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSchoolMouseClicked
+        // TODO add your handling code here:
+        Animations.hide(errSchoolName, 255, 0, 0);
+        Animations.hide(errSchoolAddress, 255, 0, 0);
+        int fila = this.tblSchool.getSelectedRow();
+        if (fila >= 0) {
+            School obje = (School) this.tblSchool.getValueAt(fila, 0);
+            txtSchoolName.setText(obje.getName());
+            txtSchoolAddress.setText(obje.getAddress());
+            cmbSchoolState.setSelectedIndex(obje.isState() ? 0 : 1);
+            this.currentId = obje.getId();
+            btnSchoolAction.setText("Modificar");
+        }
+    }//GEN-LAST:event_tblSchoolMouseClicked
+
+    private void btnSchoolSearchResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSchoolSearchResetActionPerformed
+        // TODO add your handling code here:
+        clearSchoolFields();
+        fillSchoolTable();
+    }//GEN-LAST:event_btnSchoolSearchResetActionPerformed
 
     /**
      * @param args the command line arguments
