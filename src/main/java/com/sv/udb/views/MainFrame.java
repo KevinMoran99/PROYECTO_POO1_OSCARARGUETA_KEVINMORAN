@@ -11,6 +11,7 @@ import com.sv.udb.controllers.CallController;
 import com.sv.udb.controllers.ComplaintTypeController;
 import com.sv.udb.controllers.ProvAsignController;
 import com.sv.udb.controllers.ProviderController;
+import com.sv.udb.utilities.ReportGenerator;
 import com.sv.udb.controllers.SchoolController;
 import com.sv.udb.controllers.UserController;
 import com.sv.udb.views.dialogs.SearchSchool;
@@ -2291,6 +2292,11 @@ public class MainFrame extends javax.swing.JFrame {
         btnDetailReport.setText("Generar reporte");
         btnDetailReport.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnDetailReport.setIconTextGap(6);
+        btnDetailReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDetailReportActionPerformed(evt);
+            }
+        });
 
         chbDetailTalk.setBackground(new java.awt.Color(255, 255, 255));
         chbDetailTalk.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -4483,6 +4489,10 @@ public class MainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         triggerUserSearch();
     }//GEN-LAST:event_txtUserSearchKeyReleased
+
+    private void btnDetailReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailReportActionPerformed
+        ReportGenerator.detailReport(currentId);
+    }//GEN-LAST:event_btnDetailReportActionPerformed
 
     /**
      * @param args the command line arguments

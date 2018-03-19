@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="viable" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="school_id" class="java.lang.Integer"/>
+	<field name="viable" class="java.lang.Boolean"/>
+	<field name="complaint_id" class="java.lang.Integer"/>
+	<field name="user_id" class="java.lang.Integer"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="call_date" class="java.sql.Date"/>
+	<field name="talk_given" class="java.lang.Boolean"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="79" forecolor="#FFFFFF" backcolor="#0077C6"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="11" y="15" width="179" height="48" forecolor="#FFFFFF"/>
+				<textElement>
+					<font size="36" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MINED XD]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="126" splitType="Stretch">
+			<textField>
+				<reportElement x="174" y="16" width="93" height="46"/>
+				<textElement>
+					<font fontName="Tahoma" size="30"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="16" width="163" height="46"/>
+				<textElement>
+					<font fontName="Tahoma" size="30"/>
+				</textElement>
+				<text><![CDATA[Denuncia #]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="362" y="16" width="193" height="46" forecolor="#FF0000">
+					<printWhenExpression><![CDATA[new Boolean($P{viable} == Boolean.FALSE)]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Tahoma" size="30" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ARCHIVADA]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>
