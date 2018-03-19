@@ -9,6 +9,8 @@ import java.awt.Component;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JLabel;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -16,7 +18,8 @@ import javax.swing.JLabel;
  * @author kevin
  */
 public class Utils {
-
+    public static final Pattern VALID_EMAIL_ADDRESS_REGEX = 
+    Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
     public Utils() {
     }
     
@@ -41,6 +44,12 @@ public class Utils {
         }
         return output;
     }
+    
+
+    public boolean validate(String emailStr) {
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
+        return matcher.find();
+}
    
     public static final int DATE_UI = 1;
     public static final int DATE_DB = 2;

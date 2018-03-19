@@ -144,4 +144,60 @@ public class SchoolController {
         return resp;
     }
     
+    
+    public boolean addSchool(String name,String address, boolean state){
+        boolean resp = false;
+        
+        try {
+            PreparedStatement cmd = this.conn.prepareStatement("insert into schools values(null,?,?,?)");
+            cmd.setString(1, name);
+            cmd.setString(2,address);
+            cmd.setBoolean(3, state);
+            cmd.executeUpdate();
+            resp = true;
+        } catch (Exception ex) {
+            System.err.println("Error al guardar escuela" + ex.getMessage());
+        } finally {
+            try {
+                if (this.conn != null) {
+                    if (!this.conn.isClosed()) {
+                        this.conn.close();
+                    }
+                }
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar la conexion en escuela: " + e.getMessage());
+            }
+        }
+        
+        return resp;
+    }
+    
+    public boolean updateSchool(int id, String name, String address, boolean state){
+        boolean resp = false;
+        
+        try {
+            PreparedStatement cmd = this.conn.prepareStatement("update schools set name = ?,address=?, state=? where id = ?");
+            cmd.setString(1, name);
+            cmd.setString(2,address);
+            cmd.setBoolean(3, state);
+            cmd.setInt(4, id);
+            cmd.executeUpdate();
+            resp = true;
+        } catch (Exception ex) {
+            System.err.println("Error al modificar proveedor" + ex.getMessage());
+        } finally {
+            try {
+                if (this.conn != null) {
+                    if (!this.conn.isClosed()) {
+                        this.conn.close();
+                    }
+                }
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar la conexion en proveedor: " + e.getMessage());
+            }
+        }
+        
+        return resp;
+    }
+    
 }

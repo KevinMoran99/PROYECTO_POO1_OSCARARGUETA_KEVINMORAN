@@ -12,7 +12,7 @@ id int primary key not null auto_increment,
 name varchar (100) not null,
 lastname varchar (100) not null,
 email varchar (255) unique not null,
-pass varchar (20) not null,
+pass varchar (100) not null,
 user_type_id int not null,
 state bool not null default 1,
 foreign key (user_type_id) references user_types(id)
