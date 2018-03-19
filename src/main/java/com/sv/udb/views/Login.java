@@ -111,8 +111,8 @@ public class Login extends javax.swing.JFrame {
             String email = txtEmail.getText().trim(); 
             String pass = txtPass.getText().trim();
             
-            email = "user@gmail.com";
-            pass = "123";
+            /*email = "user@gmail.com";
+            pass = "123";*/
             
             if(!(email.equals("") || pass.equals(""))) {
                 User user = new UserController().login(email, pass);

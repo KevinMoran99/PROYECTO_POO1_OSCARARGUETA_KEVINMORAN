@@ -56,6 +56,12 @@ public class Provider_asign {
     public void setContent_removed(boolean content_removed) {
         this.content_removed = content_removed;
     }
+
+    //Implementación un poco rara, pero útil en la tabla de proveedores vinculados a denuncias
+    @Override
+    public String toString() {
+        return provider.getName();
+    }
     
     
     

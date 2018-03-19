@@ -5,6 +5,11 @@
  */
 package com.sv.udb.utilities;
 
+import java.awt.Component;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JLabel;
+
 
 /**
  * Colección de métodos útiles y standalone, que no requieren de la creación de una clase
@@ -37,4 +42,25 @@ public class Utils {
         return output;
     }
    
+    public static final int DATE_UI = 1;
+    public static final int DATE_DB = 2;
+    
+    public static String formatDate (Date date, int type) {
+        if (type == Utils.DATE_UI)
+            return new SimpleDateFormat("dd/MM/yyyy").format(date);
+        else
+            return new SimpleDateFormat("yyyy-MM-dd").format(date);
+    }
+    
+    /**
+     * Hace que el componente parametrado obedezca a su prefferedSize
+     * @param comp 
+     */
+    public static void obeySize (Component comp) {
+        comp.setPreferredSize(comp.getPreferredSize());
+        comp.setMaximumSize(comp.getPreferredSize());
+        comp.setMinimumSize(comp.getPreferredSize());
+        comp.setSize(comp.getPreferredSize());
+        comp.revalidate();
+    }
 }

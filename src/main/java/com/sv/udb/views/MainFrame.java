@@ -13,9 +13,11 @@ import com.sv.udb.controllers.ProvAsignController;
 import com.sv.udb.controllers.ProviderController;
 import com.sv.udb.views.dialogs.SearchSchool;
 import com.sv.udb.models.Authority;
+import com.sv.udb.models.Authority_asign;
 import com.sv.udb.models.Call;
 import com.sv.udb.models.Complaint_type;
 import com.sv.udb.models.Provider;
+import com.sv.udb.models.Provider_asign;
 import com.sv.udb.models.School;
 import com.sv.udb.models.User;
 import com.sv.udb.utilities.Animations;
@@ -26,6 +28,8 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.Dimension;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -87,7 +91,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
         else {
             showCard("crdCalls");
-            refreshUser();
+            refreshPnlCalls();
         }
         
         
@@ -106,12 +110,37 @@ public class MainFrame extends javax.swing.JFrame {
         for(JLabel err : errorList)
             Animations.hide(err, 255, 0, 0);
         
+        //Haciendo datepickers no editables
+        dtpCallsFrom.getEditor().setEditable(false);
+        dtpCallsTo.getEditor().setEditable(false);
+        dtpReportsFrom.getEditor().setEditable(false);
+        dtpReportsTo.getEditor().setEditable(false);
         
         //Ocultando componentes
         Animations.invisibilizeComponents(this, cmbUserSearch, txtUserSearch, cmbTypeSearch, txtTypeSearch,
                 cmbSchoolSearch, txtSchoolSearch, cmbAuthSearch, txtAuthSearch, cmbProvSearch, 
-                txtProvSearch, cmbCallsSearch, txtCallsSearch, lblList, scrLstNew, btnNewListSearch, 
-                btnNewListDel, lblDetailArchived);
+                txtProvSearch, pnlCallsParam, btnCallsSchoolSearch, lblList, scrLstNew, 
+                btnNewListSearch, btnNewListDel, lblDetailArchived);
+        
+        //Modeando panel ubicado dentro de pnlCalls para que le haga caso a los tamaños que le doy ¬¬
+        /*pnlCallsParam.setPreferredSize(new Dimension(140, 28));
+        pnlCallsParam.setMaximumSize(new Dimension(140, 28));
+        pnlCallsParam.setMinimumSize(new Dimension(140, 28));
+        pnlCallsParam.setSize(new Dimension(140, 28));
+        pnlCallsParam.revalidate();
+        
+        lblDetailSchool.setPreferredSize(lblDetailSchool.getPreferredSize());
+        lblDetailSchool.setMaximumSize(lblDetailSchool.getPreferredSize());
+        lblDetailSchool.setMinimumSize(lblDetailSchool.getPreferredSize());
+        lblDetailSchool.setSize(lblDetailSchool.getPreferredSize());
+        lblDetailSchool.revalidate();*/
+        
+        Component[] obeySizes = {
+            pnlCallsParam, lblCallsSchool, lblDetailUser, lblDetailDate, lblDetailSchool, lblDetailType
+        };
+        
+        for(Component comp : obeySizes)
+            Utils.obeySize(comp);
     }
 
 
@@ -257,12 +286,15 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane7 = new javax.swing.JScrollPane();
         tblCalls = new javax.swing.JTable();
         dtpCallsFrom = new org.jdesktop.swingx.JXDatePicker();
-        cmbCallsSearch = new javax.swing.JComboBox<>();
-        txtCallsSearch = new javax.swing.JTextField();
         jLabel30 = new javax.swing.JLabel();
         dtpCallsTo = new org.jdesktop.swingx.JXDatePicker();
         jLabel31 = new javax.swing.JLabel();
         btnCallsDetail = new javax.swing.JButton();
+        btnCallsSchoolSearch = new javax.swing.JButton();
+        pnlCallsParam = new javax.swing.JPanel();
+        cmbCallsSearch = new javax.swing.JComboBox<>();
+        lblCallsSchool = new javax.swing.JLabel();
+        txtCallsSearch = new javax.swing.JTextField();
         pnlNew = new javax.swing.JPanel();
         jLabel32 = new javax.swing.JLabel();
         jSeparator7 = new javax.swing.JSeparator();
@@ -295,18 +327,19 @@ public class MainFrame extends javax.swing.JFrame {
         lblDetailSchool = new javax.swing.JLabel();
         jLabel38 = new javax.swing.JLabel();
         jLabel39 = new javax.swing.JLabel();
-        lblList1 = new javax.swing.JLabel();
+        lblAsigns = new javax.swing.JLabel();
         lblDetailArchived = new javax.swing.JLabel();
         jLabel40 = new javax.swing.JLabel();
         lblDetailUser = new javax.swing.JLabel();
         jLabel41 = new javax.swing.JLabel();
         lblDetailDate = new javax.swing.JLabel();
         lblDetailType = new javax.swing.JLabel();
-        lblDetailDescription = new org.jdesktop.swingx.JXLabel();
         btnDetailReport = new javax.swing.JButton();
         chbDetailTalk = new javax.swing.JCheckBox();
-        jScrollPane9 = new javax.swing.JScrollPane();
-        tblDetail = new javax.swing.JTable();
+        scrAsigns = new javax.swing.JScrollPane();
+        tblAsigns = new javax.swing.JTable();
+        jScrollPane11 = new javax.swing.JScrollPane();
+        lblDetailDescription = new javax.swing.JTextArea();
         pnlReports = new javax.swing.JPanel();
         jLabel42 = new javax.swing.JLabel();
         jSeparator9 = new javax.swing.JSeparator();
@@ -730,7 +763,7 @@ public class MainFrame extends javax.swing.JFrame {
                             .addComponent(jLabel3)
                             .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(errUserName))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
                         .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(errUserLastname)
                             .addComponent(jLabel4)
@@ -825,7 +858,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(errUserType)
                     .addComponent(errUserState))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
                 .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnUserClear)
                     .addComponent(btnUserAction))
@@ -1022,7 +1055,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(cmbTypeAction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(9, 9, 9)
                 .addComponent(errTypeAction)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 132, Short.MAX_VALUE)
                 .addGroup(pnlTypeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnTypeClear)
                     .addComponent(btnTypeAction))
@@ -1225,7 +1258,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(errSchoolAddress)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
                 .addGroup(pnlSchoolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSchoolClear)
                     .addComponent(btnSchoolAction))
@@ -1426,7 +1459,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(txtAuthName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(errAuthName)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 140, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 166, Short.MAX_VALUE)
                 .addGroup(pnlAuthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAuthClear)
                     .addComponent(btnAuthAction))
@@ -1622,7 +1655,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(txtProvName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(errProvName)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 140, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 166, Short.MAX_VALUE)
                 .addGroup(pnlProvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnProvClear)
                     .addComponent(btnProvAction))
@@ -1632,6 +1665,14 @@ public class MainFrame extends javax.swing.JFrame {
         pnlMain.add(pnlProv, "crdProv");
 
         pnlCalls.setBackground(new java.awt.Color(255, 255, 255));
+        pnlCalls.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
+                pnlCallsComponentHidden(evt);
+            }
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                pnlCallsComponentShown(evt);
+            }
+        });
 
         jLabel28.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel28.setText("Lista de denuncias");
@@ -1652,6 +1693,11 @@ public class MainFrame extends javax.swing.JFrame {
         btnAuthSearchReset1.setForeground(new java.awt.Color(255, 255, 255));
         btnAuthSearchReset1.setText("Revertir");
         btnAuthSearchReset1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAuthSearchReset1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAuthSearchReset1ActionPerformed(evt);
+            }
+        });
 
         tblCalls.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1660,17 +1706,32 @@ public class MainFrame extends javax.swing.JFrame {
             new String [] {
                 "Escuela", "Tipo", "Descripción", "Viable", "Fecha"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblCalls.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane7.setViewportView(tblCalls);
 
-        cmbCallsSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        cmbCallsSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        txtCallsSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        txtCallsSearch.setForeground(new java.awt.Color(6, 43, 51));
+        dtpCallsFrom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dtpCallsFromActionPerformed(evt);
+            }
+        });
 
         jLabel30.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel30.setText("Fecha:");
+
+        dtpCallsTo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dtpCallsToActionPerformed(evt);
+            }
+        });
 
         jLabel31.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel31.setText("-");
@@ -1687,6 +1748,46 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        btnCallsSchoolSearch.setBackground(new java.awt.Color(204, 204, 204));
+        btnCallsSchoolSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnCallsSchoolSearch.setText("...");
+        btnCallsSchoolSearch.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCallsSchoolSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCallsSchoolSearchActionPerformed(evt);
+            }
+        });
+
+        pnlCallsParam.setBackground(new java.awt.Color(255, 255, 255));
+        pnlCallsParam.setMaximumSize(new java.awt.Dimension(140, 2147483647));
+        pnlCallsParam.setPreferredSize(new java.awt.Dimension(140, 23));
+        pnlCallsParam.setLayout(new java.awt.CardLayout());
+
+        cmbCallsSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cmbCallsSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbCallsSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbCallsSearchActionPerformed(evt);
+            }
+        });
+        pnlCallsParam.add(cmbCallsSearch, "callsCmb");
+
+        lblCallsSchool.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lblCallsSchool.setForeground(new java.awt.Color(6, 43, 51));
+        lblCallsSchool.setText("Ninguna");
+        lblCallsSchool.setMaximumSize(new java.awt.Dimension(140, 17));
+        lblCallsSchool.setPreferredSize(new java.awt.Dimension(140, 23));
+        pnlCallsParam.add(lblCallsSchool, "callsLbl");
+
+        txtCallsSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtCallsSearch.setForeground(new java.awt.Color(6, 43, 51));
+        txtCallsSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCallsSearchKeyReleased(evt);
+            }
+        });
+        pnlCallsParam.add(txtCallsSearch, "callsTxt");
+
         javax.swing.GroupLayout pnlCallsLayout = new javax.swing.GroupLayout(pnlCalls);
         pnlCalls.setLayout(pnlCallsLayout);
         pnlCallsLayout.setHorizontalGroup(
@@ -1698,30 +1799,27 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jScrollPane7)
                     .addGroup(pnlCallsLayout.createSequentialGroup()
                         .addGroup(pnlCallsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel29)
+                            .addComponent(jLabel30))
+                        .addGap(18, 18, 18)
+                        .addGroup(pnlCallsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmbCallsSearchType, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(pnlCallsLayout.createSequentialGroup()
-                                .addComponent(jLabel28)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 290, Short.MAX_VALUE))
-                            .addGroup(pnlCallsLayout.createSequentialGroup()
-                                .addGroup(pnlCallsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel29)
-                                    .addComponent(jLabel30))
-                                .addGap(18, 18, 18)
-                                .addGroup(pnlCallsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cmbCallsSearchType, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(pnlCallsLayout.createSequentialGroup()
-                                        .addComponent(dtpCallsFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(pnlCallsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtCallsSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cmbCallsSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(dtpCallsTo, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(37, 37, 37)))
-                        .addComponent(btnAuthSearchReset1))
+                                .addComponent(dtpCallsFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(32, 32, 32)
+                                .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                        .addGroup(pnlCallsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(pnlCallsParam, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dtpCallsTo, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(37, 37, 37)
+                        .addGroup(pnlCallsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnAuthSearchReset1)
+                            .addComponent(btnCallsSchoolSearch)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlCallsLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnCallsDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnCallsDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel28))
                 .addContainerGap())
         );
         pnlCallsLayout.setVerticalGroup(
@@ -1731,25 +1829,22 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jLabel28)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlCallsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlCallsLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnlCallsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel29)
-                            .addComponent(cmbCallsSearchType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbCallsSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCallsSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnlCallsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(dtpCallsFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel30)
-                            .addComponent(dtpCallsTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel31)))
-                    .addGroup(pnlCallsLayout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(btnAuthSearchReset1)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
-                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pnlCallsParam, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmbCallsSearchType)
+                    .addGroup(pnlCallsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel29)
+                        .addComponent(btnCallsSchoolSearch)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlCallsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dtpCallsFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel30)
+                    .addComponent(dtpCallsTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel31)
+                    .addComponent(btnAuthSearchReset1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnCallsDetail)
                 .addContainerGap())
@@ -1758,6 +1853,14 @@ public class MainFrame extends javax.swing.JFrame {
         pnlMain.add(pnlCalls, "crdCalls");
 
         pnlNew.setBackground(new java.awt.Color(255, 255, 255));
+        pnlNew.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                pnlNewComponentShown(evt);
+            }
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
+                pnlNewComponentHidden(evt);
+            }
+        });
 
         jLabel32.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel32.setText("Nueva denuncia");
@@ -1985,7 +2088,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(pnlNewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnNewListDel)
                     .addComponent(errNewList))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
                 .addGroup(pnlNewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNewClear)
                     .addComponent(btnNewSave))
@@ -1995,6 +2098,11 @@ public class MainFrame extends javax.swing.JFrame {
         pnlMain.add(pnlNew, "crdNew");
 
         pnlCallDetail.setBackground(new java.awt.Color(255, 255, 255));
+        pnlCallDetail.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
+                pnlCallDetailComponentHidden(evt);
+            }
+        });
 
         jLabel36.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel36.setText("Detalle de denuncia");
@@ -2031,6 +2139,8 @@ public class MainFrame extends javax.swing.JFrame {
         lblDetailSchool.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblDetailSchool.setForeground(new java.awt.Color(6, 43, 51));
         lblDetailSchool.setText("Ninguna");
+        lblDetailSchool.setMaximumSize(new java.awt.Dimension(321, 17));
+        lblDetailSchool.setPreferredSize(new java.awt.Dimension(366, 17));
 
         jLabel38.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel38.setText("Descripción:");
@@ -2038,12 +2148,13 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel39.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel39.setText("Tipo de denuncia:");
 
-        lblList1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        lblList1.setText("Autoridades/Proveedores notificados:");
+        lblAsigns.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lblAsigns.setText("Autoridades/Proveedores notificados:");
 
         lblDetailArchived.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         lblDetailArchived.setForeground(new java.awt.Color(255, 0, 0));
         lblDetailArchived.setText("ARCHIVADA");
+        lblDetailArchived.setToolTipText("Denuncia no viable");
 
         jLabel40.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel40.setText("Registrada por usuario:");
@@ -2051,6 +2162,8 @@ public class MainFrame extends javax.swing.JFrame {
         lblDetailUser.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblDetailUser.setForeground(new java.awt.Color(6, 43, 51));
         lblDetailUser.setText("Ninguno");
+        lblDetailUser.setMaximumSize(new java.awt.Dimension(321, 17));
+        lblDetailUser.setPreferredSize(new java.awt.Dimension(366, 17));
 
         jLabel41.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel41.setText("Fecha de registro:");
@@ -2058,14 +2171,14 @@ public class MainFrame extends javax.swing.JFrame {
         lblDetailDate.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblDetailDate.setForeground(new java.awt.Color(6, 43, 51));
         lblDetailDate.setText("Ninguna");
+        lblDetailDate.setMaximumSize(new java.awt.Dimension(321, 17));
+        lblDetailDate.setPreferredSize(new java.awt.Dimension(366, 17));
 
         lblDetailType.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblDetailType.setForeground(new java.awt.Color(6, 43, 51));
         lblDetailType.setText("Ninguna");
-
-        lblDetailDescription.setForeground(new java.awt.Color(6, 43, 51));
-        lblDetailDescription.setText("Ninguna");
-        lblDetailDescription.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblDetailType.setMaximumSize(new java.awt.Dimension(321, 17));
+        lblDetailType.setPreferredSize(new java.awt.Dimension(366, 17));
 
         btnDetailReport.setBackground(new java.awt.Color(0, 50, 180));
         btnDetailReport.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -2079,7 +2192,7 @@ public class MainFrame extends javax.swing.JFrame {
         chbDetailTalk.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         chbDetailTalk.setText("Se impartieron charlas en el centro escolar para prevenir fenómenos similares");
 
-        tblDetail.setModel(new javax.swing.table.DefaultTableModel(
+        tblAsigns.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -2090,64 +2203,89 @@ public class MainFrame extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.Object.class, java.lang.Boolean.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, true
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
-        jScrollPane9.setViewportView(tblDetail);
-        if (tblDetail.getColumnModel().getColumnCount() > 0) {
-            tblDetail.getColumnModel().getColumn(1).setResizable(false);
+        scrAsigns.setViewportView(tblAsigns);
+        if (tblAsigns.getColumnModel().getColumnCount() > 0) {
+            tblAsigns.getColumnModel().getColumn(1).setResizable(false);
         }
+
+        lblDetailDescription.setEditable(false);
+        lblDetailDescription.setColumns(20);
+        lblDetailDescription.setForeground(new java.awt.Color(6, 43, 51));
+        lblDetailDescription.setLineWrap(true);
+        lblDetailDescription.setRows(2);
+        jScrollPane11.setViewportView(lblDetailDescription);
 
         javax.swing.GroupLayout pnlCallDetailLayout = new javax.swing.GroupLayout(pnlCallDetail);
         pnlCallDetail.setLayout(pnlCallDetailLayout);
         pnlCallDetailLayout.setHorizontalGroup(
             pnlCallDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jSeparator8)
-            .addGroup(pnlCallDetailLayout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addComponent(chbDetailTalk)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(pnlCallDetailLayout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlCallDetailLayout.createSequentialGroup()
                 .addGroup(pnlCallDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlCallDetailLayout.createSequentialGroup()
-                        .addComponent(jLabel36)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblDetailArchived))
-                    .addGroup(pnlCallDetailLayout.createSequentialGroup()
-                        .addGroup(pnlCallDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jScrollPane9, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlCallDetailLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(pnlCallDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlCallDetailLayout.createSequentialGroup()
-                                .addComponent(btnDetailBack)
+                                .addComponent(jLabel36)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnDetailSave))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlCallDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(btnDetailReport, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(pnlCallDetailLayout.createSequentialGroup()
-                                    .addGroup(pnlCallDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lblDetailArchived))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlCallDetailLayout.createSequentialGroup()
+                                .addGroup(pnlCallDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(pnlCallDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlCallDetailLayout.createSequentialGroup()
+                                            .addComponent(btnDetailBack)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(btnDetailReport, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlCallDetailLayout.createSequentialGroup()
+                                            .addComponent(jLabel40)
+                                            .addGap(60, 60, 60)
+                                            .addComponent(lblDetailUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                         .addGroup(pnlCallDetailLayout.createSequentialGroup()
                                             .addComponent(jLabel41)
                                             .addGap(92, 92, 92)
-                                            .addComponent(lblDetailDate))
-                                        .addGroup(pnlCallDetailLayout.createSequentialGroup()
-                                            .addComponent(jLabel40)
-                                            .addGap(60, 60, 60)
-                                            .addComponent(lblDetailUser))
-                                        .addGroup(pnlCallDetailLayout.createSequentialGroup()
-                                            .addComponent(jLabel37)
+                                            .addComponent(lblDetailDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlCallDetailLayout.createSequentialGroup()
+                                            .addGroup(pnlCallDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel37)
+                                                .addComponent(jLabel39))
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addGroup(pnlCallDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(lblDetailType)
-                                                .addComponent(lblDetailSchool)))
-                                        .addComponent(jLabel38)
-                                        .addComponent(jLabel39)
-                                        .addComponent(lblDetailDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblList1))
-                                    .addGap(294, 294, 294))))
-                        .addGap(0, 12, Short.MAX_VALUE)))
+                                                .addComponent(lblDetailType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(lblDetailSchool, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addGroup(pnlCallDetailLayout.createSequentialGroup()
+                                            .addGap(166, 166, 166)
+                                            .addComponent(btnDetailSave)))
+                                    .addComponent(scrAsigns, javax.swing.GroupLayout.PREFERRED_SIZE, 567, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(pnlCallDetailLayout.createSequentialGroup()
+                        .addGroup(pnlCallDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlCallDetailLayout.createSequentialGroup()
+                                .addGap(42, 42, 42)
+                                .addComponent(chbDetailTalk))
+                            .addGroup(pnlCallDetailLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel38))
+                            .addGroup(pnlCallDetailLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(lblAsigns)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(pnlCallDetailLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 567, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlCallDetailLayout.setVerticalGroup(
             pnlCallDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2161,35 +2299,35 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(pnlCallDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel40)
-                    .addComponent(lblDetailUser))
+                    .addComponent(lblDetailUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(pnlCallDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel41)
-                    .addComponent(lblDetailDate))
+                    .addComponent(lblDetailDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(pnlCallDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel37)
-                    .addComponent(lblDetailSchool))
+                    .addComponent(lblDetailSchool, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(pnlCallDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel39)
-                    .addComponent(lblDetailType))
+                    .addComponent(lblDetailType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel38)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblDetailDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(66, 66, 66)
-                .addComponent(lblList1)
+                .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
+                .addComponent(lblAsigns)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scrAsigns, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(chbDetailTalk)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
-                .addComponent(btnDetailReport)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addComponent(btnDetailSave)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlCallDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnDetailBack)
-                    .addComponent(btnDetailSave))
+                    .addComponent(btnDetailReport))
                 .addContainerGap())
         );
 
@@ -2240,7 +2378,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jLabel47, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(dtpReportsFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
                 .addComponent(jLabel48, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(dtpReportsTo, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2281,7 +2419,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(btnReport2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addComponent(btnReport3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(102, Short.MAX_VALUE))
+                .addContainerGap(128, Short.MAX_VALUE))
         );
 
         pnlMain.add(pnlReports, "crdReports");
@@ -2490,7 +2628,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGroup(pnlProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlProfileLayout.createSequentialGroup()
                                 .addComponent(btnUserClear1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 269, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 270, Short.MAX_VALUE)
                                 .addComponent(btnUserAction1))
                             .addGroup(pnlProfileLayout.createSequentialGroup()
                                 .addComponent(jLabel43)
@@ -2524,7 +2662,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(errProfileEmail)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(errProfilePass)
@@ -2608,13 +2746,8 @@ public class MainFrame extends javax.swing.JFrame {
      * Refrezca la información de los controles de modo personal
      */
     private void refreshUser () {
-        DefaultComboBoxModel model = (DefaultComboBoxModel) cmbNewType.getModel();
-        model.removeAllElements();
         
-        model.addElement("Ninguno");
         
-        for (Complaint_type type : new ComplaintTypeController().getAll(true))
-            model.addElement(type);
     }
     
     
@@ -2622,6 +2755,17 @@ public class MainFrame extends javax.swing.JFrame {
        -------------------------------▲---------------------------------------
        ---------------- ------------ ▲‌ ▲--------------------------------------
        --------------------------CODIGO DE NUEVA DENUNCIA ---------------------*/
+    
+    private void refreshPnlNew () {
+        //pnlNew
+        DefaultComboBoxModel newModel = (DefaultComboBoxModel) cmbNewType.getModel();
+        newModel.removeAllElements();
+        
+        newModel.addElement("Ninguno");
+        
+        for (Complaint_type type : new ComplaintTypeController().getAll(true))
+            newModel.addElement(type);
+    }
     
     /**
      * Muestra u oculta la lista de autoridades/proveedores en función de el tipo de denuncia seleccionado,
@@ -2669,7 +2813,7 @@ public class MainFrame extends javax.swing.JFrame {
         cmbNewType.setSelectedIndex(0);
         chbNewViable.setSelected(true);
         ((DefaultListModel)lstNew.getModel()).removeAllElements();
-        Animations.invisibilizeComponents(this, lblList, btnNewListSearch, lstNew, btnNewListDel);
+        Animations.invisibilizeComponents(this, lblList, btnNewListSearch, scrLstNew, btnNewListDel);
         
         JLabel[] errorList = {
             errNewSchool, errNewDescription, errNewType, errNewList,
@@ -2678,6 +2822,105 @@ public class MainFrame extends javax.swing.JFrame {
         //Ocultando los label de error
         for(JLabel err : errorList)
             Animations.hide(err, 255, 0, 0);
+    }
+    
+    
+    /*----------------------------- ------------------------------------------
+       -------------------------------▲---------------------------------------
+       ---------------- ------------ ▲‌ ▲--------------------------------------
+       --------------------------CODIGO DE LISTA DE DENUNCIAS------------------*/
+    
+    private void refreshPnlCalls () {
+        //pnlCalls
+        DefaultTableModel callsModel = (DefaultTableModel) tblCalls.getModel();
+        while (callsModel.getRowCount() > 0) callsModel.removeRow(0);
+        
+        for (Call call : new CallController().getAll()) {
+            callsModel.addRow(new Object[]{
+                call.getSchool(),
+                call.getComplaint_type(),
+                call,
+                call.getViable() ? "Es viable" : "No es viable",
+                Utils.formatDate(call.getCall_date(), Utils.DATE_UI)
+            });
+        }
+    }
+    
+    private void clearPnlCalls () {
+        cmbCallsSearchType.setSelectedIndex(0);
+        callSchool = null;
+        lblCallsSchool.setText("Ninguna");
+        txtCallsSearch.setText("");
+        dtpCallsFrom.setDate(null);
+        dtpCallsFrom.getMonthView().setUpperBound(null);
+        dtpCallsTo.setDate(null);
+        dtpCallsTo.getMonthView().setLowerBound(null);
+        Animations.invisibilizeComponents(this, pnlCallsParam, btnCallsSchoolSearch);
+    }
+    
+    private void triggerCallsSearch () {
+        try {
+            int type = 0;
+            Object param = null;
+            String from = "";
+            String to = "";
+            
+            switch(String.valueOf(cmbCallsSearchType.getSelectedItem())) {
+                case "Escuela":
+                    type = CallController.BY_SCHOOL;
+                    param = callSchool;
+                    break;
+                case "Tipo":
+                    type = CallController.BY_TYPE;
+                    param = cmbCallsSearch.getSelectedItem();
+                    break;
+                case "Descripción":
+                    type = CallController.BY_DESCRIPTION;
+                    param = txtCallsSearch.getText().trim();
+                    break;
+                case "Viable":
+                    type = CallController.BY_VIABLE;
+                    param = cmbCallsSearch.getSelectedItem();
+                    break;
+                case "Registradas por mí":
+                    type = CallController.BY_USER;
+                    param = user;
+                    break;
+                case "N/A":
+                    type = CallController.NO_FIELD;
+                    break;
+            }
+            
+            //Seteando fechas si fueron seleccionadas
+            try {from = Utils.formatDate(dtpCallsFrom.getDate(), Utils.DATE_DB);} catch (Exception e) {}
+            try {to = Utils.formatDate(dtpCallsTo.getDate(), Utils.DATE_DB);} catch (Exception e) {}
+            
+            DefaultTableModel model = (DefaultTableModel) tblCalls.getModel();
+            while (model.getRowCount() > 0) model.removeRow(0);
+
+            for (Call object : new CallController().search(type, param, from, to)) {
+                model.addRow(new Object[]{
+                    object.getSchool(),
+                    object.getComplaint_type(),
+                    object,
+                    object.getViable() ? "Es viable" : "No es viable",
+                    Utils.formatDate(object.getCall_date(), Utils.DATE_UI)
+                });
+            }
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
+    
+    /**
+     * Cambia el contenido del filtro en pnlCalls
+     * @param cardName Nombre del panel a mostrar
+     */
+    private void showCallsCard(String cardName) {
+        CardLayout card = (CardLayout) pnlCallsParam.getLayout();
+        card.show(pnlCallsParam, cardName);
     }
     
     
@@ -2806,17 +3049,35 @@ public class MainFrame extends javax.swing.JFrame {
         switch (cmbCallsSearchType.getSelectedIndex()) {
             case 0:
             case 5:
-                Animations.invisibilizeComponents(this, txtCallsSearch, cmbCallsSearch);
-                break;
-            case 3:
-                Animations.toggleVisible(this, txtCallsSearch, cmbCallsSearch);
+                Animations.invisibilizeComponents(this, pnlCallsParam, btnCallsSchoolSearch);
                 break;
             case 1:
+                showCallsCard("callsLbl");
+                Animations.visibilizeComponents(this, pnlCallsParam, btnCallsSchoolSearch);
+                break;
             case 2:
+                DefaultComboBoxModel model2 = new DefaultComboBoxModel();
+                for (Complaint_type type : new ComplaintTypeController().getAll(true)) {
+                    model2.addElement(type);
+                }
+                cmbCallsSearch.setModel(model2);
+                showCallsCard("callsCmb");
+                Animations.toggleVisible(this, pnlCallsParam, btnCallsSchoolSearch);
+                break;
+            case 3:
+                showCallsCard("callsTxt");
+                Animations.toggleVisible(this, pnlCallsParam, btnCallsSchoolSearch);
+                break;
             case 4:
-                Animations.toggleVisible(this, cmbCallsSearch, txtCallsSearch);
+                DefaultComboBoxModel model4 = new DefaultComboBoxModel();
+                model4.addElement("Es viable");
+                model4.addElement("No es viable");
+                cmbCallsSearch.setModel(model4);
+                showCallsCard("callsCmb");
+                Animations.toggleVisible(this, pnlCallsParam, btnCallsSchoolSearch);
                 break;
         }
+        triggerCallsSearch();
     }//GEN-LAST:event_cmbCallsSearchTypeActionPerformed
 
     private void btnNewClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewClearActionPerformed
@@ -2906,6 +3167,7 @@ public class MainFrame extends javax.swing.JFrame {
         try {
             SearchSchool dialog = new SearchSchool();
             int result = JOptionPane.showConfirmDialog(this, dialog, "Seleccionar escuela", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+            lblNewSchool.setText("Ninguna");
             if (result == JOptionPane.OK_OPTION) {
                 callSchool = dialog.getValue();
                 lblNewSchool.setText(callSchool.toString());
@@ -2915,12 +3177,167 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNewSchoolSearchActionPerformed
 
     private void btnDetailSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailSaveActionPerformed
-        if (JOptionPane.showConfirmDialog(this, "¿Desea guardar los cambios? Esta operación es irreversible") == JOptionPane.OK_OPTION)
-            showCard("crdCalls");
+        try {
+            boolean modifyCall = false, modifyAsign = false;
+                
+            //Determinando si la llamada debe ser modificada
+            //Operación XOR
+            //Si los valores son distintos, debe ocurrir la modificación
+            modifyCall = new CallController().getOne(currentId).isTalk_given() ^ chbDetailTalk.isSelected();
+
+            for (int i = 0; i < tblAsigns.getModel().getRowCount(); i++) {
+                //Operación XOR
+                //Compara los checkbox con el content_removed del objeto. Si son distintos, debe ocurrir la modificación
+                modifyAsign = ((Provider_asign)tblAsigns.getModel().getValueAt(i, 0)).isContent_removed() ^ (boolean)tblAsigns.getModel().getValueAt(i, 1);
+                if (modifyAsign) {
+                    break;
+                }
+            }
+
+            //Si no se detectaron modificaciones
+            if (!modifyCall && !modifyAsign) {
+                JOptionPane.showMessageDialog(this, "No se han hecho cambios en la denuncia", "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
+            
+            //Si se detectaron modificaciones
+            else {
+                //Confirmación
+                if (JOptionPane.showConfirmDialog(this, "¿Desea guardar los cambios? Esta operación es irreversible") == JOptionPane.OK_OPTION) {
+                    boolean success = true;
+                    if (modifyCall) {
+                        //Modificando talk_given de la llamada
+                        if (!new CallController().updateCall(currentId, chbDetailTalk.isSelected())) {
+                            JOptionPane.showMessageDialog(this, "Ocurrió un error al modificar la denuncia", "Operación denegada", JOptionPane.ERROR_MESSAGE);
+                            success = false;
+                        }
+                    }
+                    if (modifyAsign) {
+                        //Modificando content_removed de los proveedores
+                        for (int i = 0; i < tblAsigns.getModel().getRowCount(); i++) {
+                            if (!new ProvAsignController().updateProvAsign(
+                                    ((Provider_asign)tblAsigns.getModel().getValueAt(i, 0)).getId(), 
+                                    (boolean)tblAsigns.getModel().getValueAt(i, 1))
+                            ) {
+                                JOptionPane.showMessageDialog(this, "Ocurrió un error al modificar un proveedor relacionado a la denuncia", "Operación denegada", JOptionPane.ERROR_MESSAGE);
+                                success = false;
+                            }
+                        }
+                    }
+                    
+                    //Si todas las operaciones fueron exitosas
+                    if (success) {
+                        JOptionPane.showMessageDialog(this, "Cambios guardados", "Operación exitosa", JOptionPane.INFORMATION_MESSAGE);
+                        showCard("crdCalls");
+                    }
+                }
+            }
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }//GEN-LAST:event_btnDetailSaveActionPerformed
 
     private void btnCallsDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCallsDetailActionPerformed
-        showCard("crdCallDetail");
+        try {
+            int row = tblCalls.getSelectedRow();
+            if (row >= 0) {
+                //Mostrando datos de la denuncia
+                Call call = (Call) tblCalls.getValueAt(row, 2);
+                currentId = call.getId();
+                lblDetailUser.setText(call.getUser().getName() + " " + call.getUser().getLastname());
+                lblDetailUser.setToolTipText(call.getUser().getName() + " " + call.getUser().getLastname());
+                lblDetailDate.setText(Utils.formatDate(call.getCall_date(), Utils.DATE_UI));
+                lblDetailSchool.setText(call.getSchool().getName());
+                lblDetailSchool.setToolTipText(call.getSchool().getName());
+                lblDetailType.setText(call.getComplaint_type().getName());
+                lblDetailType.setToolTipText(call.getComplaint_type().getName());
+                lblDetailDescription.setText(call.getDescription());
+                lblDetailArchived.setVisible(!call.getViable());
+                chbDetailTalk.setSelected(call.isTalk_given());
+                chbDetailTalk.setEnabled(!call.isTalk_given());
+                
+                //Si la denuncia no es viable, se ocultan los controles de la parte inferior del panel
+                if (!call.getViable()) {
+                    Animations.invisibilizeComponents(this, lblAsigns, scrAsigns, chbDetailTalk, btnDetailSave);
+                }
+                //Si la denuncia es viable, se muestran los controles y se calculan sus valores
+                else {
+                    Animations.visibilizeComponents(this, lblAsigns, scrAsigns);
+                    
+                    //Si es una denuncia relacionada a autoridades
+                    if (call.getComplaint_type().getTaken_action().equals("Remitir con autoridad competente")) {
+                        Animations.invisibilizeComponents(this, chbDetailTalk, btnDetailSave);
+                        lblAsigns.setText("Autoridades notificadas: ");
+
+                        DefaultTableModel model = new DefaultTableModel();
+                        model.addColumn("Autoridad");
+
+                        for (Authority_asign asign : new AuthAsignController().getAsigns(call)) {
+                            model.addRow(new Object[]{asign.getAuthority().getName()});
+                        }
+                        tblAsigns.setModel(model);
+
+                    }
+                    //Si es una denuncia relacionada a proveedores
+                    else {
+                        Animations.visibilizeComponents(this, chbDetailTalk, btnDetailSave);
+                        lblAsigns.setText("Proveedores notificados: ");
+
+                        //Estableciendo clase del modelo
+                        DefaultTableModel model = new DefaultTableModel(
+                            new Object [][] {
+
+                            },
+                            new String [] {
+                                "Proveedor", "Retiró el contenido"
+                            }
+                        ) {
+                            Class[] types = new Class [] {
+                                java.lang.Object.class, java.lang.Boolean.class
+                            };
+                            boolean[] canEdit = new boolean [] {
+                                false, true
+                            };
+
+                            public Class getColumnClass(int columnIndex) {
+                                return types [columnIndex];
+                            }
+
+                            //Determina que celdas son editables
+                            //Las únicas celdas editables deberían ser las que contengan checkboxes,
+                            //en las que el atributo Content_removed del objeto relacionado sea false
+                            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                                try {
+                                    if (((Provider_asign)this.getValueAt(rowIndex, 0)).isContent_removed())
+                                        return false;
+                                    else
+                                        return canEdit [columnIndex];
+                                } catch (Exception e) {
+                                    return canEdit [columnIndex];
+                                }
+                            }
+                        };
+
+
+                        for (Provider_asign asign : new ProvAsignController().getAsigns(call)) {
+                            model.addRow(new Object[]{asign, asign.isContent_removed()});
+                        }
+
+                        tblAsigns.setModel(model);
+                    }
+
+                }
+                
+                
+                //Mostrando panel
+                showCard("crdCallDetail");
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "Seleccione una denuncia", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }//GEN-LAST:event_btnCallsDetailActionPerformed
 
     private void btnUserClear1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserClear1ActionPerformed
@@ -3095,6 +3512,7 @@ public class MainFrame extends javax.swing.JFrame {
                         txtNewDesc.getText().trim()
                 )) {
                     if (chbNewViable.isSelected()) {
+                        //Si la denuncia es viable, se hará el insert de las autoridades/proveedores relacionados
                         Call call = new CallController().getLast();
                         
                         for (int i = 0; i < ( lstNew.getModel()).getSize(); i++) {
@@ -3104,7 +3522,7 @@ public class MainFrame extends javax.swing.JFrame {
                                 }
                             }
                             else {
-                                if (!(new ProvAsignController().addAuthAsign(call, (Provider)(((DefaultListModel) lstNew.getModel()).getElementAt(i))))) {
+                                if (!(new ProvAsignController().addProvAsign(call, (Provider)(((DefaultListModel) lstNew.getModel()).getElementAt(i))))) {
                                     JOptionPane.showMessageDialog(this, "Error al guardar proveedor relacionado a denuncia", "Operación denegada", JOptionPane.WARNING_MESSAGE);
                                 }
                             }
@@ -3112,8 +3530,6 @@ public class MainFrame extends javax.swing.JFrame {
                         
                         
                     }
-                    
-                    
                     
                     JOptionPane.showMessageDialog(this, "Denuncia guardada", "Operación exitosa", JOptionPane.INFORMATION_MESSAGE);
                     clearPnlNew();
@@ -3329,6 +3745,64 @@ public class MainFrame extends javax.swing.JFrame {
         fillProvTable();
     }//GEN-LAST:event_btnProvSearchResetActionPerformed
 
+    private void btnCallsSchoolSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCallsSchoolSearchActionPerformed
+        try {
+            SearchSchool dialog = new SearchSchool();
+            int result = JOptionPane.showConfirmDialog(this, dialog, "Seleccionar escuela", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+            lblCallsSchool.setText("Ninguna");
+            if (result == JOptionPane.OK_OPTION) {
+                callSchool = dialog.getValue();
+                lblCallsSchool.setText(callSchool.toString());
+                triggerCallsSearch();
+            }
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btnCallsSchoolSearchActionPerformed
+
+    private void pnlNewComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlNewComponentShown
+        refreshPnlNew();
+    }//GEN-LAST:event_pnlNewComponentShown
+
+    private void pnlNewComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlNewComponentHidden
+        clearPnlNew();
+    }//GEN-LAST:event_pnlNewComponentHidden
+
+    private void pnlCallsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlCallsComponentShown
+        refreshPnlCalls();
+    }//GEN-LAST:event_pnlCallsComponentShown
+
+    private void pnlCallsComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlCallsComponentHidden
+        clearPnlCalls();
+    }//GEN-LAST:event_pnlCallsComponentHidden
+
+    private void cmbCallsSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCallsSearchActionPerformed
+        triggerCallsSearch();
+    }//GEN-LAST:event_cmbCallsSearchActionPerformed
+
+    private void txtCallsSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCallsSearchKeyReleased
+        triggerCallsSearch();
+    }//GEN-LAST:event_txtCallsSearchKeyReleased
+
+    private void dtpCallsFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dtpCallsFromActionPerformed
+        dtpCallsTo.getMonthView().setLowerBound(dtpCallsFrom.getDate());
+        triggerCallsSearch();
+    }//GEN-LAST:event_dtpCallsFromActionPerformed
+
+    private void dtpCallsToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dtpCallsToActionPerformed
+        dtpCallsFrom.getMonthView().setUpperBound(dtpCallsTo.getDate());
+        triggerCallsSearch();
+    }//GEN-LAST:event_dtpCallsToActionPerformed
+
+    private void btnAuthSearchReset1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAuthSearchReset1ActionPerformed
+        clearPnlCalls();
+        refreshPnlCalls();
+    }//GEN-LAST:event_btnAuthSearchReset1ActionPerformed
+
+    private void pnlCallDetailComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlCallDetailComponentHidden
+        //Limpiando pnlCallDetail
+        currentId = 0;
+    }//GEN-LAST:event_pnlCallDetailComponentHidden
+
     /**
      * @param args the command line arguments
      */
@@ -3372,6 +3846,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnAuthSearchReset;
     private javax.swing.JButton btnAuthSearchReset1;
     private javax.swing.JButton btnCallsDetail;
+    private javax.swing.JButton btnCallsSchoolSearch;
     private javax.swing.JButton btnDetailBack;
     private javax.swing.JButton btnDetailReport;
     private javax.swing.JButton btnDetailSave;
@@ -3515,6 +3990,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -3522,7 +3998,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
-    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator2;
@@ -3533,20 +4008,22 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
+    private javax.swing.JLabel lblAsigns;
+    private javax.swing.JLabel lblCallsSchool;
     private javax.swing.JLabel lblDetailArchived;
     private javax.swing.JLabel lblDetailDate;
-    private org.jdesktop.swingx.JXLabel lblDetailDescription;
+    private javax.swing.JTextArea lblDetailDescription;
     private javax.swing.JLabel lblDetailSchool;
     private javax.swing.JLabel lblDetailType;
     private javax.swing.JLabel lblDetailUser;
     private javax.swing.JLabel lblList;
-    private javax.swing.JLabel lblList1;
     private javax.swing.JLabel lblNewSchool;
     private org.jdesktop.swingx.JXLabel lblUser;
     private javax.swing.JList<String> lstNew;
     private javax.swing.JPanel pnlAuth;
     private javax.swing.JPanel pnlCallDetail;
     private javax.swing.JPanel pnlCalls;
+    private javax.swing.JPanel pnlCallsParam;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlMenu;
     private javax.swing.JPanel pnlNew;
@@ -3556,10 +4033,11 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel pnlSchool;
     private javax.swing.JPanel pnlType;
     private javax.swing.JPanel pnlUser;
+    private javax.swing.JScrollPane scrAsigns;
     private javax.swing.JScrollPane scrLstNew;
+    private javax.swing.JTable tblAsigns;
     private javax.swing.JTable tblAuth;
     private javax.swing.JTable tblCalls;
-    private javax.swing.JTable tblDetail;
     private javax.swing.JTable tblProv;
     private javax.swing.JTable tblSchool;
     private javax.swing.JTable tblType;
