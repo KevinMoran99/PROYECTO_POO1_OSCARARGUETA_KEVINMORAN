@@ -2445,6 +2445,11 @@ public class MainFrame extends javax.swing.JFrame {
         pnlMain.add(pnlCallDetail, "crdCallDetail");
 
         pnlReports.setBackground(new java.awt.Color(255, 255, 255));
+        pnlReports.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                pnlReportsComponentShown(evt);
+            }
+        });
 
         jLabel42.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel42.setText("Reportes");
@@ -2464,8 +2469,25 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel46.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel46.setText("Fecha:");
 
+        dtpReportsFrom.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                dtpReportsFromComponentShown(evt);
+            }
+        });
+        dtpReportsFrom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dtpReportsFromActionPerformed(evt);
+            }
+        });
+
         jLabel47.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel47.setText("Desde:");
+
+        dtpReportsTo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dtpReportsToActionPerformed(evt);
+            }
+        });
 
         jLabel48.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel48.setText("Hasta:");
@@ -4502,9 +4524,36 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnReport1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReport1ActionPerformed
         // TODO add your handling code here:
-        ReportGenerator rp = new ReportGenerator();
-        rp.typeReport();
+        
+        try{
+            String from = Utils.formatDate(dtpReportsFrom.getDate(), Utils.DATE_DB);
+            String to = Utils.formatDate(dtpReportsTo.getDate(), Utils.DATE_DB);
+            ReportGenerator rp = new ReportGenerator();
+            rp.typeReport(from,to);
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, "Seleccione fecha inicio y fecha fin");
+        }
+        
     }//GEN-LAST:event_btnReport1ActionPerformed
+
+    private void dtpReportsFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dtpReportsFromActionPerformed
+        // TODO add your handling code here:
+        dtpReportsTo.getMonthView().setLowerBound(dtpReportsFrom.getDate());
+    }//GEN-LAST:event_dtpReportsFromActionPerformed
+
+    private void dtpReportsToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dtpReportsToActionPerformed
+        // TODO add your handling code here:
+        dtpReportsFrom.getMonthView().setUpperBound(dtpReportsTo.getDate());
+        triggerCallsSearch();
+    }//GEN-LAST:event_dtpReportsToActionPerformed
+
+    private void dtpReportsFromComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_dtpReportsFromComponentShown
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dtpReportsFromComponentShown
+
+    private void pnlReportsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlReportsComponentShown
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pnlReportsComponentShown
 
     /**
      * @param args the command line arguments

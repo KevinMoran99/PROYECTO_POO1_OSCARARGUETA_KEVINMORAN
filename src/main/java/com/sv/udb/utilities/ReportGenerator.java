@@ -72,7 +72,7 @@ public class ReportGenerator {
     }
     
     
-    public void typeReport() {
+    public void typeReport(String from, String to) {
         HashMap map;
         
         try {
@@ -85,7 +85,12 @@ public class ReportGenerator {
             JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
             //Conexion
             Connection conn = new ConnectionDB().getConn();
-            JasperPrint print = (JasperPrint)JasperFillManager.fillReport(jasperFileName, null,conn);
+            System.err.println(from);
+            System.err.println(to);
+            map = new HashMap();
+            map.put("init_date",from);
+            map.put("end_date", to);
+            JasperPrint print = (JasperPrint)JasperFillManager.fillReport(jasperFileName, map,conn);
             
             //guardando
             JasperExportManager.exportReportToPdfFile(print, pdfFileName);

@@ -3,7 +3,13 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<queryString language="SQL">
+	<parameter name="init_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
 		<![CDATA[SELECT
      calls.`id` AS calls_id,
      calls.`viable` AS calls_viable,
@@ -16,16 +22,19 @@
 FROM
      `schools` schools INNER JOIN `calls` calls ON schools.`id` = calls.`school_id`
      INNER JOIN `complaint_types` complaint_types ON calls.`complaint_id` = complaint_types.`id`
-     INNER JOIN `users` users ON calls.`user_id` = users.`id`]]>
+     INNER JOIN `users` users ON calls.`user_id` = users.`id`
+WHERE
+     calls.`call_date` between CAST($P{init_date} as DATE) and CAST($P{end_date} as DATE)
+]]>
 	</queryString>
 	<field name="calls_id" class="java.lang.Integer"/>
+	<field name="calls_viable" class="java.lang.Boolean"/>
 	<field name="calls_description" class="java.lang.String"/>
+	<field name="calls_call_date" class="java.sql.Date"/>
+	<field name="calls_talk_given" class="java.lang.Boolean"/>
 	<field name="schools_name" class="java.lang.String"/>
 	<field name="complaint_types_name" class="java.lang.String"/>
 	<field name="users_email" class="java.lang.String"/>
-	<field name="calls_viable" class="java.lang.Boolean"/>
-	<field name="calls_talk_given" class="java.lang.Boolean"/>
-	<field name="calls_call_date" class="java.sql.Date"/>
 	<group name="complaint_types_name">
 		<groupExpression><![CDATA[$F{complaint_types_name}]]></groupExpression>
 		<groupHeader>
