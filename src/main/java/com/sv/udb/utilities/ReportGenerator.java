@@ -40,12 +40,12 @@ public class ReportGenerator {
             //Conexion
             Connection conn = new ConnectionDB().getConn();
             
-            //Yo lo uso porque soy cul
+            //Yo lo uso porque soy cul-ero
             Call call = new CallController().getOne(id);
             
             //seteando los parametros que recibe el reporte
             map = new HashMap();
-            map.put("id",String.valueOf(id));
+            map.put("id","xd");
             map.put("viable", call.getViable());
             
             //Para generar al reporte directamente con una conexión y query (debería ser suficiente para reportes basados en tablas)
@@ -63,6 +63,39 @@ public class ReportGenerator {
                     Desktop.getDesktop().open(new File(pdfFileName));
                 } catch (IOException ex) {
                     System.out.println("No abrió xd " + ex);
+                }
+            }
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
+    
+    public void typeReport() {
+        HashMap map;
+        
+        try {
+            //Rutas de archivos
+            String jrxmlFileName = new File("src/main/java/com/sv/udb/reports/Type.jrxml").getAbsolutePath();
+            String jasperFileName = new File("src/main/java/com/sv/udb/reports/Type.jasper").getAbsolutePath();
+            String pdfFileName = new File("reports/type.pdf").getAbsolutePath();
+            
+            //Compilando jasperreport
+            JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
+            //Conexion
+            Connection conn = new ConnectionDB().getConn();
+            JasperPrint print = (JasperPrint)JasperFillManager.fillReport(jasperFileName, null,conn);
+            
+            //guardando
+            JasperExportManager.exportReportToPdfFile(print, pdfFileName);
+            
+            //mostrando
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    Desktop.getDesktop().open(new File(pdfFileName));
+                } catch (IOException ex) {
+                    System.out.println("No abrió :c " + ex);
                 }
             }
             
