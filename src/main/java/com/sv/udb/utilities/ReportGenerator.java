@@ -94,6 +94,12 @@ public class ReportGenerator {
                     jasperFileName = new File("src/main/java/com/sv/udb/reports/Viability.jasper").getAbsolutePath();
                     pdfFileName = new File("reports/viability.pdf").getAbsolutePath();
                     break;
+                case THREE:
+                    //Rutas de archivos
+                    jrxmlFileName = new File("src/main/java/com/sv/udb/reports/Top.jrxml").getAbsolutePath();
+                    jasperFileName = new File("src/main/java/com/sv/udb/reports/Top.jasper").getAbsolutePath();
+                    pdfFileName = new File("reports/top.pdf").getAbsolutePath();
+                    break;
             }
             
             

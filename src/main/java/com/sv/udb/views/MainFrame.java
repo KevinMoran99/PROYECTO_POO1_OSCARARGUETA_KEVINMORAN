@@ -2510,6 +2510,11 @@ public class MainFrame extends javax.swing.JFrame {
         btnReport3.setText("Top 10 instituciones con más denuncias");
         btnReport3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnReport3.setIconTextGap(6);
+        btnReport3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReport3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlReportsLayout = new javax.swing.GroupLayout(pnlReports);
         pnlReports.setLayout(pnlReportsLayout);
@@ -4571,6 +4576,18 @@ public class MainFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Seleccione fecha inicio y fecha fin");
         }
     }//GEN-LAST:event_btnReport2ActionPerformed
+
+    private void btnReport3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReport3ActionPerformed
+        // TODO add your handling code here:
+        try{
+            String from = Utils.formatDate(dtpReportsFrom.getDate(), Utils.DATE_DB);
+            String to = Utils.formatDate(dtpReportsTo.getDate(), Utils.DATE_DB);
+            ReportGenerator rp = new ReportGenerator();
+            rp.typeReport(from,to, ReportGenerator.THREE);
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, "Seleccione fecha inicio y fecha fin");
+        }
+    }//GEN-LAST:event_btnReport3ActionPerformed
 
     /**
      * @param args the command line arguments
