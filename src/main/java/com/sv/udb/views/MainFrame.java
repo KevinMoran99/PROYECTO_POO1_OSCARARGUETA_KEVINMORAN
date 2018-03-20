@@ -368,8 +368,8 @@ public class MainFrame extends javax.swing.JFrame {
         jPanel7 = new javax.swing.JPanel();
         btnEditPass = new javax.swing.JButton();
         jLabel51 = new javax.swing.JLabel();
-        txtProfilePass = new javax.swing.JTextField();
-        txtProfileConfirm = new javax.swing.JTextField();
+        txtProfilePass = new javax.swing.JPasswordField();
+        txtProfileConfirm = new javax.swing.JPasswordField();
         jLabel56 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -660,6 +660,7 @@ public class MainFrame extends javax.swing.JFrame {
                 "Nombre", "Apellido", "Email", "Tipo", "Estado"
             }
         ));
+        tblUser.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblUser.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblUserMouseClicked(evt);
@@ -959,6 +960,7 @@ public class MainFrame extends javax.swing.JFrame {
                 "Nombre", "Accion", "Estado"
             }
         ));
+        tblType.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblType.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblTypeMouseClicked(evt);
@@ -1199,6 +1201,7 @@ public class MainFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblSchool.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblSchool.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblSchoolMouseClicked(evt);
@@ -1432,6 +1435,7 @@ public class MainFrame extends javax.swing.JFrame {
                 "Nombre", "Estado"
             }
         ));
+        tblAuth.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblAuth.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblAuthMouseClicked(evt);
@@ -1633,6 +1637,7 @@ public class MainFrame extends javax.swing.JFrame {
                 "Nombre", "Estado"
             }
         ));
+        tblProv.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblProv.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblProvMouseClicked(evt);
@@ -2573,6 +2578,14 @@ public class MainFrame extends javax.swing.JFrame {
         pnlMain.add(pnlReports, "crdReports");
 
         pnlProfile.setBackground(new java.awt.Color(255, 255, 255));
+        pnlProfile.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
+                pnlProfileComponentHidden(evt);
+            }
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                pnlProfileComponentShown(evt);
+            }
+        });
 
         jLabel43.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel43.setText("Mi perfil");
@@ -2612,6 +2625,11 @@ public class MainFrame extends javax.swing.JFrame {
         btnUserAction1.setText("Guardar cambios");
         btnUserAction1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnUserAction1.setIconTextGap(6);
+        btnUserAction1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUserAction1ActionPerformed(evt);
+            }
+        });
 
         jPanel2.setBackground(new java.awt.Color(231, 231, 231));
 
@@ -3513,7 +3531,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCallsDetailActionPerformed
 
     private void btnUserClear1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserClear1ActionPerformed
-        // TODO add your handling code here:
+        refreshPnlProfile();
     }//GEN-LAST:event_btnUserClear1ActionPerformed
 
     private void btnEditNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditNameActionPerformed
@@ -4589,6 +4607,107 @@ public class MainFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Seleccione fecha inicio y fecha fin");
         }
     }//GEN-LAST:event_btnReport3ActionPerformed
+
+    /*----------------------------- ------------------------------------------
+     -------------------------------▲-----------------------------------------
+     ---------------- ------------ ▲‌ ▲---------------------------------------
+    --------------------------CODIGO DE PROFILE-------------------------------*/
+    private void refreshPnlProfile () {
+        txtProfileName.setEnabled(false);
+        txtProfileLastName.setEnabled(false);
+        txtProfileEmail.setEnabled(false);
+        txtProfilePass.setEnabled(false);
+        txtProfileConfirm.setEnabled(false);
+        
+        Animations.hide(errProfileName, 255, 0, 0);
+        Animations.hide(errProfileEmail, 255, 0, 0);
+        Animations.hide(errProfilePass, 255, 0, 0);
+        
+        txtProfileName.setText(user.getName());
+        txtProfileLastName.setText(user.getLastname());
+        txtProfileEmail.setText(user.getEmail());
+        txtProfilePass.setText("");
+        txtProfileConfirm.setText("");
+        
+        lblUser.setText(user.getName() + " " + user.getLastname());
+    }
+    
+    
+    private void btnUserAction1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserAction1ActionPerformed
+        try {
+            boolean flag = true;
+            if (!txtProfileName.isEnabled() && !txtProfileEmail.isEnabled() && !txtProfilePass.isEnabled()) {
+                JOptionPane.showMessageDialog(this, "No se han hecho cambios en sus datos", "Aviso", JOptionPane.WARNING_MESSAGE);
+                flag = false;
+            }
+            if (txtProfileName.isEnabled() && (txtProfileName.getText().trim().isEmpty() || txtProfileLastName.getText().trim().isEmpty())) {
+                errProfileName.setText("Llene ambos campos");
+                new Animations().appear(errProfileName, 255, 0, 0);
+                flag = false;
+            } else {
+                Animations.hide(errProfileName, 255, 0, 0);
+            }
+            if (txtProfileEmail.isEnabled() && !new Utils().validate(txtProfileEmail.getText())) {
+                errProfileEmail.setText("Formato de correo no válido");
+                new Animations().appear(errProfileEmail, 255, 0, 0);
+                flag = false;
+            } else {
+                Animations.hide(errProfileEmail, 255, 0, 0);
+            }
+            if (txtProfilePass.isEnabled() && (txtProfilePass.getText().trim().isEmpty() || txtProfileConfirm.getText().trim().isEmpty())) {
+                errProfilePass.setText("Llene ambos campos");
+                new Animations().appear(errProfilePass, 255, 0, 0);
+                flag = false;
+            } 
+            else if (txtProfilePass.isEnabled() && !(txtProfilePass.getText().trim().equals(txtProfileConfirm.getText().trim()))) {
+                errProfilePass.setText("Las claves ingresadas no concuerdan");
+                new Animations().appear(errProfilePass, 255, 0, 0);
+                flag = false;
+            }
+            else if (txtProfilePass.isEnabled() && txtProfilePass.getText().trim().length() < 6) {
+                errProfilePass.setText("Clave demasiado corta");
+                new Animations().appear(errProfilePass, 255, 0, 0);
+                flag = false;
+            }
+            else {
+                Animations.hide(errProfilePass, 255, 0, 0);
+            }
+
+
+            if (flag) {
+                String name = user.getName();
+                String lastname = user.getLastname();
+                String email = user.getEmail();
+                if (txtProfileName.isEnabled()) {
+                    name = txtProfileName.getText().trim();
+                    lastname = txtProfileLastName.getText().trim();
+                }
+                if (txtProfileEmail.isEnabled()) {
+                    email = txtProfileEmail.getText().trim();
+                }
+                if (new UserController().updateUser(user.getId(),name,lastname,email, txtProfilePass.getText(), user.getUser_type().getId(), true)) {
+                    JOptionPane.showMessageDialog(this, "Perfil modificado con éxito");
+                    user = new UserController().getOne(user.getId());
+                    refreshPnlProfile();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error al modificar");
+                }
+            }
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+        
+    }//GEN-LAST:event_btnUserAction1ActionPerformed
+
+    private void pnlProfileComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlProfileComponentHidden
+        refreshPnlProfile();
+    }//GEN-LAST:event_pnlProfileComponentHidden
+
+    private void pnlProfileComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlProfileComponentShown
+        refreshPnlProfile();
+    }//GEN-LAST:event_pnlProfileComponentShown
 
     /**
      * @param args the command line arguments

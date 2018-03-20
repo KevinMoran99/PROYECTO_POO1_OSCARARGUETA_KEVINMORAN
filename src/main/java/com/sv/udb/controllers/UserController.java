@@ -88,23 +88,27 @@ public class UserController {
     
     public User login (String email, String pass) {
         User resp = null;
+        
+        BasicTextEncryptor bte = new BasicTextEncryptor();
+        bte.setPassword("poo1");
         try {
             String query = "SELECT u.id, u.name, u.lastname, u.email, u.pass, t.*, u.state "
                     + "FROM users u INNER JOIN user_types t ON u.user_type_id = t.id "
-                    + "WHERE u.email = ? AND u.pass = ?";
+                    + "WHERE u.email = ?";
             PreparedStatement cmd = this.conn.prepareStatement(query);
             cmd.setString(1, email);
-            cmd.setString(2, pass);
             ResultSet rs = cmd.executeQuery();
-            while (rs.next()) {
-                resp = new User(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4),
-                        rs.getString(5),
-                        new User_type(rs.getInt(6), rs.getString(7)),
-                        rs.getBoolean(8));
+            if (rs.next()) {
+                if (bte.decrypt(rs.getString(5)).equals(pass)) {
+                    resp = new User(
+                            rs.getInt(1),
+                            rs.getString(2),
+                            rs.getString(3),
+                            rs.getString(4),
+                            rs.getString(5),
+                            new User_type(rs.getInt(6), rs.getString(7)),
+                            rs.getBoolean(8));
+                }
             }
             
         } catch (SQLException ex) {

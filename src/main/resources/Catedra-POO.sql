@@ -79,8 +79,9 @@ foreign key (provider_id) references providers(id)
 insert into user_types values (null, "Administrador");
 insert into user_types values (null, "Personal");
 
-insert into users values (null, "Oscar", "Méndez", "admin@gmail.com", "123", 1, 1);
-insert into users values (null, "Kevin", "Morán", "user@gmail.com", "123", 2, 1);
+-- Contraseñas: 123456
+insert into users values (null, "Oscar", "Méndez", "admin@gmail.com", "jXUeI9FKyL76dUcDOy296g==", 1, 1);
+insert into users values (null, "Kevin", "Morán", "user@gmail.com", "jXUeI9FKyL76dUcDOy296g==", 2, 1);
 
 insert into complaint_types values (null, "Pornografía Infantil", "Remitir con autoridad competente", 1);
 insert into complaint_types values (null, "Grooming (proposiciones sexuales a menores de edad)", "Remitir con autoridad competente", 1);
