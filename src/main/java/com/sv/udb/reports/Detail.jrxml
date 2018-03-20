@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="341"/>
+	<property name="ireport.y" value="206"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -78,12 +78,12 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="79" splitType="Stretch">
+		<band height="66" splitType="Stretch">
 			<rectangle>
-				<reportElement x="0" y="0" width="555" height="79" forecolor="#FFFFFF" backcolor="#0077C6"/>
+				<reportElement x="-24" y="-26" width="604" height="92" forecolor="#FFFFFF" backcolor="#0077C6"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="11" y="15" width="185" height="48" forecolor="#FFFFFF"/>
+				<reportElement x="0" y="0" width="190" height="48" forecolor="#FFFFFF"/>
 				<textElement>
 					<font size="36" isBold="true"/>
 				</textElement>
@@ -92,7 +92,7 @@
 		</band>
 	</title>
 	<detail>
-		<band height="756" splitType="Stretch">
+		<band height="580" splitType="Stretch">
 			<textField>
 				<reportElement x="174" y="16" width="93" height="46"/>
 				<textElement>
@@ -226,31 +226,31 @@
 				<text><![CDATA[Descripción]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement positionType="Float" x="0" y="365" width="555" height="39" forecolor="#FFFFFF" backcolor="#797965"/>
+				<reportElement positionType="Float" x="0" y="364" width="555" height="39" forecolor="#FFFFFF" backcolor="#797965"/>
 			</rectangle>
 			<staticText>
-				<reportElement positionType="Float" x="11" y="365" width="267" height="39" forecolor="#FFFFFF"/>
+				<reportElement positionType="Float" x="11" y="364" width="267" height="39" forecolor="#FFFFFF"/>
 				<textElement>
 					<font fontName="Tahoma" size="28"/>
 				</textElement>
 				<text><![CDATA[Notas adicionales]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="28" y="417" width="168" height="31" forecolor="#000000" backcolor="#000000"/>
+				<reportElement positionType="Float" x="28" y="416" width="173" height="31" forecolor="#000000" backcolor="#000000"/>
 				<textElement>
 					<font fontName="Tahoma" size="18"/>
 				</textElement>
 				<text><![CDATA[Llamada recibida por]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="196" y="417" width="347" height="31"/>
+				<reportElement positionType="Float" x="201" y="416" width="342" height="31"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Tahoma" size="18" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{user}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="28" y="448" width="527" height="55" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#000000">
+				<reportElement positionType="Float" x="28" y="447" width="527" height="55" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#000000">
 					<printWhenExpression><![CDATA[new Boolean($P{viable} == Boolean.FALSE)]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -259,14 +259,14 @@
 				<text><![CDATA[El receptor de la llamada clasificó la denuncia como NO VIABLE,    por lo que fue ARCHIVADA.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="11" y="417" width="17" height="31" forecolor="#000000" backcolor="#000000"/>
+				<reportElement positionType="Float" x="11" y="416" width="17" height="31" forecolor="#000000" backcolor="#000000"/>
 				<textElement>
 					<font fontName="Tahoma" size="18"/>
 				</textElement>
 				<text><![CDATA[>]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="11" y="448" width="17" height="25" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#000000">
+				<reportElement positionType="Float" x="11" y="447" width="17" height="25" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#000000">
 					<printWhenExpression><![CDATA[new Boolean($P{viable} == Boolean.FALSE)]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -275,7 +275,7 @@
 				<text><![CDATA[>]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="28" y="503" width="515" height="55" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#000000">
+				<reportElement positionType="Float" x="28" y="502" width="515" height="55" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#000000">
 					<printWhenExpression><![CDATA[$P{talk}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -284,7 +284,7 @@
 				<text><![CDATA[El centro escolar ya impartió charlas para prevenir fenómenos similares en el futuro.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="11" y="503" width="17" height="25" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#000000">
+				<reportElement positionType="Float" x="11" y="502" width="17" height="25" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#000000">
 					<printWhenExpression><![CDATA[$P{talk}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -292,14 +292,34 @@
 				</textElement>
 				<text><![CDATA[>]]></text>
 			</staticText>
-			<subreport>
-				<reportElement x="11" y="577" width="532" height="100"/>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "SubreportProvider.jasper"]]></subreportExpression>
-			</subreport>
+			<break>
+				<reportElement x="0" y="569" width="100" height="1">
+					<printWhenExpression><![CDATA[$P{viable}]]></printWhenExpression>
+				</reportElement>
+			</break>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="46" splitType="Stretch"/>
+		<band height="6" splitType="Stretch"/>
 	</pageFooter>
+	<summary>
+		<band height="45" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="23" isRemoveLineWhenBlank="true"/>
+				<subreportParameter name="id">
+					<subreportParameterExpression><![CDATA[$P{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "SubreportProvider.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="0" y="23" width="555" height="22"/>
+				<subreportParameter name="id">
+					<subreportParameterExpression><![CDATA[$P{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "SubreportAuthority.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
 </jasperReport>

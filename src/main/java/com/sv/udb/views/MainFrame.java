@@ -42,6 +42,7 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
@@ -2454,6 +2455,11 @@ public class MainFrame extends javax.swing.JFrame {
         btnReport1.setText("Denuncias por tipo");
         btnReport1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnReport1.setIconTextGap(6);
+        btnReport1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReport1ActionPerformed(evt);
+            }
+        });
 
         jLabel46.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel46.setText("Fecha:");
@@ -3649,10 +3655,9 @@ public class MainFrame extends javax.swing.JFrame {
                         user,
                         txtNewDesc.getText().trim()
                 )) {
+                    Call call = new CallController().getLast();
                     if (chbNewViable.isSelected()) {
                         //Si la denuncia es viable, se hará el insert de las autoridades/proveedores relacionados
-                        Call call = new CallController().getLast();
-
                         for (int i = 0; i < (lstNew.getModel()).getSize(); i++) {
                             if (((Complaint_type) cmbNewType.getSelectedItem()).getTaken_action().equals("Remitir con autoridad competente")) {
                                 if (!(new AuthAsignController().addAuthAsign(call, (Authority) (((DefaultListModel) lstNew.getModel()).getElementAt(i))))) {
@@ -3669,6 +3674,7 @@ public class MainFrame extends javax.swing.JFrame {
                     }
                     
                     JOptionPane.showMessageDialog(this, "Denuncia guardada", "Operación exitosa", JOptionPane.INFORMATION_MESSAGE);
+                    ReportGenerator.detailReport(call.getId());
                     clearPnlNew();
                 } else {
                     JOptionPane.showMessageDialog(this, "La denuncia no pudo ser guardada", "Operación denegada", JOptionPane.WARNING_MESSAGE);
@@ -4492,7 +4498,14 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnDetailReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailReportActionPerformed
         ReportGenerator.detailReport(currentId);
+        JOptionPane.showMessageDialog(this, "Reporte generado", "Aviso", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnDetailReportActionPerformed
+
+    private void btnReport1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReport1ActionPerformed
+        // TODO add your handling code here:
+        ReportGenerator rp = new ReportGenerator();
+        rp.typeReport();
+    }//GEN-LAST:event_btnReport1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -4510,7 +4523,8 @@ public class MainFrame extends javax.swing.JFrame {
                     break;
                 }
             }*/
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
