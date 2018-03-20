@@ -79,6 +79,8 @@ public class ReportGenerator {
             map.put("talk", call.isTalk_given());
             map.put("conn", conn);
             
+            map.put("SUBREPORT_DIR", System.getProperty("user.dir") + "\\src\\main\\java\\com\\sv\\udb\\reports\\");
+            
             //Para generar al reporte directamente con una conexión y query (debería ser suficiente para reportes basados en tablas)
             JasperPrint print = (JasperPrint)JasperFillManager.fillReport(jasperFileName, map, conn);
             
