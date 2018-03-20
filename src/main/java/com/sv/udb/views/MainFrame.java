@@ -2498,6 +2498,11 @@ public class MainFrame extends javax.swing.JFrame {
         btnReport2.setText("Denuncias por viabilidad");
         btnReport2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnReport2.setIconTextGap(6);
+        btnReport2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReport2ActionPerformed(evt);
+            }
+        });
 
         btnReport3.setBackground(new java.awt.Color(8, 80, 127));
         btnReport3.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
@@ -4529,7 +4534,7 @@ public class MainFrame extends javax.swing.JFrame {
             String from = Utils.formatDate(dtpReportsFrom.getDate(), Utils.DATE_DB);
             String to = Utils.formatDate(dtpReportsTo.getDate(), Utils.DATE_DB);
             ReportGenerator rp = new ReportGenerator();
-            rp.typeReport(from,to);
+            rp.typeReport(from,to, ReportGenerator.ONE);
         }catch(Exception e){
             JOptionPane.showMessageDialog(this, "Seleccione fecha inicio y fecha fin");
         }
@@ -4554,6 +4559,18 @@ public class MainFrame extends javax.swing.JFrame {
     private void pnlReportsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlReportsComponentShown
         // TODO add your handling code here:
     }//GEN-LAST:event_pnlReportsComponentShown
+
+    private void btnReport2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReport2ActionPerformed
+        // TODO add your handling code here:
+        try{
+            String from = Utils.formatDate(dtpReportsFrom.getDate(), Utils.DATE_DB);
+            String to = Utils.formatDate(dtpReportsTo.getDate(), Utils.DATE_DB);
+            ReportGenerator rp = new ReportGenerator();
+            rp.typeReport(from,to, ReportGenerator.TWO);
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, "Seleccione fecha inicio y fecha fin");
+        }
+    }//GEN-LAST:event_btnReport2ActionPerformed
 
     /**
      * @param args the command line arguments

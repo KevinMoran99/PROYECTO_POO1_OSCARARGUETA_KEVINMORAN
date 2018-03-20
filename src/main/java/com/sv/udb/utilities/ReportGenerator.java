@@ -71,15 +71,31 @@ public class ReportGenerator {
         }
     }
     
-    
-    public void typeReport(String from, String to) {
+    public static final int ONE = 1;
+    public static final int TWO= 2;
+    public static final int THREE = 3;
+    public void typeReport(String from, String to, int number) {
         HashMap map;
         
         try {
-            //Rutas de archivos
-            String jrxmlFileName = new File("src/main/java/com/sv/udb/reports/Type.jrxml").getAbsolutePath();
-            String jasperFileName = new File("src/main/java/com/sv/udb/reports/Type.jasper").getAbsolutePath();
-            String pdfFileName = new File("reports/type.pdf").getAbsolutePath();
+            String jrxmlFileName="";
+            String jasperFileName="";
+            String pdfFileName="";
+            switch(number){
+                case ONE:
+                    //Rutas de archivos
+                    jrxmlFileName = new File("src/main/java/com/sv/udb/reports/Type.jrxml").getAbsolutePath();
+                    jasperFileName = new File("src/main/java/com/sv/udb/reports/Type.jasper").getAbsolutePath();
+                    pdfFileName = new File("reports/type.pdf").getAbsolutePath();
+                    break;
+                case TWO:
+                    //Rutas de archivos
+                    jrxmlFileName = new File("src/main/java/com/sv/udb/reports/Viability.jrxml").getAbsolutePath();
+                    jasperFileName = new File("src/main/java/com/sv/udb/reports/Viability.jasper").getAbsolutePath();
+                    pdfFileName = new File("reports/viability.pdf").getAbsolutePath();
+                    break;
+            }
+            
             
             //Compilando jasperreport
             JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
