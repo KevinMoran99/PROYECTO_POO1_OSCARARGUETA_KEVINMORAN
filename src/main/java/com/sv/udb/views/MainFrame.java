@@ -71,7 +71,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         //Estilizando componentes
         Animations.initStyle(this.getContentPane());
-
+        
         //Botones del menu
         adminBtns = new JButton[5];
         adminBtns[0] = btnMenuUser;
@@ -4480,6 +4480,25 @@ public class MainFrame extends javax.swing.JFrame {
                 flag = false;
             } else {
                 Animations.hide(errUserPass, 255, 0, 0);
+            }
+            //Validando que el propio usuario no pueda inhabilitarse
+            if (currentId == user.getId()) {
+                if (cmbUserType.getSelectedIndex() != 0) {
+                    errUserType.setText("No puede cambiar su tipo");
+                    new Animations().appear(errUserType, 255, 0, 0);
+                    flag = false;
+                }
+                else {
+                    Animations.hide(errUserType, 255, 0, 0);
+                }
+                if (cmbUserState.getSelectedIndex() == 1) {
+                    errUserState.setText("No puede inhabilitarse a sí mismo");
+                    new Animations().appear(errUserState, 255, 0, 0);
+                    flag = false;
+                }
+                else {
+                    Animations.hide(errUserState, 255, 0, 0);
+                }
             }
             if (flag) {
                 boolean state = true;

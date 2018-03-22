@@ -63,7 +63,7 @@ public class ReportGenerator {
             //Conexion
             Connection conn = new ConnectionDB().getConn();
             
-            //Yo lo uso porque soy cul-ero
+            //Yo lo uso porque soy cul
             Call call = new CallController().getOne(id);
             
             //seteando los parametros que recibe el reporte
